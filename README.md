@@ -83,4 +83,4 @@ Schreibt der Chat-KI einen vorgefertigten Charakter zu, der dann während einer 
 ### Modul zur selbständigen Aktionsauswahl
 `autoaction`  
   
-Ermöglich der KI, um die Anfrage zu erfüllen unter allen zur Verfügung stehenden Aktionen und Fähigkeiten eine passende auszuwählen.
+Ermöglich der KI, unter allen zur Verfügung stehenden Aktionen und Fähigkeiten selbständig eine passende auszuwählen. um die Anfrage bestmöglich zu erfüllen.
