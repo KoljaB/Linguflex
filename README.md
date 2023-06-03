@@ -1,7 +1,7 @@
 # Linguflex
 
 ### Worum geht's?
-Linguflex ermöglicht die Interaktion mit Textgeneratoren in natürlicher Sprache. 
+Linguflex ermöglicht die Interaktion mit Textgeneratoren ("Chat-KIs") in natürlicher Sprache. 
 Es bietet Module zur Verwaltung von Terminkalender und Emails, Abrufen aktueller Infos aus dem Internet ("googlen"), Abspielen von Audio- und Videoinhalten, Smart-Home (Lichtsteuerung), Nachrichten, Wetter und einiges mehr.
 
 ### Voraussetzungen
@@ -52,6 +52,8 @@ Als nächster Schritt zur Erweiterung der Vanilla-Konfiguration wird empfohlen, 
 
 ### UI-Modul
 `user_interface`  
+  
+Standardmäßig zeigt Linguflex lediglich ein Konsolenfenster mit Loggingmeldungen an. Dieses Modul stellt zusätzlich ein ansprechenderes User Interface bereit zur Anzeige der Kommunikation mit der Chat KI.
 
 ### Terminkalender-Modul
 `calendar`  
