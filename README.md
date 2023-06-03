@@ -7,8 +7,7 @@ Es bietet Module zur Verwaltung von Terminkalender und Emails, Smart-Home-Aufgab
 
 ## Voraussetzungen
 
-Benötigt wird ein OpenAI API key. Dazu Account bei OpenAI eröffnen: https://platform.openai.com/
-Dann oben rechts "Profilnamen / Symbol", im Menü "View API Keys" und anschließend "Create new secret key".
+Benötigt wird ein OpenAI API key. Dazu Account bei OpenAI eröffnen: https://platform.openai.com/. Oben rechts auf "Profilnamen / Symbol", im Menü auf "View API Keys" und anschließend "Create new secret key".
 
 ## Installation
 
