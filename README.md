@@ -5,14 +5,21 @@ Linguflex ermöglicht die Interaktion mit Textgeneratoren ("Chat-KIs") in natür
 Es bietet Module zur Verwaltung von Terminkalender und Emails, Abrufen aktueller Infos aus dem Internet ("googlen"), Abspielen von Audio- und Videoinhalten, Smart-Home (Lichtsteuerung), Nachrichten, Wetter und einiges mehr.
 
 ### Voraussetzungen
-- Python 3.9.9
+- Python 3.9.9 (https://www.python.org/downloads/release/python-399/)
 - OpenAI API key  
 Für einen OpenAI API key gegebenenfalls Account bei OpenAI eröffnen (platform.openai.com). Anschließend rechts oben auf den Profilnamen klicken, dann im Menü auf "View API Keys" und anschließend auf "Create new secret key".
 
 ### Installation
+Python installieren. Konsolenfenster öffnen und folgendes eingeben:  
+  
 `pip install linguflex`
 
+### Inbetriebnahme
+Es wird empfohlen, zunächst die Vanilla-Konfiguration zu starten und dann schrittweise weitere Module hinzuzufügen.
+
 ### Start von Linguflex
+Konsolenfenster öffnen und folgendes eingeben:  
+  
 `python linguflex`
 
 ### Konfiguration
@@ -48,7 +55,7 @@ Die Basis-Konfiguration ist in config_basis.txt hinterlegt und erweitert die Van
 `azure_texttospeech`
 `elevenlabs_texttospeech`  
   
-Als nächster Schritt zur Erweiterung der Vanilla-Konfiguration wird empfohlen, eine professionellere Sprachausgabe zu installieren. Dazu wird das Modul system_texttospeech aus der Sektion [modules] der Konfigurationsdatei entfernt und durch eines der oben angegebenen Sprachausgabemodule ersetzt. Edge ist kostenlos und nutzt das Edge-Browserfenster. Azure benötigt einen Microsoft Azure API Key (Account erstellen unter portal.azure.com, dann Ressource erstellen und in der Ressource links auf "Schlüssel und Endpunkt" klicken). Elevenlabs benötigt einen Elevenlabs API Key (Account erstellen unter elevenlabs.io, dann rechts oben auf das Profilbild und auf "Profile" klicken). Die API Keys werden in die config.txt eingetragen oder als Umgebungsvariable definiert (LINGU_AZURE_SPEECH_KEY bzw LINGU_ELEVENLABS_SPEECH_KEY).
+Als nächster Schritt zur Erweiterung der Vanilla-Konfiguration wird empfohlen, eine professionellere Sprachausgabe zu installieren. Dazu wird das Modul system_texttospeech aus der Sektion [modules] der Konfigurationsdatei entfernt und durch eines der oben angegebenen Sprachausgabemodule ersetzt. Edge nutzt das Edge-Browserfenster und bietet kostenlose, hochqualitative Sprachausgabe auf Kosten von Stabilität und Komfort (aufgrund des Browserfensters). Azure ist kostenpflichtig, bietet jedoch einen großzügigen Gratiszeitraum. Hierfür wird ein Microsoft Azure API Key benötigt (Account erstellen unter portal.azure.com, dann Ressource erstellen und in der Ressource links auf "Schlüssel und Endpunkt" klicken). Elevenlabs ist ebenfalls kostenpflichtig mit Gratiszeitraum und benötigt einen Elevenlabs API Key (Account erstellen unter elevenlabs.io, dann rechts oben auf das Profilbild und auf "Profile" klicken). Die API Keys werden in die config.txt eingetragen oder als Umgebungsvariable definiert (LINGU_AZURE_SPEECH_KEY bzw LINGU_ELEVENLABS_SPEECH_KEY).
 
 ### UI-Modul
 `user_interface`  
@@ -65,7 +72,7 @@ Integration mit dem Google Calendar zum Abruf und Eintragen von Terminen. Benöt
   
 Abruf von EMails. IMAP-Server, Benutzername und Passwort werden in die Sektion [email] der Konfigurationsdatei geschrieben, siehe Beispiel in config_basis.txt.
 
-### Informationsabruf-Modul
+### Abruf von Echtzeit-Informationen aus dem Internet
 `google`  
   
 Abruf von Echtzeitinformationen aus dem Internet. Benötigt einen SerpAPI-Key (erhältlich unter serpapi.com), der in die Konfigurationsdatei eingetragen oder in die Umgebungsvariable LINGU_SERP_API_KEY geschrieben wird.
@@ -75,7 +82,7 @@ Abruf von Echtzeitinformationen aus dem Internet. Benötigt einen SerpAPI-Key (e
   
 Dieses Modul kommuniziert mit dem Webserver in modules/basic/webserver, der separat gestartet werden muss. Der Webserver öffnet den Port 5000, der in der lokalen Firewall für TCP-Kommunikation freigegeben werden muss. Der Webclient in modules/basic/webclient kann auf ein Smartphone kopiert werden. IP und Port des Webservers müssen in der index.html eingetragen werden. Hier kann auch zB ein Router auf Port 80 angegeben werden, der eine Weiterleitung auf den lokalen Webserver vornimmt, so dass Linguflex auch unterwegs genutzt werden kann.
 
-### Persönlichkeit-Modul
+### Persönlichkeits-Modul
 `personality`  
   
 Schreibt der Chat-KI einen vorgefertigten Charakter zu, der dann während einer Session gewechselt werden kann.
@@ -84,3 +91,14 @@ Schreibt der Chat-KI einen vorgefertigten Charakter zu, der dann während einer 
 `autoaction`  
   
 Ermöglich der KI, unter allen zur Verfügung stehenden Aktionen und Fähigkeiten selbständig eine passende auszuwählen. um die Anfrage bestmöglich zu erfüllen.
+
+
+## Erweiterungs-Konfiguration
+Die Erweiterungs-Konfiguration ist in config_extended.txt hinterlegt und erweitert die Konfiguration um Audio- und Video-Ausspiel, aktuelle Wetterdaten, Smart-Home Lichtsteuerung, Abruf von Nachrichten, Suche nach Bildern im Internet, Erzeugung von Bildern mit Bildgeneratoren, den Abruf aktueller Investmentdepot-Daten und Spiele.
+
+### Modul für Audio- und Videoausspiel
+`playout`  
+  
+Ermöglich der KI, unter allen zur Verfügung stehenden Aktionen und Fähigkeiten selbständig eine passende auszuwählen. um die Anfrage bestmöglich zu erfüllen.
+
+
