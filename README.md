@@ -36,7 +36,7 @@ In der Sektion [modules] der config-Datei werden die zu ladenden Module angegebe
 `openai_generator`
 `system_texttospeech`  
 
-Diese einfache Grundkonfiguration wird zur ersten Inbetriebnahme empfohlen und ermöglicht lediglich eine grundlegende Sprachkommunikation mit der Chat KI. Sie ist in config_vanilla.txt und initial in der config.txt hinterlegt. 
+Diese einfache Grundkonfiguration wird zur ersten Inbetriebnahme empfohlen und ermöglicht eine grundlegende Sprachkommunikation mit der Chat KI. Sie ist in config_vanilla.txt und initial in der config.txt hinterlegt. 
 
 Zunächst den OpenAI API key in die config.txt in der Sektion [openai_generator] eintragen. 
 ```
@@ -63,7 +63,7 @@ Als nächster Schritt zur Erweiterung der Vanilla-Konfiguration wird empfohlen, 
 ### UI-Modul
 `user_interface`  
   
-Standardmäßig zeigt Linguflex lediglich ein Konsolenfenster mit Loggingmeldungen an. Dieses Modul stellt zusätzlich ein ansprechenderes User Interface bereit zur Anzeige der Kommunikation mit der Chat KI.
+Standardmäßig zeigt Linguflex ein Konsolenfenster mit Loggingmeldungen an. Das UI-Modul stellt zusätzlich ein ansprechenderes User Interface bereit zur Anzeige der Kommunikation mit der Chat KI.
 
 ### Terminkalender-Modul
 `calendar`  
