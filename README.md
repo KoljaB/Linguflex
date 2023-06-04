@@ -10,9 +10,7 @@ Es bietet Module zur Verwaltung von Terminkalender und Emails, Abrufen aktueller
 Für einen OpenAI API key gegebenenfalls Account bei OpenAI eröffnen ([platform.openai.com](https://platform.openai.com/)). Anschließend rechts oben auf den Profilnamen klicken, dann im Menü auf "View API Keys" und anschließend auf "Create new secret key".
 
 ### Installation
-Python installieren. Konsolenfenster öffnen und folgendes eingeben:  
-  
-`pip install linguflex`
+Python installieren, Linguflex Repository lokal kopieren. 
 
 ### Inbetriebnahme
 Es wird empfohlen, zunächst die Vanilla-Konfiguration zu starten und dann schrittweise weitere Module hinzuzufügen.
