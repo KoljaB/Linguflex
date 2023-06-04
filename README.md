@@ -4,6 +4,9 @@
 Linguflex ermöglicht die Interaktion mit Textgeneratoren ("Chat-KIs") in natürlicher Sprache. 
 Es bietet Module zur Verwaltung von Terminkalender und Emails, Abrufen aktueller Infos aus dem Internet ("googlen"), Abspielen von Audio- und Videoinhalten, Smart-Home (Lichtsteuerung), Nachrichten, Wetter und einiges mehr.
 
+### Release-Stand
+Die aktuelle Linguflex-Version umfasst die Vanilla-Konfiguration. In den nächsten Tagen werden schrittweise die Module zunächst für die Basis- und dann für die Komplett-Konfiguration veröffentlicht.
+
 ### Voraussetzungen
 - Python 3.9.9 (https://www.python.org/downloads/release/python-399/)
 - OpenAI API key  
