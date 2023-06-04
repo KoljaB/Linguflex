@@ -23,7 +23,7 @@ Konsolenfenster öffnen und folgendes eingeben:
 `python linguflex`
 
 ### Konfiguration
-Textdatei mit den zu ladenden Modulen und deren Konfigurationseinstellungen. Es wird empfohlen, mit der einfachen Vanilla-Konfiguration zu beginnen und dann schrittweise Module zu ergänzen. Linguflex lädt die in der config.txt hinterlegte Konfiguration, es sei denn es wird per Kommandozeilenparameter eine andere übergeben.
+Textdatei mit den zu ladenden Modulen und deren Konfigurationseinstellungen. Es wird empfohlen, mit der einfachen Vanilla-Konfiguration zu beginnen und dann schrittweise Module zu ergänzen. Zusätzlich zur Vanilla-Konfiguration gibt es eine Basic-Konfiguration mit weiteren grundlegenden Modulen sowie eine Komplett-Konfiguration mit allen zur Verfügung stehenden Modulen. Es wird die in der Datei config.txt hinterlegte Konfiguration geladen oder die optional per Kommandozeilenparameter übergebene.
 
 ### Module
 In der Sektion [modules] der config-Datei werden die zu ladenden Module angegeben. Linguflex lädt und startet alle Module in der hier angegebenen Reihenfolge.
@@ -35,7 +35,7 @@ In der Sektion [modules] der config-Datei werden die zu ladenden Module angegebe
 `openai_generator`
 `system_texttospeech`  
 
-Diese einfache Grundkonfiguration ermöglicht grundlegende Sprachkommunikation mit der Chat KI. Sie ist in config_vanilla.txt und initial in der config.txt hinterlegt.
+Diese einfache Grundkonfiguration wird zur ersten Inbetriebnahme empfohlen und ermöglicht lediglich eine grundlegende Sprachkommunikation mit der Chat KI. Sie ist in config_vanilla.txt und initial in der config.txt hinterlegt. 
 
 Zunächst den OpenAI API key in die config.txt in der Sektion [openai_generator] eintragen. 
 ```
@@ -50,7 +50,7 @@ Wenn GPT 4 statt GTP 3.5 Turbo verwendet werden soll, den Wert des Parameters gp
   
   
 ## Basis-Konfiguration
-Die Basis-Konfiguration ist in config_basis.txt hinterlegt und erweitert die Vanilla-Konfiguration um ein fortschrittlicheres Text-To-Speech Modul, ein User Interface, Terminkalender-Integration, EMail-Support, den Abruf von Echtzeit-Informationen mit Google, ein Webservermodul zur Bedienung mit Smartphones, ein Modul zur Steuerung des Charakters / der Persönlichkeit der Chat-KI und ein Modul zur selbständigen automatischen Auswahl von durch Modulen bereitgestellten Aktionen durch die KI.
+Die Basis-Konfiguration liegt in config_basic.txt und erweitert Vanilla um ausgereiftere Text-To-Speech Module, ein User Interface, Terminkalender-Integration, EMail-Support, den Abruf von Echtzeit-Informationen mit Google, ein Webservermodul zur Bedienung mit Smartphones, ein Modul zur Steuerung des Charakters / der Persönlichkeit der Chat-KI und ein Modul zur selbständigen automatischen Auswahl von durch andere Module bereitgestellten Aktionen durch die KI. 
 
 ### Text-To-Speech-Module
 `edge_texttospeechy`
@@ -93,10 +93,9 @@ Schreibt der Chat-KI einen vorgefertigten Charakter zu, der dann während einer 
 `autoaction`  
   
 Ermöglich der KI, unter allen zur Verfügung stehenden Aktionen und Fähigkeiten selbständig eine passende auszuwählen. um die Anfrage bestmöglich zu erfüllen.
-  
-  
-## Erweiterungs-Konfiguration
-Die Erweiterungs-Konfiguration ist in config_extended.txt hinterlegt und erweitert die Konfiguration um Audio- und Video-Ausspiel, aktuelle Wetterdaten, Smart-Home Lichtsteuerung, Abruf von Nachrichten, Suche nach Bildern im Internet, Erzeugung von Bildern mit Bildgeneratoren, den Abruf aktueller Investmentdepot-Daten und Spiele.
+    
+## Komplett-Konfiguration
+Die Komplett-Konfiguration ist in config_full.txt hinterlegt und beinhaltet zusätzlich zur Basic-Konfiguration noch Audio- und Video-Ausspiel, aktuelle Wetterdaten, Smart-Home Lichtsteuerung, Abruf von Nachrichten, Suche nach Bildern im Internet, Erzeugung von Bildern mit Bildgeneratoren, den Abruf aktueller Investmentdepot-Daten und Spiele.
 
 ### Modul für Audio- und Videoausspiel
 `playout`  
@@ -128,4 +127,12 @@ Sucht im Internet nach einem Bild und zeigt dieses an.
   
 Erzeugt ein Bild mit dem DALL-E Bildgenerator unter Nutzung der OpenAI API und zeigt dieses an. Zu jeder Nutzung fallen Kosten an ([openai.com/pricing](https://openai.com/pricing)).
 
+### Depot-Modul
+`depot`  
+  
+Abruf und Zusammenfassung von Investmentdepot-Daten. Das Investment-Depot wird als comdirect-Musterdepot angelegt und der externe Link dazu ("Aktionen gesamtes Musterdepot" => "Freunden zeigen") in der Konfigurationsdatei abgelegt.
 
+### Spiele-Modul
+`games`  
+  
+Präsentiert eine Reihe von Emojis, die ein "zufällig" ausgewähltes Werk (Film, Buch oder Serie) repräsentieren, welches dann erraten werden muss.
