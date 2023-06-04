@@ -136,4 +136,4 @@ Abruf und Zusammenfassung von Investmentdepot-Daten. Das Investment-Depot wird a
 ### Spiele-Modul
 `games`  
   
-Präsentiert eine Reihe von Emojis, die ein "zufällig" ausgewähltes Werk (Film, Buch oder Serie) repräsentieren, welches dann erraten werden muss.
+Zeigt eine Auswahl von Emojis, die ein "zufällig" ausgewähltes Werk (Film, Buch oder Serie) repräsentieren, welches daraufhin erraten werden muss.
