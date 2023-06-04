@@ -1,0 +1,32 @@
+[system]
+debuglevel=3
+
+# modules to load
+[modules]
+system_texttospeech
+openai_generator
+whisper_speechtotext
+microphone_recorder
+
+[microphone_recorder]
+debug_show_volume=False	
+volume_start_recording=5
+volume_stop_recording=5
+sampling_rate=44100
+
+[whisper_speechtotext]
+model_size=medium
+language=de
+
+[openai_generator]
+openai_api_key=ENTER YOUR OPENAI API-KEY HERE
+default_temperature=0.5
+init_prompt=
+gpt_model=gpt-3.5-turbo
+history_max_entries = 14
+history_max_chars_per_message = 800
+history_max_chars_total = 3000
+api_error_message=Fehler beim Aufruf der GPT API.
+
+[system_texttospeech]
+voice=Microsoft Stefan - German (Germany)
