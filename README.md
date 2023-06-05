@@ -68,7 +68,10 @@ Standardmäßig zeigt Linguflex ein Konsolenfenster mit Loggingmeldungen an. Das
 ### Terminkalender-Modul
 `calendar`  
   
-Integration mit dem Google Calendar zum Abruf und Eintragen von Terminen. Benötigt eine Datei credentials.json im Ausführungsverzeichnis von Linguflex. Dazu in [console.cloud.google.com](https://console.cloud.google.com/) ein Projekt anlegen, und unter "APIs und Dienste" links auf "Anmeldedaten". Dann auf "Anmeldedaten erstellen" und eine neue OAuth-ClientId erstellen. Diese wird anschließend unter OAuth 2.0-Client-IDs gelistet, dort ist ganz rechts ein Pfeil nach unten. Dort draufklicken und dann auf "JSON herunterladen". Außerdem erfordert das Modul, dass der Benutzer bei der ersten Ausführung auf einem Gerät seine Google-Anmeldeinformationen eingibt. Die Anmeldeinformationen werden dann in einer Datei token.pickle gespeichert, um zukünftige Anmeldungen zu vermeiden.
+Integration mit dem Google Calendar zum Abruf und Eintragen von Terminen. 
+Benötigt die Datei credentials.json im Ausführungsverzeichnis von Linguflex. Dazu in [console.cloud.google.com](https://console.cloud.google.com/) ein Projekt anlegen, und unter "APIs und Dienste" links auf "Anmeldedaten". Dann auf "Anmeldedaten erstellen" und eine neue OAuth-ClientId erstellen. Diese wird anschließend unter OAuth 2.0-Client-IDs gelistet, dort ist ganz rechts ein Pfeil nach unten. Dort draufklicken und dann auf "JSON herunterladen". 
+Fehlt die credentials.json wird die Logmeldung ""[calendar] ERROR:[Errno 2] No such file or directory: 'credentials.json'" ausgegeben. 
+Bei der ersten Ausführung auf einem Gerät wird der Benutzer weiterhin aufgefordert, seine Google-Anmeldeinformationen einzugeben. Diese Informationen werden dann in einer Datei token.pickle gespeichert, um zukünftige Anmeldungen zu vermeiden. 
 
 ### EMail-Modul
 `email`  
