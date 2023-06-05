@@ -1,11 +1,20 @@
 # Linguflex
 
-### Worum geht's?
 Linguflex ermöglicht die Interaktion mit Textgeneratoren ("Chat-KIs") in natürlicher Sprache. 
-Es bietet Module zur Verwaltung von Terminkalender und Emails, Abrufen aktueller Infos aus dem Internet ("googlen"), Abspielen von Audio- und Videoinhalten, Smart-Home (Lichtsteuerung), Nachrichten, Wetter und einiges mehr.
+Es bietet Module zur Verwaltung von Terminkalender und Emails, Abruf von Echtzeit-Informationen aus dem Internet ("googlen"), Abspielen von Audio- und Videoinhalten, Smart-Home-Steuerung (Licht), Nachrichten, Wetter uvm. Linguflex wird laufend erweitert.
 
 ### Release-Stand
-Die aktuelle Linguflex-Version umfasst die Vanilla-Konfiguration. In den nächsten Tagen werden schrittweise die Module zunächst für die Basis- und dann für die Komplett-Konfiguration veröffentlicht.
+- Vanilla-Konfiguration:  
+`microphone_recorder`  
+`whisper_speechtotext`  
+`openai_generator`  
+`system_texttospeech`  
+- Basis-Konfiguration:  
+`google_calendar`  
+
+. In den nächsten Tagen werden schrittweise die Module zunächst für die Basis- und dann für die Komplett-Konfiguration veröffentlicht.
+
+
 
 ### Voraussetzungen
 - Python 3.9.9 (https://www.python.org/downloads/release/python-399/)
