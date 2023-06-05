@@ -33,7 +33,13 @@ Konsolenfenster öffnen und folgendes eingeben:
 `python linguflex`
 
 ### Konfiguration
-Textdatei mit den zu ladenden Modulen und deren Konfigurationseinstellungen. Es wird empfohlen, mit der einfachen Vanilla-Konfiguration zu beginnen und dann schrittweise Module zu ergänzen. Zusätzlich zur Vanilla-Konfiguration gibt es eine Basic-Konfiguration mit weiteren grundlegenden Modulen sowie eine Komplett-Konfiguration mit allen zur Verfügung stehenden Modulen. Es wird die in der Datei config.txt hinterlegte Konfiguration geladen oder die optional per Kommandozeilenparameter übergebene.
+Eine Linguflex-Konfiguration ist eine Textdatei, welche die zu ladenden Modulen und deren Einstellungen beschreibt. Standardmäßig lädt Linguflex die Konfiguration, die in der Datei config.txt hinterlegt ist. Optional kann der Pfad zu einer anderen Konfigurationsdatei per Kommandozeilenparameter übergeben werden.
+Es werden drei Beispielkonfigurationen mitgeliefert:  
+1. Vanilla (Sprachkommunikation mit dem GPT-Modell)
+2. Basis (inkl grundlegende Erweiterungsmodule)
+3. Komplett (alle verfügbaren Module)
+
+Es wird empfohlen, mit der einfachen Vanilla-Konfiguration zu beginnen und dann sukzessive präferierte Module zu ergänzen, da deren Inbetriebnahme oft mit einigen zusätzlichen Schritten verbunden ist. Wie die einzelnen Module dann in der config.txt von Vanilla angelegt und konfiguriert werden, kann den Dateien config_basic.txt und config_full.txt entnommen werden.
 
 ### Module
 In der Sektion [modules] der config-Datei werden die zu ladenden Module angegeben. Linguflex lädt und startet alle Module in der hier angegebenen Reihenfolge.
