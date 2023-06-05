@@ -66,7 +66,7 @@ Als nächster Schritt zur Erweiterung der Vanilla-Konfiguration wird empfohlen, 
 Standardmäßig zeigt Linguflex ein Konsolenfenster mit Loggingmeldungen an. Das UI-Modul stellt zusätzlich ein ansprechenderes User Interface bereit zur Anzeige der Kommunikation mit der Chat KI.
 
 ### Terminkalender-Modul
-`calendar`  
+`google_calendar`  
   
 Integration mit dem Google Calendar zum Abruf und Eintragen von Terminen. 
 Benötigt die Datei credentials.json im Ausführungsverzeichnis von Linguflex. Dazu in [console.cloud.google.com](https://console.cloud.google.com/) ein Projekt anlegen, und unter "APIs und Dienste" links auf "Anmeldedaten". Dann auf "Anmeldedaten erstellen" und eine neue OAuth-ClientId erstellen. Diese wird anschließend unter OAuth 2.0-Client-IDs gelistet, dort ist ganz rechts ein Pfeil nach unten. Dort draufklicken und dann auf "JSON herunterladen". 
@@ -74,7 +74,7 @@ Fehlt die credentials.json wird die Logmeldung ""[calendar] ERROR:[Errno 2] No s
 Bei der ersten Ausführung auf einem Gerät wird der Benutzer weiterhin aufgefordert, seine Google-Anmeldeinformationen einzugeben. Diese Informationen werden dann in einer Datei token.pickle gespeichert, um zukünftige Anmeldungen zu vermeiden. 
 
 ### EMail-Modul
-`email`  
+`email_imap`  
   
 Abruf von EMails. IMAP-Server, Benutzername und Passwort werden in die Sektion [email] der Konfigurationsdatei geschrieben, siehe Beispiel in config_basis.txt.
 
