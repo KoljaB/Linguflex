@@ -36,7 +36,7 @@ Es werden drei Beispielkonfigurationen mitgeliefert:
 2. Basis (inkl grundlegende Erweiterungsmodule)
 3. Komplett (alle verfügbaren Module)
 
-Es wird empfohlen, mit der einfachen Vanilla-Konfiguration zu beginnen und dann sukzessive präferierte Module zu ergänzen, da deren Inbetriebnahme oft mit einigen zusätzlichen Schritten verbunden ist. Wie die einzelnen Module dann in der config.txt von Vanilla angelegt und konfiguriert werden, kann den Dateien config_basic.txt und config_full.txt entnommen werden.
+Es wird empfohlen, mit der einfachen Vanilla-Konfiguration zu beginnen und dann sukzessive präferierte Module zu ergänzen, da deren Inbetriebnahme oft mit einigen zusätzlichen Schritten verbunden ist. Wie ein einzelnes Modul in der config.txt angelegt und konfiguriert wird kann den Dateien config_basic.txt und config_full.txt entnommen werden.
 
 ### Module
 In der Sektion [modules] der config-Datei werden die zu ladenden Module angegeben. Linguflex lädt und startet alle Module in der hier angegebenen Reihenfolge.
