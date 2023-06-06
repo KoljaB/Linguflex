@@ -11,6 +11,9 @@ Es bietet Module zur Verwaltung von Terminkalender und Emails, Abruf von Echtzei
 `system_texttospeech`  
 - Basis-Konfiguration:  
 `user_interface`  
+`edge_texttospeech`
+`azure_texttospeech`
+`elevenlabs_texttospeech`  
 `google_calendar`  
 `email_imap`  
 
@@ -65,17 +68,17 @@ Wenn GPT 4 statt GTP 3.5 Turbo verwendet werden soll, den Wert des Parameters gp
 ## Basis-Konfiguration
 Die Basis-Konfiguration liegt in config_basic.txt und erweitert Vanilla um ausgereiftere Text-To-Speech Module, ein User Interface, Terminkalender-Integration, EMail-Support, den Abruf von Echtzeit-Informationen mit Google, ein Webservermodul zur Bedienung mit Smartphones, ein Modul zur Steuerung des Charakters / der Persönlichkeit der Chat-KI und ein Modul zur selbständigen automatischen Auswahl von durch andere Module bereitgestellten Aktionen durch die KI. 
 
-### Text-To-Speech-Module
-`edge_texttospeechy`
-`azure_texttospeech`
-`elevenlabs_texttospeech`  
-  
-Als nächster Schritt zur Erweiterung der Vanilla-Konfiguration wird empfohlen, eine professionellere Sprachausgabe zu installieren. Dazu wird das Modul system_texttospeech aus der Sektion [modules] der Konfigurationsdatei entfernt und durch eines der oben angegebenen Sprachausgabemodule ersetzt. Edge nutzt das Edge-Browserfenster und bietet kostenlose, hochqualitative Sprachausgabe auf Kosten von Stabilität und Komfort (aufgrund des Browserfensters). Azure ist kostenpflichtig, bietet jedoch einen großzügigen Gratiszeitraum. Hierfür wird ein Microsoft Azure API Key benötigt (Account erstellen unter [portal.azure.com](https://portal.azure.com/), dann Ressource erstellen und in der Ressource links auf "Schlüssel und Endpunkt" klicken). Elevenlabs ist ebenfalls kostenpflichtig mit Gratiszeitraum und benötigt einen Elevenlabs API Key (Account erstellen unter [elevenlabs.io](https://beta.elevenlabs.io/), dann rechts oben auf das Profilbild und auf "Profile" klicken). Die API Keys werden in die config.txt eingetragen oder als Umgebungsvariable definiert (LINGU_AZURE_SPEECH_KEY bzw LINGU_ELEVENLABS_SPEECH_KEY).
-
 ### UI-Modul
 `user_interface`  
   
 Standardmäßig zeigt Linguflex ein Konsolenfenster mit Loggingmeldungen an. Das UI-Modul stellt zusätzlich ein ansprechenderes User Interface bereit zur Anzeige der Kommunikation mit der Chat KI. Breite und Höhe des Fensters können in der config.txt eingestellt werden (siehe Beispielkonfiguration in config_basic.txt).
+
+### Text-To-Speech-Module
+`edge_texttospeech`
+`azure_texttospeech`
+`elevenlabs_texttospeech`  
+  
+Liefert eine professionellere Sprachausgabe. Dazu wird das Modul Sprachausgabemodul "system_texttospeech" aus der Sektion [modules] der Konfigurationsdatei entfernt und durch eines der oben angegebenen Sprachausgabemodule ersetzt. Das Modul edge_texttospeech nutzt zur Sprachausgabe das Edge-Browserfenster und bietet so kostenlose, hochqualitative Sprachausgabe mit reduzierter Stabilität und Komfort (aufgrund des Browserfensters). Azure ist kostenpflichtig, bietet jedoch einen großzügigen Gratiszeitraum. Hierfür wird ein Microsoft Azure API Key benötigt (Account erstellen unter [portal.azure.com](https://portal.azure.com/), dann Ressource erstellen und in der Ressource links auf "Schlüssel und Endpunkt" klicken). Elevenlabs ist ebenfalls kostenpflichtig mit Gratiszeitraum und benötigt einen Elevenlabs API Key (Account erstellen unter [elevenlabs.io](https://beta.elevenlabs.io/), dann rechts oben auf das Profilbild und auf "Profile" klicken). Die API Keys werden in die config.txt eingetragen oder als Umgebungsvariable definiert (LINGU_AZURE_SPEECH_KEY bzw LINGU_ELEVENLABS_SPEECH_KEY).
 
 ### Terminkalender-Modul
 `google_calendar`  
