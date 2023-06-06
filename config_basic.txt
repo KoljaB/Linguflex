@@ -3,11 +3,13 @@ debuglevel=3
 
 # modules to load
 [modules]
+user_interface
 system_texttospeech
 openai_generator
 whisper_speechtotext
 microphone_recorder
 google_calendar
+email_imap
 
 [microphone_recorder]
 debug_show_volume=False	
@@ -31,3 +33,13 @@ api_error_message=Fehler beim Aufruf der GPT API.
 
 [system_texttospeech]
 voice=Microsoft Stefan - German (Germany)
+
+[user_interface]
+window_startup_width=450
+window_startup_height=150
+window_maximum_height=400
+
+[email_imap]
+server=ENTER YOUR IMAP EMAIL SERVER HERE (for example: imap.web.de)
+username=ENTER YOUR MAIL LOGIN USERNAME HERE
+password=ENTER YOUR MAIL PASSWORD HERE
