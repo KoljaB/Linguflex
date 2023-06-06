@@ -4,7 +4,7 @@ debuglevel=3
 # modules to load
 [modules]
 user_interface
-system_texttospeech
+edge_texttospeech
 openai_generator
 whisper_speechtotext
 microphone_recorder
@@ -43,3 +43,21 @@ window_maximum_height=400
 server=ENTER YOUR IMAP EMAIL SERVER HERE (for example: imap.web.de)
 username=ENTER YOUR MAIL LOGIN USERNAME HERE
 password=ENTER YOUR MAIL PASSWORD HERE
+
+[edge_texttospeech]
+launch_wait_time_before_tts_init=0.75
+minimize_window=False
+tts_wait_time_before_minimize_init=0.75
+max_wait_time_for_close_windows=1
+
+[azure_texttospeech]
+azure_speech_api_key=ENTER YOUR AZURE SPEECH API-KEY HERE
+azure_speech_region=ENTER YOUR AZURE REGION HERE (for example germanywestcentral)
+voice=de-DE-AmalaNeural
+language=de-DE
+rate_percent=10
+pitch_percent=0
+
+[elevenlabs_texttospeech]
+elevenlabs_speech_api_key=ENTER YOUR ELEVENLABS API-KEY HERE
+voice=Elli
