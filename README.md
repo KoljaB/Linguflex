@@ -10,11 +10,11 @@ Es bietet Module zur Verwaltung von Terminkalender und Emails, Abruf von Echtzei
 `openai_generator`  
 `system_texttospeech`  
 - Basis-Konfiguration:  
+`user_interface`  
 `google_calendar`  
+`email_imap`  
 
-In den nächsten Tagen werden schrittweise die Module zunächst für die Basis- und dann für die Komplett-Konfiguration veröffentlicht.
-
-
+In den nächsten Tagen werden schrittweise zunächst alle Module der Basis- und anschließend die der Komplett-Konfiguration veröffentlicht.
 
 ### Voraussetzungen
 - Python 3.9.9 (https://www.python.org/downloads/release/python-399/)
@@ -36,7 +36,7 @@ Es werden drei Beispielkonfigurationen mitgeliefert:
 2. Basis (inkl grundlegende Erweiterungsmodule)
 3. Komplett (alle verfügbaren Module)
 
-Es wird empfohlen, mit der einfachen Vanilla-Konfiguration zu beginnen und dann sukzessive präferierte Module zu ergänzen, da deren Inbetriebnahme oft mit einigen zusätzlichen Schritten verbunden ist. Wie ein einzelnes Modul in der config.txt angelegt und konfiguriert wird kann den Dateien config_basic.txt und config_full.txt entnommen werden.
+Es wird empfohlen, mit der einfachen Vanilla-Konfiguration zu beginnen und dann sukzessive präferierte Module zu ergänzen, da deren Inbetriebnahme oft mit zusätzlichen Schritten verbunden ist. Wie ein einzelnes Modul in der config.txt angelegt und konfiguriert wird kann den Dateien config_basic.txt oder config_full.txt entnommen werden.
 
 ### Module
 In der Sektion [modules] der config-Datei werden die zu ladenden Module angegeben. Linguflex lädt und startet alle Module in der hier angegebenen Reihenfolge.
@@ -75,7 +75,7 @@ Als nächster Schritt zur Erweiterung der Vanilla-Konfiguration wird empfohlen, 
 ### UI-Modul
 `user_interface`  
   
-Standardmäßig zeigt Linguflex ein Konsolenfenster mit Loggingmeldungen an. Das UI-Modul stellt zusätzlich ein ansprechenderes User Interface bereit zur Anzeige der Kommunikation mit der Chat KI.
+Standardmäßig zeigt Linguflex ein Konsolenfenster mit Loggingmeldungen an. Das UI-Modul stellt zusätzlich ein ansprechenderes User Interface bereit zur Anzeige der Kommunikation mit der Chat KI. Breite und Höhe des Fensters können in der config.txt eingestellt werden (siehe Beispielkonfiguration in config_basic.txt).
 
 ### Terminkalender-Modul
 `google_calendar`  
@@ -88,7 +88,7 @@ Bei der ersten Ausführung auf einem Gerät wird der Benutzer weiterhin aufgefor
 ### EMail-Modul
 `email_imap`  
   
-Abruf von EMails. IMAP-Server, Benutzername und Passwort werden in die Sektion [email] der Konfigurationsdatei geschrieben, siehe Beispiel in config_basis.txt.
+Abruf von EMails. IMAP-Server, Benutzername und Passwort werden in die Sektion [email_imap] der Konfigurationsdatei geschrieben, siehe Beispiel in config_basis.txt.
 
 ### Abruf von Echtzeit-Informationen aus dem Internet
 `google`  
