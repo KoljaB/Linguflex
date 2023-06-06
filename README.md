@@ -12,7 +12,7 @@ Es bietet Module zur Verwaltung von Terminkalender und Emails, Abruf von Echtzei
 - Basis-Konfiguration:  
 `google_calendar`  
 
-. In den nächsten Tagen werden schrittweise die Module zunächst für die Basis- und dann für die Komplett-Konfiguration veröffentlicht.
+In den nächsten Tagen werden schrittweise die Module zunächst für die Basis- und dann für die Komplett-Konfiguration veröffentlicht.
 
 
 
