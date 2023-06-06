@@ -1,7 +1,10 @@
 # Linguflex
 
-Linguflex ermöglicht die Interaktion mit Textgeneratoren ("Chat-KIs") in natürlicher Sprache. 
-Es bietet Module zur Verwaltung von Terminkalender und Emails, Abruf von Echtzeit-Informationen aus dem Internet ("googlen"), Abspielen von Audio- und Videoinhalten, Smart-Home-Steuerung (Licht), Nachrichten, Wetter uvm. Linguflex wird laufend erweitert.
+Linguflex ist eine Plattform, welche die Interaktion mit Textgeneratoren ("Chat-KIs") in natürlicher Sprache ermöglich. Die modulare Struktur erlaubt die Anpassung jeder Implementierung auf die speziellen Anforderungen der jeweiligen Anwendung.  
+  
+Es existieren bereits zahlreiche Module, die unterschiedliche Funktionen bereitstellen. Dazu gehören die Verwaltung von Terminkalendern und E-Mails, der Abruf von Echtzeitinformationen aus dem Internet ("googlen"), das Abspielen von Audio- und Videoinhalten, die Steuerung von Smart-Home-Geräten (wie Licht), sowie Module für Nachrichten, Wetterinformationen und mehr.  
+  
+Trotz dieser Vielfalt an Funktionen wurde Linguflex primär mit einem Fokus auf Erweiterbarkeit entwickelt. Dies zeigt sich in der Kompaktheit des Modul-Codes und der Möglichkeit, auf Basis von Linguflex sehr einfach eigene Anwendungen auf Basis von Textgeneratoren zu entwickeln.
 
 ### Release-Stand
 - Vanilla-Konfiguration:  
