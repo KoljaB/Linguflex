@@ -101,7 +101,7 @@ Abruf von Echtzeitinformationen aus dem Internet. Benötigt einen SerpAPI-Key (e
 ### Webserver-Modul
 `webserver`  
   
-Dieses Modul kommuniziert mit dem Webserver in modules/basic/webserver, der separat gestartet werden muss. Der Webserver öffnet den Port 5000, der in der lokalen Firewall für TCP-Kommunikation freigegeben werden muss. Der Webclient in modules/basic/webclient kann auf ein Smartphone kopiert werden. IP und Port des Webservers müssen in der index.html eingetragen werden. Hier kann auch zB ein Router auf Port 80 angegeben werden, der eine Weiterleitung auf den lokalen Webserver vornimmt, so dass Linguflex auch unterwegs genutzt werden kann.
+Dieses Modul kommuniziert mit dem Webserver in modules/basic/webserver, der separat gestartet wird. Der Webserver öffnet den Port 5000, der in der lokalen Firewall für TCP-Kommunikation freigegeben wird. Der Webclient in modules/basic/webclient kann auf ein Smartphone kopiert werden. IP und Port des Webservers müssen in der index.html eingetragen werden. Hier kann auch zB ein Router auf Port 80 angegeben werden, der eine Weiterleitung auf den lokalen Webserver vornimmt, so dass Linguflex auch unterwegs genutzt werden kann.
 
 ### Persönlichkeits-Modul
 `personality`  
