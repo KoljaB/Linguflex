@@ -26,9 +26,16 @@ In den nächsten Tagen werden schrittweise zunächst alle Module der Basis- und 
 Für einen OpenAI API key gegebenenfalls Account bei OpenAI eröffnen ([platform.openai.com](https://platform.openai.com/)). Anschließend rechts oben auf den Profilnamen klicken, dann im Menü auf "View API Keys" und anschließend auf "Create new secret key".
 
 ### Installation
-Python installieren, Linguflex Repository lokal kopieren. 
-Eingabe von 'pip install -r requirements.txt' installiert alle notwendigen Bibliotheken für Vanilla, Eingabe von
-'pip install -r requirements_basic.txt' für die Basis-Installation.
+Python installieren, Linguflex Repository lokal kopieren. Anschließend im Linguflex-Ordner zur Installation der jeweils notwendigen Bibliotheken einen der folgenden Befehle ausführen:  
+  
+Vanilla-Installation
+```
+pip install -r requirements.txt
+```
+Basis-Installation
+```
+pip install -r requirements_basic.txt
+```
 
 ### Start von Linguflex
 Konsolenfenster öffnen und folgendes eingeben:  
