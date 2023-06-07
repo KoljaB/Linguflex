@@ -104,7 +104,7 @@ Bei der ersten Ausführung auf einem Gerät wird der Benutzer weiterhin aufgefor
 Abruf von EMails. IMAP-Server, Benutzername und Passwort werden in die Sektion [email_imap] der Konfigurationsdatei geschrieben, siehe Beispiel in config_basis.txt.
 
 ### Abruf von Echtzeit-Informationen aus dem Internet
-`google`  
+`google_information`  
   
 Abruf von Echtzeitinformationen aus dem Internet. Benötigt einen SerpAPI-Key (erhältlich unter [serpapi.com](https://serpapi.com/)), der in die Konfigurationsdatei eingetragen oder in die Umgebungsvariable LINGU_SERP_API_KEY geschrieben wird.
 
