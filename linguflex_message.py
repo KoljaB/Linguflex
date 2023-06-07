@@ -5,7 +5,8 @@ class LinguFlexMessage():
         self.audio = None # path to audio data
         self.input = None # input text
         self.original_input = None # needed to smuggle through user input in chained messages by modules
-        self.skip_input = False # request from module to not process next input (LinguFlexMessages raised by modules would not want this)
+        self.no_input_processing = False # request from module to not process next input (LinguFlexMessages raised by modules would not want this)
+        self.skip_input = False 
         self.user_id = DEFAULT_USER # user identification for client-individual history etc
         self.prompt = '' # system prompt to instruct llm
         self.llm = '' # preferred llm model to use

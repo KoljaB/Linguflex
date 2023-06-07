@@ -6,6 +6,8 @@ import inspect
 import sys
 
 sys.path.insert(0, 'modules')
+sys.path.insert(0, 'modules/basic')
+sys.path.insert(0, 'modules/extended')
 
 from linguflex_log import (
     log,

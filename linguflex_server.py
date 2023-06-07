@@ -88,15 +88,6 @@ class ActionHandler:
                     else:
                         log(DEBUG_LEVEL_MAX, f'  no action keys defined in [{module_name}]')
 
-    def get_full_action_string(self, message: LinguFlexMessage) -> str:
-        json_action_row = ''
-        for module_name, module_instance in self.special_modules[JsonActionProviderModule_IF].items():
-            for action in module_instance.actions:
-                if not action['react_to'] is None and len(action['react_to']) > 0 and 'keys' in action and 'description' in action and 'key_description' in action and 'value_description' in action and 'instructions' in action:
-                    json_action_row += ' - {}: Schlüssel {}, Wert {}. {} Beispiel User: \'{}\'. Assistant: \'{}\'\n'.format(action['description'], action['key_description'], action['value_description'], action['instructions'], action['example_user'], action['example_assistant'])
-        if not json_action_row is None and len(json_action_row) > 0:
-            return '\n' + ACTION_FINAL_TEXT + '\n' + json_action_row
-
 class OutputHandler:
     def __init__(self, all_modules, special_modules):
         self.all_modules = all_modules
@@ -151,7 +142,8 @@ class MessageHandler:
 
     def process_message(self, message: LinguFlexMessage) -> LinguFlexMessage:
         self.input_handler.create_input(message)
-        self.process_input(message)
+        if not message.no_input_processing: self.process_input(message)
+        message.prompt += message.prompt_end
         self.output_handler.create_output(message)
         self.output_handler.process_output(message)
         self.finish_message(message)
@@ -187,6 +179,7 @@ class MessageHandler:
                                 log(DEBUG_LEVEL_MID,f'  {module_name} ignoring module action')
                             else:
                                 if found_keywords:
+                                    log(DEBUG_LEVEL_MAX, f'  [{module_name}] input: {input_lower}')
                                     log(DEBUG_LEVEL_MAX, f'  [{module_name}] allows action "{action["description"]}" ({found_keywords} detected)')
                                 else:
                                     log(DEBUG_LEVEL_MAX, f'  [{module_name}] allows action "{action["description"]}" (action raise requested)')
@@ -194,7 +187,6 @@ class MessageHandler:
                                 #json_action_row += ' - {}: Schlüssel {}, Wert {}. {} Beispiel User: \'{}\'.  Assistant: \'{}\''.format(action['description'], action['key_description'], action['value_description'], action['instructions'], action['example_user'], action['example_assistant'])
             if not json_action_row is None and len(json_action_row) > 0:
                 message.prompt += '\n' + ACTION_FINAL_TEXT + '\n' + json_action_row
-            message.prompt += message.prompt_end
 
     def finish_message(self, message: LinguFlexMessage) -> None:
         if message.output and len(message.output) > 0:        
@@ -232,6 +224,7 @@ class AllModulesHandler:
 
 class LinguFlexServer:
     def __init__(self, all_modules, special_modules) -> None:
+        self.special_modules = special_modules
         self.message_handler = MessageHandler(all_modules, special_modules)
         self.all_modules_handler = AllModulesHandler(all_modules)
 
@@ -246,3 +239,12 @@ class LinguFlexServer:
 
     def shutdown(self) -> None:
         self.all_modules_handler.shutdown()
+
+    def get_full_action_string(self, message: LinguFlexMessage) -> str:
+        json_action_row = ''
+        for module_name, module_instance in self.special_modules[JsonActionProviderModule_IF].items():
+            for action in module_instance.actions:
+                if not action['react_to'] is None and len(action['react_to']) > 0 and 'keys' in action and 'description' in action and 'key_description' in action and 'value_description' in action and 'instructions' in action:
+                    json_action_row += ' - {}: Schlüssel {}, Wert {}. {} Beispiel User: \'{}\'. Assistant: \'{}\'\n'.format(action['description'], action['key_description'], action['value_description'], action['instructions'], action['example_user'], action['example_assistant'])
+        if not json_action_row is None and len(json_action_row) > 0:
+            return json_action_row

@@ -36,13 +36,34 @@ def get_elapsed_time() -> str:
     if len(minutes) < 2: minutes = ' ' + minutes
     return f"{minutes}:{seconds:04.1f}"
 
-def chunk_text(text: str, 
-        chunk_size: int) -> List:
+def trim(text: str) -> str:
+    # Remove leading spaces and line feeds
+    text = text.strip()
+    while text is not None and len(text) > 0 and (text[0] == " " or text[0] == "\n" or text[0] == "\r"):
+        text = text[1:]        
+    # # Remove trailing spaces and line feeds
+    while text is not None and len(text) > 0 and (text[-1] == " " or text[-1] == "\n" or text[-1] == "\r"):
+        text = text[:-1]
+    return text
+
+def chunk_text(text: str, chunk_size: int) -> List:
     chunks = []
-    for i in range(0, len(text), chunk_size):
-        chunk = text[i:i + chunk_size]
-        chunks.append(chunk)
-    return chunks
+    lines = text.split('\n')  # split text into lines
+    for line in lines:
+        line = trim(line)
+        for i in range(0, len(line), chunk_size):
+            chunk = line[i:i + chunk_size]
+            chunks.append(chunk)
+        chunks.append('\n')  # append a newline to preserve original line breaks
+    return chunks[:-1]
+
+# def chunk_text(text: str, 
+#         chunk_size: int) -> List:
+#     chunks = []
+#     for i in range(0, len(text), chunk_size):
+#         chunk = text[i:i + chunk_size]
+#         chunks.append(chunk)
+#     return chunks
 
 def count_leading_spaces(text: str) -> int:
     count = 0
@@ -55,10 +76,12 @@ def count_leading_spaces(text: str) -> int:
 
 def colorize(dbg_lvl: int,
         text: str) -> str:
-    if dbg_lvl >= DEBUG_LEVEL_MAX:
-        return Fore.LIGHTBLACK_EX + text + Style.RESET_ALL
-    elif dbg_lvl <= DEBUG_LEVEL_MIN:
-        return Fore.LIGHTWHITE_EX + text + Style.RESET_ALL
+    text = trim(text)
+    if len(text) > 0:
+        if dbg_lvl >= DEBUG_LEVEL_MAX:
+            return Fore.LIGHTBLACK_EX + text + Style.RESET_ALL
+        elif dbg_lvl <= DEBUG_LEVEL_MIN:
+            return Fore.LIGHTWHITE_EX + text + Style.RESET_ALL
     return text
 
 def log(dbg_lvl: int, 
@@ -83,11 +106,12 @@ def log(dbg_lvl: int,
                 first_line = True
                 for chunk in chunks:
                     print_line = timestamp_to_print
+                    chunk = trim(chunk)
                     if first_line:
                         print_line += colorize(dbg_lvl, str(chunk))
                     else:
                         print_line += ' ' * leading_spaces + colorize(dbg_lvl, str(chunk))
-                    print(print_line)
+                    if len(print_line) > 0: print(print_line)
                     first_line = False
             else:
                 print(timestamp_to_print + colorize(dbg_lvl, str(text)))
