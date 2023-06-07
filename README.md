@@ -19,11 +19,9 @@ bereits veröffentlicht:
 `email_imap`  
 `google_information`  
 `auto_action`  
-
-innerhalb der nächsten Tage folgen:
-- Basis-Konfiguration:  
 `personality_switch`
 
+innerhalb der nächsten Tage folgen:
 - Komplett-Konfiguration:  
 `media_playout`  
 `weather_summary`  
@@ -155,7 +153,7 @@ Abruf von Echtzeitinformationen aus dem Internet. Benötigt einen SerpAPI-Key (e
 ### Persönlichkeits-Modul
 `personality_switch`  
   
-Schreibt der Chat-KI einen vorgefertigten Charakter zu, der dann während einer Session gewechselt werden kann.
+Schreibt der Chat-KI einen vorgefertigten Charakter zu, der dann während einer Session gewechselt werden kann. Der Start-Charakter kann in der Konfigurationsdatei festgelegt werden. 
 
 ### Modul zur selbständigen Aktionsauswahl
 `auto_action`  
