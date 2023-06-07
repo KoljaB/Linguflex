@@ -27,6 +27,8 @@ Für einen OpenAI API key gegebenenfalls Account bei OpenAI eröffnen ([platform
 
 ### Installation
 Python installieren, Linguflex Repository lokal kopieren. 
+Eingabe von 'pip install -r requirements.txt' installiert alle notwendigen Bibliotheken für Vanilla, Eingabe von
+'pip install -r requirements_basic.txt' für die Basis-Installation.
 
 ### Start von Linguflex
 Konsolenfenster öffnen und folgendes eingeben:  
