@@ -4,12 +4,14 @@ debuglevel=3
 # modules to load
 [modules]
 user_interface
-edge_texttospeech
+azure_texttospeech
 openai_generator
 whisper_speechtotext
+google_information
 microphone_recorder
 google_calendar
 email_imap
+auto_action
 
 [microphone_recorder]
 debug_show_volume=False	
@@ -61,3 +63,6 @@ pitch_percent=0
 [elevenlabs_texttospeech]
 elevenlabs_speech_api_key=ENTER YOUR ELEVENLABS API-KEY HERE
 voice=Elli
+
+[google_information]
+serp_api_key=ENTER YOUR SERP API-KEY HERE
