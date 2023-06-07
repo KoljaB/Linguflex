@@ -19,6 +19,8 @@ Trotz dieser Vielfalt an Funktionen wurde Linguflex primär mit einem Fokus auf 
 `elevenlabs_texttospeech`  
 `google_calendar`  
 `email_imap`  
+`google_information`  
+`auto_action`  
 
 In den nächsten Tagen werden schrittweise zunächst alle Module der Basis- und anschließend die der Komplett-Konfiguration veröffentlicht.
 
