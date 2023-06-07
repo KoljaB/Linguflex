@@ -22,21 +22,47 @@ Linguflex ist eine innovative Plattform, die eine natürliche Interaktion mit Te
 Alle restlichen Module werden innerhalb der nächsten Tage veröffentlicht.
 
 ### Voraussetzungen
-- Python 3.9.9 (https://www.python.org/downloads/release/python-399/)
+- Python 3.9.9
 - OpenAI API key  
 Für einen OpenAI API key gegebenenfalls Account bei OpenAI eröffnen ([platform.openai.com](https://platform.openai.com/)). Anschließend rechts oben auf den Profilnamen klicken, dann im Menü auf "View API Keys" und anschließend auf "Create new secret key".
 
 ### Installation
-Python installieren, Linguflex Repository lokal kopieren. Anschließend im Linguflex-Ordner zur Installation der jeweils notwendigen Bibliotheken einen der folgenden Befehle ausführen:  
-  
-Vanilla-Installation
+
+#### 1. [Python 3.9.9](https://www.python.org/downloads/release/python-399/) installieren
+#### 2. Linguflex Repository kopieren ("klonen")  
+Zip-File herunterladen und entpacken oder bei installiertem Github folgendes ausführen:
+```
+git clone https://github.com/username/Linguflex.git
+```
+#### 3. In das Verzeichnis wechseln
+```
+cd linguflex
+```
+#### 4. Virtuelle Umgebung erstellen (nicht unbedingt nötig, aber empfohlen)
+```
+python -m venv env
+env/bin/activate
+```
+#### 5. Abhängigkeiten installieren  
 ```
 pip install -r requirements.txt
 ```
-Basis-Installation
+für die Vanilla-Installation  
+  
+
 ```
 pip install -r requirements_basic.txt
 ```
+für die Basis-Installation
+
+#### 6. OpenAI API Key eintragen
+
+Den OpenAI API key in die config.txt in der Sektion [openai_generator] eintragen. 
+```
+[openai_generator]
+openai_api_key=ENTER YOUR OPENAI API-KEY HERE
+```
+Hinweis: Nutzung zusätzlicher Module über Vanilla hinaus könnten weitere Anpassungen in der Konfigurationsdatei erfordern wie zB das eintragen weiterer API-Keys. Näheres dazu in der Beschreibung der jeweiligen Module.
 
 ### Start von Linguflex
 Konsolenfenster öffnen und folgendes eingeben:  
@@ -77,7 +103,7 @@ Wenn GPT 4 statt GTP 3.5 Turbo verwendet werden soll, den Wert des Parameters gp
   
   
 ## Basis-Konfiguration
-Die Basis-Konfiguration liegt in config_basic.txt und erweitert Vanilla um ausgereiftere Text-To-Speech Module, ein User Interface, Terminkalender-Integration, EMail-Support, den Abruf von Echtzeit-Informationen mit Google, ein Webservermodul zur Bedienung mit Smartphones, ein Modul zur Steuerung des Charakters / der Persönlichkeit der Chat-KI und ein Modul zur selbständigen automatischen Auswahl von durch andere Module bereitgestellten Aktionen durch die KI. 
+Die Basis-Konfiguration liegt in config_basic.txt und erweitert Vanilla um ausgereiftere Text-To-Speech Module, ein User Interface, Terminkalender-Integration, EMail-Support, den Abruf von Echtzeit-Informationen mit Google, ein Modul zur Steuerung des Charakters / der Persönlichkeit der Chat-KI und ein Modul zur selbständigen automatischen Auswahl von durch andere Module bereitgestellten Aktionen durch die KI. 
 
 ### UI-Modul
 `user_interface`  
@@ -120,7 +146,7 @@ Schreibt der Chat-KI einen vorgefertigten Charakter zu, der dann während einer 
 Ermöglich der KI, unter allen zur Verfügung stehenden Aktionen und Fähigkeiten selbständig eine passende auszuwählen. um die Anfrage bestmöglich zu erfüllen. Das GPT 3.5 Modell kommt je nach Komplexität der zur Verfügung gestellten Aktionen an seine Grenzen, GPT 4 performt deutlich besser. 
     
 ## Komplett-Konfiguration
-Die Komplett-Konfiguration ist in config_full.txt hinterlegt und beinhaltet zusätzlich zur Basic-Konfiguration noch Audio- und Video-Ausspiel, aktuelle Wetterdaten, Smart-Home Lichtsteuerung, Abruf von Nachrichten, Suche nach Bildern im Internet, Erzeugung von Bildern mit Bildgeneratoren, den Abruf aktueller Investmentdepot-Daten und Spiele.
+Die Komplett-Konfiguration ist in config_full.txt hinterlegt und beinhaltet zusätzlich zur Basic-Konfiguration noch Audio- und Video-Ausspiel, aktuelle Wetterdaten, Smart-Home Lichtsteuerung, Abruf von Nachrichten, Suche nach Bildern im Internet, Erzeugung von Bildern mit Bildgeneratoren, den Abruf aktueller Investmentdepot-Daten und Spiele und ein Webservermodul zur Bedienung mit Smartphones.
 
 ### Modul für Audio- und Videoausspiel
 `playout`  
