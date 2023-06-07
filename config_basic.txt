@@ -12,6 +12,7 @@ microphone_recorder
 google_calendar
 email_imap
 auto_action
+personality_switch
 
 [microphone_recorder]
 debug_show_volume=False	
@@ -66,3 +67,6 @@ voice=Elli
 
 [google_information]
 serp_api_key=ENTER YOUR SERP API-KEY HERE
+
+[personality_switch]
+start_character=Default
