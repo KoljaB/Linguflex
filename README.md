@@ -3,6 +3,7 @@
 Linguflex ist eine **innovative Plattform**, die eine **natürliche Interaktion** mit Textgeneratoren wie **OpenAI GPT** ermöglicht und die Erstellung schlanker, effizienter **Erweiterungsmodule** unterstützt. Vorgefertigte Module bieten eine Vielfalt an Funktionen – von Terminkalender und E-Mail-Verwaltung über Echtzeitzugriff auf Webinformationen, Wetterupdates oder Nachrichten bis hin zur Medienwiedergabe und Steuerung von Smart-Home-Geräten. Linguflex hebt sich hervor durch seine **Erweiterbarkeit**, **kompakten Modulcode** und die **Flexibilität**, individuellen Anwendungsanforderungen gerecht zu werden.
 
 ### Release-Stand Module 
+bereits veröffentlicht:
 - Vanilla-Konfiguration:  
 `microphone_recorder`  
 `whisper_speechtotext`  
@@ -19,7 +20,20 @@ Linguflex ist eine **innovative Plattform**, die eine **natürliche Interaktion*
 `google_information`  
 `auto_action`  
 
-Alle restlichen Module werden innerhalb der nächsten Tage veröffentlicht.
+innerhalb der nächsten Tage folgen:
+- Basis-Konfiguration:  
+`personality_switch`
+
+- Komplett-Konfiguration:  
+`media_playout`  
+`weather_summary`  
+`news_summary`  
+`lights_control`  
+`pic_search`  
+`pic_generate`  
+`webserver`  
+`emoji_game`  
+`depot_summary`  
 
 ### Voraussetzungen
 - Python 3.9.9
@@ -32,7 +46,7 @@ Für einen OpenAI API key gegebenenfalls Account bei OpenAI eröffnen ([platform
 #### 2. Linguflex Repository kopieren ("klonen")  
 Zip-File herunterladen und entpacken oder bei installiertem Github folgendes ausführen:
 ```
-git clone https://github.com/username/Linguflex.git
+git clone https://github.com/KoljaB/Linguflex.git
 ```
 #### 3. In das Verzeichnis wechseln
 ```
@@ -139,7 +153,7 @@ Abruf von EMails. IMAP-Server, Benutzername und Passwort werden in die Sektion [
 Abruf von Echtzeitinformationen aus dem Internet. Benötigt einen SerpAPI-Key (erhältlich unter [serpapi.com](https://serpapi.com/)), der in die Konfigurationsdatei eingetragen oder in die Umgebungsvariable LINGU_SERP_API_KEY geschrieben wird.
 
 ### Persönlichkeits-Modul
-`personality`  
+`personality_switch`  
   
 Schreibt der Chat-KI einen vorgefertigten Charakter zu, der dann während einer Session gewechselt werden kann.
 
@@ -154,24 +168,24 @@ Ermöglich der KI, unter allen zur Verfügung stehenden Aktionen und Fähigkeite
 Die Komplett-Konfiguration ist in config_full.txt hinterlegt und beinhaltet zusätzlich zur Basic-Konfiguration noch Audio- und Video-Ausspiel, aktuelle Wetterdaten, Smart-Home Lichtsteuerung, Abruf von Nachrichten, Suche nach Bildern im Internet, Erzeugung von Bildern mit Bildgeneratoren, den Abruf aktueller Investmentdepot-Daten und Spiele und ein Webservermodul zur Bedienung mit Smartphones.
 
 ### Modul für Audio- und Videoausspiel
-`playout`  
+`media_playout`  
   
 Nutzt Youtube und Firefox, um Audios und Videos auszuspielen. Benötigt einen zur installierten Firefox-Version passenden Geckodriver (ein einzelnes Executable zur Automatisierung von Firefox, erhältlich hier: https://github.com/mozilla/geckodriver/releases) im Ausführungsordner von Linguflex.
 
 ### Wetter-Modul
-`weather`  
+`weather_summary`  
   
 Benötigt einen OpenWeatherMap API Key (https://openweathermap.org/api), der in der Konfigurationsdatei oder in der Umgebungsvariable LINGU_OPENWEATHERMAP_API_KEY hinterlegt wird. In der Konfigurationsdatei kann eine Stadt als default_city eingetragen werden, für die Wetterdaten abgerufen werden, wenn der Chat KI kein anderer Ort mitgeteilt wurde.
 
-### SmartHome Lichtsteuerung
-`lights`  
-  
-Steuert Farben und Helligkeit von Tuya Smartbulbs Lampen. Zu jeder Lampe wird ein frei vergebbarer Name, sowie Id, IP-Adresse, Key und Version in der Konfigurationsdatei hinterlegt. Id, IP, Key und Version können mit dem Konsolenbefehl "python -m tinytuya scan" automatisch aus dem WLAN gelesen werden ([pypi.org/project/tinytuya](https://pypi.org/project/tinytuya/)).
-
 ### Nachrichten-Modul
-`news`  
+`news_summary`  
   
 Fasst die aktuellen Tagesnachrichten zusammen.
+
+### SmartHome Lichtsteuerung
+`lights_control`  
+  
+Steuert Farben und Helligkeit von Tuya Smartbulbs Lampen. Zu jeder Lampe wird ein frei vergebbarer Name, sowie Id, IP-Adresse, Key und Version in der Konfigurationsdatei hinterlegt. Id, IP, Key und Version können mit dem Konsolenbefehl "python -m tinytuya scan" automatisch aus dem WLAN gelesen werden ([pypi.org/project/tinytuya](https://pypi.org/project/tinytuya/)).
 
 ### Bildersuche-Modul
 `pic_search`  
@@ -183,17 +197,17 @@ Sucht im Internet nach einem Bild und zeigt dieses an.
   
 Erzeugt ein Bild mit dem DALL-E Bildgenerator unter Nutzung der OpenAI API und zeigt dieses an. Zu jeder Nutzung fallen Kosten an ([openai.com/pricing](https://openai.com/pricing)).
 
-### Depot-Modul
-`depot`  
-  
-Abruf und Zusammenfassung von Investmentdepot-Daten. Das Investment-Depot wird als comdirect-Musterdepot angelegt und der externe Link dazu ("Aktionen gesamtes Musterdepot" => "Freunden zeigen") in der Konfigurationsdatei abgelegt.
-
-### Spiele-Modul
-`games`  
-  
-Zeigt eine Auswahl von Emojis, die ein "zufällig" ausgewähltes Werk (Film, Buch oder Serie) repräsentieren, welches daraufhin erraten werden muss.
-
 ### Webserver-Modul
 `webserver`  
   
 Dieses Modul kommuniziert mit dem Webserver in modules/basic/webserver, der separat gestartet wird. Der Webserver öffnet den Port 5000, der in der lokalen Firewall für TCP-Kommunikation freigegeben wird. Der Webclient in modules/basic/webclient kann auf ein Smartphone kopiert werden. IP und Port des Webservers müssen in der index.html eingetragen werden. Es kann auch zB ein Router auf Port 80 angegeben werden, der eine Weiterleitung auf den lokalen Webserver vornimmt, so dass Linguflex auch unterwegs genutzt werden kann. Achtung: das funktioniert zwar in der Praxis, wird aber aufgrund potentieller Sicherheitslücken der rudimentären Webserver-Implementierung ausdrücklich nicht empfohlen.
+
+### Spiele-Modul
+`emoji_game`  
+  
+Zeigt eine Auswahl von Emojis, die ein "zufällig" ausgewähltes Werk (Film, Buch oder Serie) repräsentieren, welches daraufhin erraten werden muss.
+
+### Depot-Modul
+`depot_summary`  
+  
+Abruf und Zusammenfassung von Investmentdepot-Daten. Das Investment-Depot wird als comdirect-Musterdepot angelegt und der externe Link dazu ("Aktionen gesamtes Musterdepot" => "Freunden zeigen") in der Konfigurationsdatei abgelegt.
