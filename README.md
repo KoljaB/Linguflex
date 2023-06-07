@@ -70,18 +70,20 @@ Konsolenfenster öffnen und folgendes eingeben:
 `python linguflex`
 
 ### Konfiguration
-Eine Linguflex-Konfiguration ist eine Textdatei, welche die zu ladenden Modulen und deren Einstellungen beschreibt. Standardmäßig lädt Linguflex die Konfiguration, die in der Datei config.txt hinterlegt ist. Optional kann der Pfad zu einer anderen Konfigurationsdatei per Kommandozeilenparameter übergeben werden.
+Eine Linguflex-Konfiguration ist eine Textdatei, welche die zu ladenden Modulen und deren Einstellungen beschreibt. Standardmäßig lädt Linguflex die Konfiguration, die in der Datei config.txt hinterlegt ist. Optional kann der Pfad zu einer anderen Konfigurationsdatei per Kommandozeilenparameter übergeben werden.  
+
 Es werden drei Beispielkonfigurationen mitgeliefert:  
 1. Vanilla (Sprachkommunikation mit dem GPT-Modell)
-2. Basis (inkl grundlegende Erweiterungsmodule)
+2. Basis (grundlegende Erweiterungsmodule)
 3. Komplett (alle verfügbaren Module)
 
 Es wird empfohlen, mit der einfachen Vanilla-Konfiguration zu beginnen und dann sukzessive präferierte Module zu ergänzen, da deren Inbetriebnahme oft mit zusätzlichen Schritten verbunden ist. Wie ein einzelnes Modul in der config.txt angelegt und konfiguriert wird kann den Dateien config_basic.txt oder config_full.txt entnommen werden.
 
 ### Module
 In der Sektion [modules] der config-Datei werden die zu ladenden Module angegeben. Linguflex lädt und startet alle Module in der hier angegebenen Reihenfolge.
-  
-  
+
+<br>
+
 ## Vanilla-Konfiguration
 `microphone_recorder`
 `whisper_speechtotext`
@@ -100,8 +102,9 @@ Alternativ kann der Key auch in die Umgebungsvariable LINGU_OPENAI_API_KEY gesch
 Konfigurationsparameter der Vanillakonfiguration:
 Der Mikrofon-Rekorder nimmt auf, sobald der Eingangspegel über dem in der volume_start_recording festgelegten Schwellwert steigt und beendet die Aufnahme, wenn der Pegel unter den von volume_stop_recording festgelegten Wert fällt.  
 Wenn GPT 4 statt GTP 3.5 Turbo verwendet werden soll, den Wert des Parameters gpt_model auf "gpt-4" ändern.
-  
-  
+
+<br>
+
 ## Basis-Konfiguration
 Die Basis-Konfiguration liegt in config_basic.txt und erweitert Vanilla um ausgereiftere Text-To-Speech Module, ein User Interface, Terminkalender-Integration, EMail-Support, den Abruf von Echtzeit-Informationen mit Google, ein Modul zur Steuerung des Charakters / der Persönlichkeit der Chat-KI und ein Modul zur selbständigen automatischen Auswahl von durch andere Module bereitgestellten Aktionen durch die KI. 
 
@@ -144,7 +147,9 @@ Schreibt der Chat-KI einen vorgefertigten Charakter zu, der dann während einer 
 `auto_action`  
   
 Ermöglich der KI, unter allen zur Verfügung stehenden Aktionen und Fähigkeiten selbständig eine passende auszuwählen. um die Anfrage bestmöglich zu erfüllen. Das GPT 3.5 Modell kommt je nach Komplexität der zur Verfügung gestellten Aktionen an seine Grenzen, GPT 4 performt deutlich besser. 
-    
+
+<br>
+
 ## Komplett-Konfiguration
 Die Komplett-Konfiguration ist in config_full.txt hinterlegt und beinhaltet zusätzlich zur Basic-Konfiguration noch Audio- und Video-Ausspiel, aktuelle Wetterdaten, Smart-Home Lichtsteuerung, Abruf von Nachrichten, Suche nach Bildern im Internet, Erzeugung von Bildern mit Bildgeneratoren, den Abruf aktueller Investmentdepot-Daten und Spiele und ein Webservermodul zur Bedienung mit Smartphones.
 
