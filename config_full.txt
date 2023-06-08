@@ -1,7 +1,6 @@
 [system]
 debuglevel=3
 
-# modules to load
 [modules]
 user_interface
 azure_texttospeech
@@ -14,6 +13,7 @@ email_imap
 auto_action
 personality_switch
 media_playout
+weather_summary
 
 [microphone_recorder]
 debug_show_volume=False	
@@ -71,3 +71,7 @@ serp_api_key=ENTER YOUR SERP API-KEY HERE
 
 [personality_switch]
 start_character=Default
+
+[weather_summary]
+openweathermap_api_key=ENTER YOUR OPENWEATHERMAP API-KEY HERE
+default_city=Hamburg

@@ -1,7 +1,6 @@
 [system]
 debuglevel=3
 
-# modules to load
 [modules]
 system_texttospeech
 openai_generator
