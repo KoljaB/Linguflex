@@ -147,6 +147,8 @@ Benötigt die Datei credentials.json im Ausführungsverzeichnis von Linguflex. D
 Fehlt die credentials.json wird die Logmeldung ""[calendar] ERROR:[Errno 2] No such file or directory: 'credentials.json'" ausgegeben. 
 Bei der ersten Ausführung auf einem Gerät wird der Benutzer weiterhin aufgefordert, seine Google-Anmeldeinformationen einzugeben. Diese Informationen werden dann in einer Datei token.pickle gespeichert, um zukünftige Anmeldungen zu vermeiden. 
 
+Kalenderdaten können auch von einfacheren Sprachmodellen wie GPT 3.5 abgerufen werden. Für das Eintragen von Terminen mit umgangssprachlichen Zeitreferenzen ("morgen", "in drei Tagen"), benötigt man jedoch ein performantes Modell wie GPT-4.
+
 ### EMail-Modul
 `email_imap`  
   
