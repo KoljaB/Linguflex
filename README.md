@@ -21,9 +21,12 @@ bereits veröffentlicht:
 `auto_action`  
 `personality_switch`
 
-innerhalb der nächsten Tage folgen:
 - Komplett-Konfiguration:  
 `media_playout`  
+
+
+innerhalb der nächsten Tage folgen:
+- Komplett-Konfiguration:  
 `weather_summary`  
 `news_summary`  
 `lights_control`  
