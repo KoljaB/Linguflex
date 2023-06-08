@@ -14,6 +14,7 @@ auto_action
 personality_switch
 media_playout
 weather_summary
+news_summary
 
 [microphone_recorder]
 debug_show_volume=False	
@@ -64,7 +65,7 @@ pitch_percent=0
 
 [elevenlabs_texttospeech]
 elevenlabs_speech_api_key=ENTER YOUR ELEVENLABS API-KEY HERE
-voice=Elli
+voice=Adam
 
 [google_information]
 serp_api_key=ENTER YOUR SERP API-KEY HERE
