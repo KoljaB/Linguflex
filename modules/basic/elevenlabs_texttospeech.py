@@ -41,13 +41,13 @@ class TextToSpeechModule_ElevenLabs(TextToSpeechModule_IF):
         output_optimized = text_converter.optimiere(message.output_user)
         log(DEBUG_LEVEL_MAX, '  [tts_eleven] output [{}]'.format(output_optimized))
 
-        voice = Voice(
-            voice_id="z4z95FcLrYTsEFrmpOpI",
-            name="Winkens 2",
-            category="cloned",
-            settings=VoiceSettings(stability=0.85, similarity_boost=0.85),
-            # settings=VoiceSettings(stability=0.55, similarity_boost=0.55), # too much variety in output
-        )
+        # use cloned voice:
+        # voice = Voice(
+        #     voice_id="yourVoiceId",
+        #     name="yourVoiceName",
+        #     category="cloned",
+        #     settings=VoiceSettings(stability=0.85, similarity_boost=0.85),
+        # )
 
         audio = generate(
             text=output_optimized,
@@ -56,41 +56,6 @@ class TextToSpeechModule_ElevenLabs(TextToSpeechModule_IF):
             )        
         
         play(audio)
-
-    # def konvertiere_int_in_gesprochenen_text(zahl: int) -> str:
-    #     einheiten = ["", "eins", "zwei", "drei", "vier", "fünf", "sechs", "sieben", "acht", "neun"]
-    #     zehner = ["", "zehn", "zwanzig", "dreißig", "vierzig", "fünfzig", "sechzig", "siebzig", "achtzig", "neunzig"]
-    #     hunderter = ["", "einhundert", "zweihundert", "dreihundert", "vierhundert", "fünfhundert", "sechshundert", "siebenhundert", "achthundert", "neunhundert"]
-    #     ausnahmen = {11: "elf", 12: "zwölf"}
-
-    #     if zahl < 10:
-    #         return einheiten[zahl]
-    #     if zahl in ausnahmen:
-    #         return ausnahmen[zahl]
-    #     if zahl < 100:
-    #         zehn = zahl // 10
-    #         eins = zahl % 10
-    #         if eins == 0:
-    #             return zehner[zehn]
-    #         else:
-    #             return einheiten[eins] + "und" + zehner[zehn]
-    #     if zahl < 1000:
-    #         hundert = zahl // 100
-    #         rest = zahl % 100
-    #         if rest == 0:
-    #             return hunderter[hundert]
-    #         else:
-    #             return hunderter[hundert] + konvertiere_int_in_gesprochenen_text(rest)
-    #     if zahl < 10000:
-    #         tausend = zahl // 1000
-    #         rest = zahl % 1000
-    #         if rest == 0:
-    #             return einheiten[tausend] + "tausend"
-    #         else:
-    #             return einheiten[tausend] + "tausend" + konvertiere_int_in_gesprochenen_text(rest)
-
-    #     return str(zahl)
-    
 
 
 #  voice_id='21m00Tcm4TlvDq8ikWAM', name='Rachel', category='premade', settings=VoiceSettings(stability=0.75, similarity_boost=0.75
