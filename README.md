@@ -25,12 +25,12 @@ bereits veröffentlicht:
 `media_playout`  
 `weather_summary`  
 `news_summary`  
+`pic_search`  
 
 innerhalb der nächsten Tage folgen:
 - Komplett-Konfiguration:  
-`lights_control`  
-`pic_search`  
 `pic_generate`  
+`lights_control`  
 `webserver`  
 `emoji_game`  
 `depot_summary`  
@@ -189,20 +189,20 @@ Benötigt einen OpenWeatherMap API Key (https://openweathermap.org/api), der in 
   
 Fasst die aktuellen Tagesnachrichten zusammen. Das Sprachmodell kann nach den Hauptnachrichten oder Nachrichten aus den Bereichen Wirtschaft, Technik, Forschung, Inland, Ausland oder Gesellschaft befragt werden. Als Nachrichtenquelle wird Tagesschau genutzt, die Informationen werden per BeautifulSoup gepollt.
 
-### SmartHome Lichtsteuerung
-`lights_control`  
-  
-Steuert Farben und Helligkeit von Tuya Smartbulbs Lampen. Zu jeder Lampe wird ein frei vergebbarer Name, sowie Id, IP-Adresse, Key und Version in der Konfigurationsdatei hinterlegt. Id, IP, Key und Version können mit dem Konsolenbefehl "python -m tinytuya scan" automatisch aus dem WLAN gelesen werden ([pypi.org/project/tinytuya](https://pypi.org/project/tinytuya/)).
-
 ### Bildersuche-Modul
 `pic_search`  
   
-Sucht im Internet nach einem Bild und zeigt dieses an.
+Sucht im Internet nach einem Bild und zeigt dieses an. Benötigt einen Google API- und CX-Schlüssel, die in der Konfigurationsdatei (siehe config_full.txt) oder in den Umgebungsvariablen LINGU_GOOGLE_API_KEY und LINGU_GOOGLE_CX_KEY hinterlegt werden. Für den Google API Key auf https://console.cloud.google.com mit dem Google Konto anmelden (gegebenenfalls erstellen). Neues Projekt erstellen, in der Bibliothek nach "Custom Search API" suchen und für das Projekt aktivieren. Im "Credentials"-Bereich auf "+ Create Credentials", dann "API key" wählen. Für den Google Search Engine (CX)-Schlüssel auf https://cse.google.com/cse/all mit dem Google Konto anmelden. Neue Suchmaschine erstellen und die Informationen ausfüllen (z.B. welche Websites durchsucht werden sollen), dann auf "Erstellen".  Dann auf den Namen Ihrer Suchmaschine, um die Details anzuzeigen und man sieht die "Suchmaschinen-ID", das ist der benötigte CX-Schlüssel.
 
 ### Bildererzeugungs-Modul
 `pic_generate`  
   
 Erzeugt ein Bild mit dem DALL-E Bildgenerator unter Nutzung der OpenAI API und zeigt dieses an. Zu jeder Nutzung fallen Kosten an ([openai.com/pricing](https://openai.com/pricing)).
+
+### SmartHome Lichtsteuerung
+`lights_control`  
+  
+Steuert Farben und Helligkeit von Tuya Smartbulbs Lampen. Zu jeder Lampe wird ein frei vergebbarer Name, sowie Id, IP-Adresse, Key und Version in der Konfigurationsdatei hinterlegt. Id, IP, Key und Version können mit dem Konsolenbefehl "python -m tinytuya scan" automatisch aus dem WLAN gelesen werden ([pypi.org/project/tinytuya](https://pypi.org/project/tinytuya/)).
 
 ### Webserver-Modul
 `webserver`  
