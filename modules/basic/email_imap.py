@@ -1,7 +1,5 @@
 import sys
 sys.path.insert(0, '..')
-# import json
-# import random
 
 from linguflex_interfaces import JsonActionProviderModule_IF
 from linguflex_log import log, DEBUG_LEVEL_OFF, DEBUG_LEVEL_MIN, DEBUG_LEVEL_MID, DEBUG_LEVEL_MAX
@@ -31,7 +29,7 @@ emails_action = {
     'instructions' : 'Gib wenn du zu E-Mails befragt wirst das JSON {"EMail": "Datenabruf"} aus, sonst nichts.'
 }
 
-class JV_EMails(JsonActionProviderModule_IF):
+class EMailModule(JsonActionProviderModule_IF):
 
     def __init__(self) -> None:
         self.actions = [emails_action]

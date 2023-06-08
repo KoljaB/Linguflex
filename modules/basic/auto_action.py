@@ -63,7 +63,7 @@ empty_action = {
     'instructions' : ''
 }
 
-class JV_AutoAction(JsonActionProviderModule_IF):
+class AutoActionModule(JsonActionProviderModule_IF):
     def __init__(self) -> None:
         self.actions = [empty_action]
         pass

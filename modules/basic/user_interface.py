@@ -6,7 +6,7 @@ from linguflex_log import log, DEBUG_LEVEL_OFF, DEBUG_LEVEL_MIN, DEBUG_LEVEL_MID
 from linguflex_message import LinguFlexMessage
 from user_interface_helper import UI_Window
 
-class UIModule(Module_IF):   
+class UserInterfaceModule(Module_IF):   
     def __init__(self) -> None:
         self.ui = UI_Window()
         self.started = False

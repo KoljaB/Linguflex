@@ -38,7 +38,7 @@ Gib mir einen Überblick über meine innerhalb der nächsten Woche anstehenden T
 Hier die Infos zu den Terminen:
 """ 
 
-class JV_Calendar(JsonActionProviderModule_IF):
+class CalendarModule(JsonActionProviderModule_IF):
     def __init__(self) -> None:
         self.actions = [calendar_retrieve_action, calendar_addevent_action]
 

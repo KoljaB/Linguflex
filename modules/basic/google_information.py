@@ -42,7 +42,7 @@ google_action = {
     'instructions' : ''
 }
 
-class JV_Google(JsonActionProviderModule_IF):
+class GoogleInformationModule(JsonActionProviderModule_IF):
     def __init__(self) -> None:
         self.actions = [google_action]
         self.google = GoogleSearchAPI(api_key)

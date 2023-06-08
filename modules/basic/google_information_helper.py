@@ -136,14 +136,3 @@ class GoogleSearchAPI:
         optimized = self.optimize(str(response_no_links))
 
         return optimized
-    
-        # if 'answer_box' in res.keys() and 'answer' in res['answer_box'].keys():
-        #     return res['answer_box']['answer']
-        # elif 'answer_box' in res.keys() and 'snippet' in res['answer_box'].keys():
-        #     return res['answer_box']['snippet']
-        # elif 'answer_box' in res.keys() and 'snippet_highlighted_words' in res['answer_box'].keys():
-        #     return res['answer_box']["snippet_highlighted_words"][0]
-        # elif 'snippet' in res["organic_results"][0].keys():
-        #     return res["organic_results"][0]['snippet']
-        # else:
-        #     return 'Leider keine passendes Suchergebnis von Google.'
