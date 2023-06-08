@@ -112,13 +112,14 @@ openai_api_key=ENTER YOUR OPENAI API-KEY HERE
 Alternativ kann der Key auch in die Umgebungsvariable LINGU_OPENAI_API_KEY geschrieben werden.
 
 Konfigurationsparameter der Vanillakonfiguration:
-Der Mikrofon-Rekorder nimmt auf, sobald der Eingangspegel über dem in der volume_start_recording festgelegten Schwellwert steigt und beendet die Aufnahme, wenn der Pegel unter den von volume_stop_recording festgelegten Wert fällt.  
-Wenn GPT 4 statt GTP 3.5 Turbo verwendet werden soll, den Wert des Parameters gpt_model auf "gpt-4" ändern.
+Der Mikrofon-Rekorder nimmt auf, sobald der Eingangspegel über dem in der volume_start_recording festgelegten Schwellwert steigt und beendet die Aufnahme, wenn der Pegel unter den von volume_stop_recording festgelegten Wert fällt. Wenn GPT 4 statt GTP 3.5 Turbo verwendet werden soll, den Wert des Parameters gpt_model auf "gpt-4" ändern.
+
+Die bestehende Whisper-Installation nutzt die CPU. Die Spracherkennung kann durch Umstellung auf GPU beschleunigt werden: dazu PyTorch mit CUDA-Support installieren (Anleitungen dazu sind im Internet zu finden), whisper_speechtotext stellt automatisch auf GPU-Nutzung um, sobald CUDA verfügbar ist.
 
 <br>
 
 ## Basis-Konfiguration
-Die Basis-Konfiguration liegt in config_basic.txt und erweitert Vanilla um ein User Interface, ausgereiftere Text-To-Speech Module, Terminkalender-Integration, EMail-Support, den Abruf von Echtzeit-Informationen mit Google, ein Modul zur Steuerung des Charakters / der Persönlichkeit der Chat-KI und ein Modul zur selbständigen automatischen Auswahl von durch andere Module bereitgestellten Aktionen durch die KI. 
+Die Basis-Konfiguration liegt in config_basic.txt und erweitert Vanilla um ein User Interface, ausgereiftere Text-To-Speech Module, Terminkalender-Integration, EMail-Support, den Abruf von Echtzeit-Informationen mit Google, ein Modul zur Steuerung des Charakters / der Persönlichkeit der Chat-KI und ein Modul, welches der Sprachmodell-KI ermöglicht, selbständig Aktionen auszuführen, die durch andere Module bereitgestellt werden.
 
 ### UI-Modul
 `user_interface`  
@@ -161,8 +162,8 @@ Schreibt der Chat-KI einen vorgefertigten Charakter zu, der dann während einer 
 
 ### Modul zur selbständigen Aktionsauswahl
 `auto_action`  
-  
-Ermöglich der KI, unter allen zur Verfügung stehenden Aktionen und Fähigkeiten selbständig eine passende auszuwählen. um die Anfrage bestmöglich zu erfüllen. Das GPT 3.5 Modell kommt je nach Komplexität der zur Verfügung gestellten Aktionen an seine Grenzen, GPT 4 performt deutlich besser. 
+
+Wird die vom Benutzer gestellte Anfrage vom Sprachmodell nicht erfüllt, prüft dieses Modul die von anderen Modulen bereitgestellten Aktionen und setzt diese ein, wenn sie zielführend sind. Das GPT 3.5 Modell kommt je nach Komplexität der zur Verfügung gestellten Aktionen an seine Grenzen, GPT 4 performt deutlich besser. 
 
 <br>
 
