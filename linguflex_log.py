@@ -57,14 +57,6 @@ def chunk_text(text: str, chunk_size: int) -> List:
         chunks.append('\n')  # append a newline to preserve original line breaks
     return chunks[:-1]
 
-# def chunk_text(text: str, 
-#         chunk_size: int) -> List:
-#     chunks = []
-#     for i in range(0, len(text), chunk_size):
-#         chunk = text[i:i + chunk_size]
-#         chunks.append(chunk)
-#     return chunks
-
 def count_leading_spaces(text: str) -> int:
     count = 0
     for char in text:
