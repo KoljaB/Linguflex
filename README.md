@@ -23,11 +23,10 @@ bereits veröffentlicht:
 
 - Komplett-Konfiguration:  
 `media_playout`  
-
+`weather_summary`  
 
 innerhalb der nächsten Tage folgen:
 - Komplett-Konfiguration:  
-`weather_summary`  
 `news_summary`  
 `lights_control`  
 `pic_search`  
@@ -181,7 +180,7 @@ Nutzt Youtube und Firefox, um Audios und Videos auszuspielen. Benötigt einen zu
 ### Wetter-Modul
 `weather_summary`  
   
-Benötigt einen OpenWeatherMap API Key (https://openweathermap.org/api), der in der Konfigurationsdatei oder in der Umgebungsvariable LINGU_OPENWEATHERMAP_API_KEY hinterlegt wird. In der Konfigurationsdatei kann eine Stadt als default_city eingetragen werden, für die Wetterdaten abgerufen werden, wenn der Chat KI kein anderer Ort mitgeteilt wurde.
+Benötigt einen OpenWeatherMap API Key (https://openweathermap.org/api), der in der Konfigurationsdatei oder in der Umgebungsvariable LINGU_OPENWEATHERMAP_API_KEY hinterlegt wird. In der Konfigurationsdatei sollte die default_city von Hamburg auf den eigenen Wohnort geändert werden.
 
 ### Nachrichten-Modul
 `news_summary`  
