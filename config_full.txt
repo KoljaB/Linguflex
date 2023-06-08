@@ -16,6 +16,7 @@ media_playout
 weather_summary
 news_summary
 pic_search
+pic_generate
 
 [microphone_recorder]
 debug_show_volume=False	
