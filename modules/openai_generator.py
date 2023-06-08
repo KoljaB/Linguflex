@@ -3,8 +3,6 @@ sys.path.insert(0, '..')
 import os
 import openai
 
-# TBD: add max_tokens, improve temperature
-
 from linguflex_interfaces import LanguageProcessingModule_IF
 from linguflex_log import log, DEBUG_LEVEL_OFF, DEBUG_LEVEL_MIN, DEBUG_LEVEL_MID, DEBUG_LEVEL_MAX
 from linguflex_config import cfg, set_section, get_section, configuration_parsing_error_message
@@ -37,25 +35,19 @@ try:
 except Exception as e:
     raise ValueError(configuration_parsing_error_message + ' ' + str(e))
 
-class LangchainSimpleModule(LanguageProcessingModule_IF):
+class OpenAIModule(LanguageProcessingModule_IF):
     def __init__(self) -> None: 
-     # contains the full complete history for each user
+        # contains the full complete history for each user
         self.history = {}
         # contains the trimmed part of history we send to llm for each user
         self.limited_history = {}
-        # self.last_user_input = {'role':'user', 'content': ''}
 
     def create_output(self,
             message: LinguFlexMessage) -> None: 
         
         llm_model = gpt_model if len(message.llm) == 0 else message.llm
 
-
-        # if message.clone_last_user_input:
-        #     log(DEBUG_LEVEL_MAX, '  [openai] clone content {} from last user input {}'.format(str(self.last_user_input), self.last_user_input['content']))
-        #     message.input += self.last_user_input['content']
         user_input = {'role':'user', 'content': message.input}
-        #self.last_user_input = user_input
 
         user_input_limited = {'role':'user', 'content': self.limit_string(message.input, history_max_chars_per_message)}
 
@@ -95,13 +87,11 @@ class LangchainSimpleModule(LanguageProcessingModule_IF):
             completion = openai.ChatCompletion.create(model=llm_model, messages=llm_messages, temperature=llm_temperature)
             output = completion['choices'][0]['message']['content']
             if message.remove_from_history:
-                if len(self.history) > 1:
-                    self.history.pop()
-                    self.history.pop()
+                if len(self.history[message.user_id]) > 1:
+                    self.history[message.user_id].pop()
+                    self.history[message.user_id].pop()
 
             history_assistant_output = output
-            # if len(message.character) > 0:
-            #     history_assistant_output = "[" + message.character + "] " + history_assistant_output
 
             llm_output = {'role':'assistant', 'content': history_assistant_output}
             llm_output_limited = {'role':'assistant', 'content': self.limit_string(history_assistant_output, history_max_chars_per_message)}
