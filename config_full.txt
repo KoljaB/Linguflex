@@ -15,6 +15,7 @@ personality_switch
 media_playout
 weather_summary
 news_summary
+pic_search
 
 [microphone_recorder]
 debug_show_volume=False	
@@ -76,3 +77,7 @@ start_character=Default
 [weather_summary]
 openweathermap_api_key=ENTER YOUR OPENWEATHERMAP API-KEY HERE
 default_city=Hamburg
+
+[pic_search]
+google_api_key=ENTER YOUR GOOGLE API-KEY HERE
+google_cx_key=ENTER YOUR GOOGLE SEARCH ENGINE (CX)-KEY HERE
