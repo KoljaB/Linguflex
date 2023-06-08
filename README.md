@@ -173,7 +173,7 @@ Die Komplett-Konfiguration ist in config_full.txt hinterlegt und beinhaltet zus�
 ### Modul für Audio- und Videoausspiel
 `media_playout`  
   
-Nutzt Youtube und Firefox, um Audios und Videos auszuspielen. Benötigt einen zur installierten Firefox-Version passenden Geckodriver (ein einzelnes Executable zur Automatisierung von Firefox, erhältlich hier: https://github.com/mozilla/geckodriver/releases) im Ausführungsordner von Linguflex.
+Nutzt Youtube und Firefox, um Audios und Videos auszuspielen. Benötigt einen zur installierten Firefox-Version passenden Geckodriver (ein einzelnes Executable zur Automatisierung von Firefox, erhältlich hier: https://github.com/mozilla/geckodriver/releases) im Ausführungsordner von Linguflex. Ich habe mit dem Geckodriver 0.33.0 Probleme gehabt, während 0.32.2 gut funktionierte - dies mag aber im Zusammenspiel mit der installierten Firefox-Version (114 bei mir) bei jedem anders sein.
 
 ### Wetter-Modul
 `weather_summary`  
