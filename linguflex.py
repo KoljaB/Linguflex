@@ -7,7 +7,7 @@ import sys
 
 sys.path.insert(0, 'modules')
 sys.path.insert(0, 'modules/basic')
-sys.path.insert(0, 'modules/extended')
+sys.path.insert(0, 'modules/full')
 
 from linguflex_log import (
     log,
