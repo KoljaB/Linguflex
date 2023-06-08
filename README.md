@@ -26,10 +26,10 @@ bereits veröffentlicht:
 `weather_summary`  
 `news_summary`  
 `pic_search`  
+`pic_generate`  
 
 innerhalb der nächsten Tage folgen:
 - Komplett-Konfiguration:  
-`pic_generate`  
 `lights_control`  
 `webserver`  
 `emoji_game`  
