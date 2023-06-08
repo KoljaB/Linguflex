@@ -16,7 +16,7 @@ set_section('pic_search')
 API_KEY_NOT_FOUND_ERROR_MESSAGE = 'Google Custom Search API-Key not found. Please define the key in your linguflex config file or set the key in the environment variable LINGU_GOOGLE_API_KEY.'
 CX_KEY_NOT_FOUND_ERROR_MESSAGE = 'Google Custom Search CX-Key not found. Please define the key in your linguflex config file or set the key in the environment variable LINGU_GOOGLE_CX_KEY.'
 
-# Import Google API-Key from either registry (LINGU_GOOGLE_API_KEY) or config file jv_pic/google_api_key
+# Import Google API-Key from either registry (LINGU_GOOGLE_API_KEY) or config file pic_search/google_api_key
 api_key = os.environ.get('LINGU_GOOGLE_API_KEY')
 if api_key is None:
     try:
@@ -26,7 +26,7 @@ if api_key is None:
 if api_key is None:
     raise ValueError(API_KEY_NOT_FOUND_ERROR_MESSAGE)
 
-# Import Google CX-Key from either registry (LINGU_GOOGLE_CX_KEY) or config file jv_pic/google_cx_key
+# Import Google CX-Key from either registry (LINGU_GOOGLE_CX_KEY) or config file pic_search/google_cx_key
 cx_key = os.environ.get('LINGU_GOOGLE_CX_KEY')
 if cx_key is None:
     try:
