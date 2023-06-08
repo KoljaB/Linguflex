@@ -24,10 +24,10 @@ bereits veröffentlicht:
 - Komplett-Konfiguration:  
 `media_playout`  
 `weather_summary`  
+`news_summary`  
 
 innerhalb der nächsten Tage folgen:
 - Komplett-Konfiguration:  
-`news_summary`  
 `lights_control`  
 `pic_search`  
 `pic_generate`  
@@ -187,7 +187,7 @@ Benötigt einen OpenWeatherMap API Key (https://openweathermap.org/api), der in 
 ### Nachrichten-Modul
 `news_summary`  
   
-Fasst die aktuellen Tagesnachrichten zusammen.
+Fasst die aktuellen Tagesnachrichten zusammen. Das Sprachmodell kann nach den Hauptnachrichten oder Nachrichten aus den Bereichen Wirtschaft, Technik, Forschung, Inland, Ausland oder Gesellschaft befragt werden. Als Nachrichtenquelle wird Tagesschau genutzt, die Informationen werden per BeautifulSoup gepollt.
 
 ### SmartHome Lichtsteuerung
 `lights_control`  
