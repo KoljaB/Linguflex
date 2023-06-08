@@ -30,7 +30,6 @@ class WeatherManager:
             if item_time <= time_limit:
                 compact_entry = [
                     item["main"]["temp"],
-                    #item_time.strftime('%Y-%m-%d %Hh'),
                     item_time.strftime('%d.%m.%Y %H Uhr'),
                     item["weather"][0]["description"],
                     item["wind"]["speed"]
