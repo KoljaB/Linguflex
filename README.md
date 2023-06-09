@@ -68,6 +68,11 @@ pip install -r requirements_basic.txt
 ```
 für die Basis-Installation
 
+```
+pip install -r requirements_full.txt
+```
+für die Komplett-Installation
+
 #### 6. OpenAI API Key eintragen
 
 Den OpenAI API key in die config.txt in der Sektion [openai_generator] eintragen. 
