@@ -31,7 +31,6 @@ bereits veröffentlicht:
 innerhalb der nächsten Tage folgen:
 - Komplett-Konfiguration:  
 `lights_control`  
-`webserver`  
 `emoji_game`  
 `depot_summary`  
 
@@ -172,7 +171,7 @@ Wird die vom Benutzer gestellte Anfrage vom Sprachmodell nicht erfüllt, prüft 
 <br>
 
 ## Komplett-Konfiguration
-Die Komplett-Konfiguration ist in config_full.txt hinterlegt und beinhaltet zusätzlich zur Basic-Konfiguration noch Audio- und Video-Ausspiel, aktuelle Wetterdaten, Smart-Home Lichtsteuerung, Abruf von Nachrichten, Suche nach Bildern im Internet, Erzeugung von Bildern mit Bildgeneratoren, den Abruf aktueller Investmentdepot-Daten und Spiele und ein Webservermodul zur Bedienung mit Smartphones.
+Die Komplett-Konfiguration ist in config_full.txt hinterlegt und beinhaltet zusätzlich zur Basic-Konfiguration noch Audio- und Video-Ausspiel, aktuelle Wetterdaten, Smart-Home Lichtsteuerung, Abruf von Nachrichten, Suche nach Bildern im Internet, Erzeugung von Bildern mit Bildgeneratoren, den Abruf aktueller Investmentdepot-Daten und Spiele.
 
 ### Modul für Audio- und Videoausspiel
 `media_playout`  
@@ -203,11 +202,6 @@ Erzeugt ein Bild mit dem DALL-E Bildgenerator unter Nutzung der OpenAI API und z
 `lights_control`  
   
 Steuert Farben und Helligkeit von Tuya Smartbulbs Lampen. Zu jeder Lampe wird ein frei vergebbarer Name, sowie Id, IP-Adresse, Key und Version in der Konfigurationsdatei hinterlegt. Id, IP, Key und Version können mit dem Konsolenbefehl "python -m tinytuya scan" automatisch aus dem WLAN gelesen werden ([pypi.org/project/tinytuya](https://pypi.org/project/tinytuya/)).
-
-### Webserver-Modul
-`webserver`  
-  
-Dieses Modul kommuniziert mit dem Webserver in modules/basic/webserver, der separat gestartet wird. Der Webserver öffnet den Port 5000, der in der lokalen Firewall für TCP-Kommunikation freigegeben wird. Der Webclient in modules/basic/webclient kann auf ein Smartphone kopiert werden. IP und Port des Webservers müssen in der index.html eingetragen werden. Es kann auch zB ein Router auf Port 80 angegeben werden, der eine Weiterleitung auf den lokalen Webserver vornimmt, so dass Linguflex auch unterwegs genutzt werden kann. Achtung: das funktioniert zwar in der Praxis, wird aber aufgrund potentieller Sicherheitslücken der rudimentären Webserver-Implementierung ausdrücklich nicht empfohlen.
 
 ### Spiele-Modul
 `emoji_game`  
