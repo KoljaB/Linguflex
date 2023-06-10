@@ -9,46 +9,18 @@ Für einen OpenAI API key gegebenenfalls Account bei OpenAI eröffnen ([platform
 
 ### Installation
 
-#### 1. [Python 3.9.9](https://www.python.org/downloads/release/python-399/) installieren
-#### 2. Linguflex Repository kopieren ("klonen")  
-Zip-File herunterladen und entpacken oder bei installiertem Github folgendes ausführen:
-```
-git clone https://github.com/KoljaB/Linguflex.git
-```
-#### 3. In das Verzeichnis wechseln
-```
-cd linguflex
-```
-#### 4. Virtuelle Umgebung erstellen (nicht unbedingt nötig, aber empfohlen)
-```
-python -m venv env
-env/bin/activate
-```
-#### 5. Abhängigkeiten installieren  
-```
-pip install -r requirements.txt
-```
-für die Vanilla-Installation  
-  
-
-```
-pip install -r requirements_basic.txt
-```
-für die Basis-Installation
-
-```
-pip install -r requirements_full.txt
-```
-für die Komplett-Installation
-
-#### 6. OpenAI API Key eintragen
-
+- [Python 3.9.9](https://www.python.org/downloads/release/python-399/) installieren
+- Linguflex Repository kopieren ("klonen")  
+Zip-File herunterladen und entpacken oder bei installiertem Github `git clone https://github.com/KoljaB/Linguflex.git` ausführen
+- in das Verzeichnis wechseln `cd linguflex`, (optional) virtuelle Umgebung erstellen mit `python -m venv env` und `env/bin/activate`
+- Abhängigkeiten installieren  
+für die Vanilla-Installation: `pip install -r requirements.txt`
+für die Basis-Installation: `pip install -r requirements_basic.txt`
+für die Komplett-Installation: `pip install -r requirements_full.txt`
+- OpenAI API Key eintragen
 Den OpenAI API key in die config.txt in der Sektion [openai_generator] eintragen. 
-```
-[openai_generator]
-openai_api_key=ENTER YOUR OPENAI API-KEY HERE
-```
-Hinweis: Nutzung zusätzlicher Module über Vanilla hinaus könnten weitere Anpassungen in der Konfigurationsdatei erfordern wie zB das eintragen weiterer API-Keys. Näheres dazu in der Beschreibung der jeweiligen Module.
+
+Hinweis: Nutzung zusätzlicher Module über Vanilla hinaus erfordern zum Teil weitere Anpassungen in der Konfigurationsdatei wie zB das eintragen weiterer API-Keys. Näheres dazu in der Beschreibung der jeweiligen Module.
 
 ### Start von Linguflex
 Konsolenfenster öffnen und folgendes eingeben:  
@@ -185,6 +157,8 @@ Zeigt eine Auswahl von Emojis, die ein "zufällig" ausgewähltes Werk (Film, Buc
 `depot_summary`  
   
 Abruf und Zusammenfassung von Investmentdepot-Daten. Das Investment-Depot wird als comdirect-Musterdepot angelegt und der externe Link dazu ("Aktionen gesamtes Musterdepot" => "Freunden zeigen") in der Konfigurationsdatei abgelegt.
+
+<br>
 
 ## Ausblick
 
