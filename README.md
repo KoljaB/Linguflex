@@ -206,7 +206,7 @@ Erzeugt ein Bild mit dem DALL-E Bildgenerator unter Nutzung der OpenAI API und z
 ### SmartHome Lichtsteuerung
 `lights_control`  
   
-Steuert Farben und Helligkeit von Tuya Smartbulbs Lampen. Zu jeder Lampe wird ein frei vergebbarer Name, sowie Id, IP-Adresse, Key und Version in der Konfigurationsdatei hinterlegt. Id, IP, Key und Version können mit dem Konsolenbefehl "python -m tinytuya scan" automatisch aus dem WLAN gelesen werden ([pypi.org/project/tinytuya](https://pypi.org/project/tinytuya/)).
+Steuert Farben und Helligkeit von Tuya Smartbulbs Lampen. Zu jeder Lampe wird ein frei vergebbarer Name, sowie Device-Id, die IP-Adresse der Lampe, den "Local Key" und Version in der Konfigurationsdatei hinterlegt. Beispieleinträge sind in der config_full.txt zu finden. Auf der [Webseite des tinytuya-Projekts](https://pypi.org/project/tinytuya/) gibt es unter der Rubrik "Setup Wizard - Getting Local Keys" eine ausführliche Anleitung, wie man an diese Daten kommt. 
 
 ### Spiele-Modul
 `emoji_game`  
