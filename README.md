@@ -217,3 +217,7 @@ Zeigt eine Auswahl von Emojis, die ein "zufällig" ausgewähltes Werk (Film, Buc
 `depot_summary`  
   
 Abruf und Zusammenfassung von Investmentdepot-Daten. Das Investment-Depot wird als comdirect-Musterdepot angelegt und der externe Link dazu ("Aktionen gesamtes Musterdepot" => "Freunden zeigen") in der Konfigurationsdatei abgelegt.
+
+## Ausblick
+
+Als nächstes folgt ein Webserver-Modul, das die Bedienung von LinguFlex mit dem Smartphone von überall aus ermöglicht. Ein funktionierender Webserver samt Client existiert bereits, zur Veröffentlichung ist der Code jedoch nicht ausgereift genug. Der jetzige Webserver ist eine eigenständige Flask-Anwendung, um dem Linguflex-Server nicht die Implementierung als CORS/Flask-Anwendung aufzuzwingen. Die daraus resultierende Interprozesskommunikation zwischen Linguflex- und Webserver basiert derzeit auf Textdateien und einer ganzen Reihe unschöner Spin/Busy-Waits. Dies aber auch generell Flask als Basis für den Webserver sind aus Sicherheitsgründen nicht ausreichend für ein Release, spätestens wenn man Ports nicht nur für das lokalen Netzwerk, sondern nach außen freigeben möchte, um Linguflex auch von unterwegs aus nutzen zu können.
