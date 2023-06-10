@@ -2,38 +2,6 @@
 
 Linguflex ist eine **innovative Plattform**, die eine **natürliche Interaktion** mit Textgeneratoren wie **OpenAI GPT** ermöglicht und die Erstellung schlanker, effizienter **Erweiterungsmodule** unterstützt. Vorgefertigte Module bieten eine Vielfalt an Funktionen – von Terminkalender und E-Mail-Verwaltung über Echtzeitzugriff auf Webinformationen, Wetterupdates oder Nachrichten bis hin zur Medienwiedergabe und Steuerung von Smart-Home-Geräten. Linguflex hebt sich hervor durch seine **Erweiterbarkeit**, **kompakten Modulcode** und die **Flexibilität**, individuellen Anwendungsanforderungen gerecht zu werden.
 
-### Release-Stand Module 
-bereits veröffentlicht:
-- Vanilla-Konfiguration:  
-`microphone_recorder`  
-`whisper_speechtotext`  
-`openai_generator`  
-`system_texttospeech`  
-  
-- Basis-Konfiguration:  
-`user_interface`  
-`edge_texttospeech`
-`azure_texttospeech`
-`elevenlabs_texttospeech`  
-`google_calendar`  
-`email_imap`  
-`google_information`  
-`auto_action`  
-`personality_switch`
-
-- Komplett-Konfiguration:  
-`media_playout`  
-`weather_summary`  
-`news_summary`  
-`pic_search`  
-`pic_generate`  
-`lights_control`  
-
-innerhalb der nächsten Tage folgen:
-- Komplett-Konfiguration:  
-`emoji_game`  
-`depot_summary`  
-
 ### Voraussetzungen
 - Python 3.9.9
 - OpenAI API key  
