@@ -85,7 +85,8 @@ google_api_key=ENTER YOUR GOOGLE API-KEY HERE
 google_cx_key=ENTER YOUR GOOGLE SEARCH ENGINE (CX)-KEY HERE
 
 [lights_control]
-# Replace the provided example values with the ones retrieved from the "python -m tinytuya scan" command
+# Follow the process described on https://pypi.org/project/tinytuya/ section "Setup Wizard - Getting Local Keys"
+# then replace the provided example values with the ones you got
 bulb_names=Wohnzimmer-Stehlampe,Küchen-Deckenlampe
 bulb_ids=bf645ll4cdf90da88fd5if,bf4384165484b91hsf1am7
 bulb_ips=192.168.178.123,192.168.178.234
