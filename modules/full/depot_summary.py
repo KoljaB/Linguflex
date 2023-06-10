@@ -31,11 +31,12 @@ portfolio_action = {
 portfolio_summarization_input = "Fasse die heutige Entwicklung des Depots zusammen. " 
 
 portfolio_summarization_prompt = """
-Fasse die wichtigsten Informationen zur heutigen Entwicklung des Depots zusammen. \
+Fasse anhand der folgenden Informationen die wichtigsten heutigen Entwicklungen des Depots zusammen. \
+
 Runde große Beträge auf Werte auf hunderter oder tausender auf oder ab. \
 Lass Einleitungen und Hinweise weg, gib nur eine knappes Fazit.
 
-Hier die Infos zum Depot:
+Hier die Informationen zum Depot:
 """ 
 
 class DepotSummary(JsonActionProviderModule_IF):
