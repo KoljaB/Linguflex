@@ -18,6 +18,8 @@ news_summary
 pic_search
 pic_generate
 lights_control
+depot_summary
+emoji_game
 
 [microphone_recorder]
 debug_show_volume=False	
@@ -92,3 +94,10 @@ bulb_ids=bf645ll4cdf90da88fd5if,bf4384165484b91hsf1am7
 bulb_ips=192.168.178.123,192.168.178.234
 bulb_keys=5bb48edfa9ff11e1,6daa614c0d4f63f2
 bulb_versions=3.4,3.4
+
+[depot_summary]
+# summary_url contains the comdirect Musterdepot url from which only the top bar information gets forwarded to the llm
+# you can then add multiple depots by comma-separating the corresponding names and urls which get parsed in detail
+summary_url=http://www.comdirect.de/inf/musterdepot/pmd/freunde.html?portfolio_key=2292222040208171207217514212856016747845524741807122040879782074100435982669295295
+depot_names=ETFs und Aktien
+depot_urls=http://www.comdirect.de/inf/musterdepot/pmd/freunde.html?portfolio_key=2292222040208171207217514212856016747845524741807122040879782074100435982669295295
