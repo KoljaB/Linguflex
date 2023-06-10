@@ -17,6 +17,7 @@ weather_summary
 news_summary
 pic_search
 pic_generate
+lights_control
 
 [microphone_recorder]
 debug_show_volume=False	
@@ -82,3 +83,11 @@ default_city=Hamburg
 [pic_search]
 google_api_key=ENTER YOUR GOOGLE API-KEY HERE
 google_cx_key=ENTER YOUR GOOGLE SEARCH ENGINE (CX)-KEY HERE
+
+[lights_control]
+# Replace the provided example values with the ones retrieved from the "python -m tinytuya scan" command
+bulb_names=Wohnzimmer-Stehlampe,Küchen-Deckenlampe
+bulb_ids=bf645ll4cdf90da88fd5if,bf4384165484b91hsf1am7
+bulb_ips=192.168.178.123,192.168.178.234
+bulb_keys=5bb48edfa9ff11e1,6daa614c0d4f63f2
+bulb_versions=3.4,3.4
