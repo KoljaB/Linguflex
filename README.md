@@ -12,7 +12,7 @@ Für einen OpenAI API key gegebenenfalls Account bei OpenAI eröffnen ([platform
 - [Python 3.9.9](https://www.python.org/downloads/release/python-399/) installieren
 - Linguflex Repository kopieren ("klonen")  
 Zip-File herunterladen und entpacken oder bei installiertem Github `git clone https://github.com/KoljaB/Linguflex.git` ausführen
-- in das Verzeichnis wechseln `cd linguflex`, (optional) virtuelle Umgebung erstellen mit `python -m venv env` und `env/Scripts/activate`
+- in das Verzeichnis wechseln `cd linguflex`, (optional) virtuelle Umgebung erstellen mit `python -m venv env` und `env\Scripts\activate`
 - Abhängigkeiten installieren  
 für die Vanilla-Installation: `pip install -r requirements.txt`
 für die Basis-Installation: `pip install -r requirements_basic.txt`
