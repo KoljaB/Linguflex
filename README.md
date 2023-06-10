@@ -27,10 +27,10 @@ bereits veröffentlicht:
 `news_summary`  
 `pic_search`  
 `pic_generate`  
+`lights_control`  
 
 innerhalb der nächsten Tage folgen:
 - Komplett-Konfiguration:  
-`lights_control`  
 `emoji_game`  
 `depot_summary`  
 
