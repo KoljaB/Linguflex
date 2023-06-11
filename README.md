@@ -1,41 +1,61 @@
 # Linguflex
 
-Linguflex ist eine **innovative Plattform**, die eine **natürliche Interaktion** mit Textgeneratoren wie **OpenAI GPT** ermöglicht und die Erstellung schlanker, effizienter **Erweiterungsmodule** unterstützt. Vorgefertigte Module bieten eine Vielfalt an Funktionen – von Terminkalender und E-Mail-Verwaltung über Echtzeitzugriff auf Webinformationen, Wetterupdates oder Nachrichten bis hin zur Medienwiedergabe und Steuerung von Smart-Home-Geräten. Linguflex hebt sich hervor durch seine **Erweiterbarkeit**, **kompakten Modulcode** und die **Flexibilität**, individuellen Anwendungsanforderungen gerecht zu werden.
+Linguflex ist ein **persönlicher Assistent**, der **auf gesprochenes Wort reagiert**, wie es ein Mensch tun würde.
 
-### Voraussetzungen
+Sie sprechen ins Mikrophon, Linguflex hört zu und reagiert auf Ihre Anweisungen. Sie können Linguflex bitten, Ihren Tag zu **planen**, Updates zu **E-Mails**, **Wetter** und **Nachrichten** zu liefern, **Medien** abzuspielen oder Ihre **Smart-Home**-Geräte zu steuern. Sie können Linguflex erweitern und anpassen, um genau das zu tun, was Sie benötigen.
+
+## Key Features
+
+- **Sprachsteuerung**  
+  - versteht gesprochene Anweisungen und kann darauf reagieren
+- **Personalisierung**
+  - modular aufgebaut, kann individuell auf die Bedürfnisse des Benutzers angepasst werden
+- **Home-Automation**
+  - kann Smart-Home-Geräte steuern und Musik oder Videos abspielen
+- **Informationsaufbereitung**
+  - kann Informationen zu Nachrichten, Wetter, EMails, Terminen etc sammeln und präsentieren
+
+## Voraussetzungen
+
 - Python 3.9.9
-- OpenAI API key  
-Für einen OpenAI API key gegebenenfalls Account bei OpenAI eröffnen ([platform.openai.com](https://platform.openai.com/)). Anschließend rechts oben auf den Profilnamen klicken, dann im Menü auf "View API Keys" und anschließend auf "Create new secret key".
+- OpenAI API key
 
-### Installation
+Um einen OpenAI API-Schlüssel zu erhalten, gegebenenfalls ein Konto auf [platform.openai.com](https://platform.openai.com/) erstellen. Klicken Sie danach auf Ihren Profilnamen in der rechten oberen Ecke, navigieren Sie im Menü zu "View API Keys" und klicken Sie auf "Create new secret key".
 
-- [Python 3.9.9](https://www.python.org/downloads/release/python-399/) installieren
-- Linguflex Repository kopieren ("klonen")  
-Zip-File herunterladen und entpacken oder bei installiertem Github `git clone https://github.com/KoljaB/Linguflex.git` ausführen
-- in das Verzeichnis wechseln `cd linguflex`, (optional) virtuelle Umgebung erstellen mit `python -m venv env` und `env\Scripts\activate`
-- Abhängigkeiten installieren  
-für die Vanilla-Installation: `pip install -r requirements.txt`
-für die Basis-Installation: `pip install -r requirements_basic.txt`
-für die Komplett-Installation: `pip install -r requirements_full.txt`
-- OpenAI API Key eintragen
-Den OpenAI API key in die config.txt in der Sektion [openai_generator] eintragen. 
+## Installation
 
-Hinweis: Nutzung zusätzlicher Module über Vanilla hinaus erfordern zum Teil weitere Anpassungen in der Konfigurationsdatei wie zB das eintragen weiterer API-Keys. Näheres dazu in der Beschreibung der jeweiligen Module.
+1. Installieren Sie [Python 3.9.9](https://www.python.org/downloads/release/python-399/)
+2. Klonen Sie das Linguflex-Repository:
+   - Laden Sie die ZIP-Datei herunter und extrahieren Sie sie, oder
+   - Führen Sie `git clone https://github.com/KoljaB/Linguflex.git` aus, falls Sie Git installiert haben.
+3. Navigieren Sie zum Linguflex-Verzeichnis: `cd linguflex`
+4. (Optional) Erstellen Sie eine virtuelle Umgebung: `python -m venv env` und aktivieren Sie sie mit `env\Scripts\activate`
+5. Installieren Sie die Abhängigkeiten entsprechend dem gewünschten Installationstyp:
+   - Für eine Vanilla-Installation: `pip install -r requirements.txt`
+   - Für eine Basis-Installation: `pip install -r requirements_basic.txt`
+   - Für eine Komplett-Installation: `pip install -r requirements_full.txt`
+6. Geben Sie den OpenAI API-Schlüssel ein:
+   - Öffne die Datei `config.txt` und trage den API-Schlüssel im Abschnitt `[openai_generator]` ein.
 
-### Start von Linguflex
-Konsolenfenster öffnen und folgendes eingeben:  
-  
-`python linguflex`
+Hinweis: Die Verwendung zusätzlicher Module über die Vanilla-Installation hinaus kann zusätzliche Konfigurationsänderungen erfordern, wie das Hinzufügen weiterer API-Schlüssel. Weitere Informationen dazu gibt es in den Modulbeschreibungen.
 
-### Konfiguration
-Eine Linguflex-Konfiguration ist eine Textdatei, welche die zu ladenden Modulen und deren Einstellungen beschreibt. Standardmäßig lädt Linguflex die Konfiguration, die in der Datei config.txt hinterlegt ist. Optional kann der Pfad zu einer anderen Konfigurationsdatei per Kommandozeilenparameter übergeben werden.  
+## Start
 
-Es werden drei Beispielkonfigurationen mitgeliefert:  
-1. Vanilla (Sprachkommunikation mit dem GPT-Modell)
-2. Basis (grundlegende Erweiterungsmodule)
-3. Komplett (alle verfügbaren Module)
+Um Linguflex zu starten, öffnen Sie ein Konsolenfenster und geben Sie folgenden Befehl ein:
+```
+python linguflex
+```
 
-Es wird empfohlen, mit der einfachen Vanilla-Konfiguration zu beginnen und dann sukzessive präferierte Module zu ergänzen, da deren Inbetriebnahme oft mit zusätzlichen Schritten verbunden ist. Wie ein einzelnes Modul in der config.txt angelegt und konfiguriert wird kann den Dateien config_basic.txt oder config_full.txt entnommen werden.
+## Konfiguration
+
+Eine Linguflex-Konfiguration ist eine Textdatei, die die zu ladenden Module und ihre Einstellungen beschreibt. Standardmäßig lädt Linguflex die Konfiguration aus der Datei `config.txt`. Alternativ können Sie den Pfad zu einer anderen Konfigurationsdatei als Kommandozeilenparameter angeben.
+
+Das Repository enthält drei Beispielkonfigurationen:
+1. Standard (Vanilla): Ermöglicht eine grundlegende Sprachkommunikation mit dem GPT-Modell.
+2. Basis (Basic): Beinhaltet zusätzliche Module für erweiterte Funktionen.
+3. Voll (Full): Stellt alle verfügbaren Module bereit.
+
+Wir empfehlen, mit der Vanilla-Konfiguration zu beginnen und nach und nach bevorzugte Module hinzuzufügen, da einige Module zusätzliche Einrichtungsschritte erfordern. Bitte schauen Sie dazu in die Dateien `config_basic.txt` oder `config_full.txt`, um zu sehen, wie einzelne Module konfiguriert und zur `config.txt`-Datei hinzugefügt werden können.
 
 ### Module
 In der Sektion [modules] der config-Datei werden die zu ladenden Module angegeben. Linguflex lädt und startet alle Module in der hier angegebenen Reihenfolge.
