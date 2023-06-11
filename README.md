@@ -2,7 +2,7 @@
 
 Linguflex ist ein **persönlicher Assistent**, der **auf gesprochenes Wort reagiert**, wie es ein Mensch tun würde.
 
-Sie sprechen ins Mikrophon, Linguflex hört zu und reagiert auf Ihre Anweisungen. Sie können Linguflex bitten, Ihren Tag zu **planen**, Updates zu **E-Mails**, **Wetter** und **Nachrichten** zu liefern, **Medien** abzuspielen oder Ihre **Smart-Home**-Geräte zu steuern. Sie können Linguflex erweitern und anpassen, um genau das zu tun, was Sie benötigen.
+Sie sprechen ins Mikrophon, Linguflex hört zu und reagiert auf Ihre Anweisungen. Sie können Linguflex bitten, Ihre **Termine zu planen**, Updates zu **E-Mails**, **Wetter** und **Nachrichten** zu liefern, **Medien** abzuspielen oder Ihre **Smart-Home**-Geräte zu steuern. Sie können Linguflex erweitern und anpassen, um genau das zu tun, was Sie benötigen.
 
 ## Key Features
 
