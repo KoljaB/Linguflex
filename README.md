@@ -8,12 +8,12 @@ Sie sprechen ins Mikrophon, Linguflex hört zu und reagiert auf Ihre Anweisungen
 
 - **Sprachsteuerung**  
   - versteht gesprochene Anweisungen und kann darauf reagieren
-- **Personalisierung**
-  - modular aufgebaut, kann individuell auf die Bedürfnisse des Benutzers angepasst werden
+- **Persönlicher Assistent**
+  - präsentiert aktuelle Nachrichten, Wetter, EMails und verwaltet Termine
 - **Home-Automation**
   - kann Smart-Home-Geräte steuern und Musik oder Videos abspielen
-- **Informationsaufbereitung**
-  - kann Informationen zu Nachrichten, Wetter, EMails, Terminen etc sammeln und präsentieren
+- **Personalisierung**
+  - modular aufgebaut, kann individuell auf die Bedürfnisse des Benutzers angepasst werden
 
 ## Voraussetzungen
 
