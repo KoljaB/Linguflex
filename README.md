@@ -106,7 +106,7 @@ Die Basis-Installation, definiert in `config_basic.txt`, erweitert die Vanilla-I
 - Kalender-Modul  
   `google_calendar`
   - integriert den Google Kalender, um Ereignisse abzurufen und hinzuzufügen
-  - benötigt die Datei `credentials.json` im Ausführungsverzeichnis von Linguflex. Um diese Datei zu erhalten, folgen Sie den unten stehenden Anweisungen:
+  - benötigt die Datei `credentials.json` im Ausführungsverzeichnis von Linguflex. Um diese Datei zu erhalten, folgen Sie den unten stehenden Anweisungen (siehe auch [hier](https://developers.google.com/calendar/api/quickstart/python?hl=de#authorize_credentials_for_a_desktop_application)):
     - erstellen Sie ein Projekt auf [console.cloud.google.com](https://console.cloud.google.com/) und navigieren Sie zu "APIs & Dienste" -> "Anmeldedaten"
     - klicken Sie auf "Anmeldedaten erstellen" und wählen Sie "OAuth-Client-ID", um eine neue OAuth-Client-ID zu erstellen
     - klicken Sie unter "OAuth 2.0-Client-IDs" auf das Download-Symbol auf der rechten Seite, um die Datei `credentials.json` herunterzuladen
