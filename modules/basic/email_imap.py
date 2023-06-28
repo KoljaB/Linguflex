@@ -1,71 +1,70 @@
-import sys
-sys.path.insert(0, '..')
-
-from linguflex_interfaces import JsonActionProviderModule_IF
-from linguflex_log import log, DEBUG_LEVEL_OFF, DEBUG_LEVEL_MIN, DEBUG_LEVEL_MID, DEBUG_LEVEL_MAX
-from linguflex_config import cfg, set_section, get_section, configuration_parsing_error_message
-from linguflex_message import LinguFlexMessage
+import pickle
+import os
+from core import cfg, log, DEBUG_LEVEL_MAX
+from linguflex_functions import linguflex_function
 from email_imap_helper import EmailFetcher
-from datetime import datetime
+from datetime import datetime, timedelta
 
-set_section('email_imap')
+fetcher = EmailFetcher(cfg('server'), cfg('username'), cfg('password'))
+history_days = int(cfg('history_days'))
 
-try:
-    server = cfg[get_section()]['server']
-    username = cfg[get_section()]['username']
-    password = cfg[get_section()]['password']
-except Exception as e:
-    raise ValueError(configuration_parsing_error_message + ' ' + str(e))
+CHECK_TIME_FILE='email_last_check_time.pkl'
+
+@linguflex_function
+def retrieve_emails(mailbox='INBOX'):
+    "Returns current emails; mailbox: name of the mailbox to retrieve emails from; default is 'INBOX'"
+    log(DEBUG_LEVEL_MAX, "  [retrieve_emails] Start fetching emails...")
+
+    imap = fetcher.connect_to_server()
+    email_ids = fetcher.search_emails(imap, history_days, mailbox)
+    emails = fetcher.fetch_emails(imap, email_ids)
+    emails.reverse()
+    log(DEBUG_LEVEL_MAX, f"  [retrieve_emails] Fetched {len(emails)} emails successfully")
+
+    # Close the connection to the IMAP server
+    imap.logout()
+
+    # Limit the number of emails to 10
+    emails = emails[:10]
+
+    last_check_time = get_last_check_time()
+
+    # filter out emails that are older than last_check_time
+    emails = [email for email in emails if datetime.strptime(email['date'], '%d.%m.%Y %H:%M:%S') > last_check_time]
+
+    store_last_check_time(datetime.today())    
+
+    # last_check_time = get_last_check_time()
+
+    # # filter out emails that are older than last_check_time
+    # # the current date is in 'date' like that: 
+    # # for email in emails:
+    # #   mail_date = email['date'] # formatted as in datetime.strptime(date_str, '%a, %d %b %Y %H:%M:%S %z').strftime('%d.%m.%Y %H:%M:%S')
+
+    # emails = [email for email in emails if datetime.strptime(email['date'], '%a, %d %b %Y %H:%M:%S %z') > last_check_time]
+
+    # store_last_check_time(datetime.today())
+
+    return {"last check time": str(last_check_time), "emails": emails}
+    #return emails
 
 
-emails_action = {
-    'description': 'E-Mails abrufen',
-    'react_to': ['mail','mails','email','emails','e-mail','e-mails'],
-    'example_user': 'Wie sind meine E-Mails?',
-    'example_assistant': '{"EMail": "Datenabruf"}',
-    'key_description': 'EMail',
-    'value_description': 'Datenabruf',
-    'keys': ['EMail'],
-    'instructions' : 'Gib wenn du zu E-Mails befragt wirst das JSON {"EMail": "Datenabruf"} aus, sonst nichts.'
-}
+def store_last_check_time(check_time):
+    """
+    Stores the time of the last email check to a file.
 
-class EMailModule(JsonActionProviderModule_IF):
+    :param check_time: The time of the last email check.
+    """
+    with open(CHECK_TIME_FILE, 'wb') as f:
+        pickle.dump(check_time, f)
 
-    def __init__(self) -> None:
-        self.actions = [emails_action]
-        self.fetcher = EmailFetcher(server, username, password)
+def get_last_check_time():
+    """
+    Retrieves the time of the last email check from a file. If the file doesn't exist, return the current time minus 7 days.
 
-    def perform_action(self, 
-            message: LinguFlexMessage,
-            json) -> None:
-        try:
-            if 'EMail' in json.keys() and json['EMail'] == 'Datenabruf':
-                log(DEBUG_LEVEL_MID, f'  [mail] checking mails')
-
-                # fetch mails
-                emails = self.fetcher.get_mails(5)
-                emails.reverse()
-                log(DEBUG_LEVEL_MAX, f'  [mail] mails fetched: ' + str(len(emails)))
-
-                # create summary for llm
-                summary = ''
-                for email in emails:
-                    email['content'] = self.fetcher.remove_links(email['content'])
-                    summary += self.fetcher.summarize(email) + "\n"
-                summary = (summary[:5000] + '..') if len(summary) > 5000 else summary                    
-
-                # raise new message since we want to call the llm again
-                create_new_response = message.create()                
-                create_new_response.input = "Gib mir eine Zusammenfassung relevanter, wichtiger EMails."
-                cur_date = datetime.now().strftime("%d.%m.%Y")
-                cur_time = datetime.now().strftime("%H:%M")
-                time_string = f'Das heutige Datum ist {cur_date}, es ist {cur_time} Uhr. '                
-                create_new_response.prompt = time_string + f"Meine EMails: ´´´{summary}´´´"
-                create_new_response.skip_input = True
-                create_new_response.remove_from_history = True
-                message.skip_output = True
-                message.initialize_message = create_new_response
-            
-
-        except Exception as e:
-            log(DEBUG_LEVEL_MIN, '  [mail] ERROR:' + str(e))
+    :return: The time of the last email check.
+    """
+    if not os.path.exists(CHECK_TIME_FILE):
+        return datetime.today() - timedelta(days=7)
+    with open(CHECK_TIME_FILE, 'rb') as f:
+        return pickle.load(f)   

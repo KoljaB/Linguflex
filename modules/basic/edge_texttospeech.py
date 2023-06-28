@@ -1,5 +1,5 @@
-import sys
-sys.path.insert(0, '..')
+from core import TextToSpeechModule, Request, cfg, log, DEBUG_LEVEL_MIN, DEBUG_LEVEL_MID, DEBUG_LEVEL_MAX, DEBUG_LEVEL_ERR
+from pywinauto import win32api
 import os
 import subprocess
 import time
@@ -9,37 +9,26 @@ import tempfile
 import pyautogui
 import psutil
 import win32con
-from pywinauto import win32api
 import win32gui
 import win32process
 
-from linguflex_interfaces import TextToSpeechModule_IF
-from linguflex_log import log, DEBUG_LEVEL_OFF, DEBUG_LEVEL_MIN, DEBUG_LEVEL_MID, DEBUG_LEVEL_MAX
-from linguflex_config import cfg, set_section, get_section, configuration_parsing_error_message
-from linguflex_message import LinguFlexMessage
-
-set_section('edge_texttospeech')
-
-try:
-    minimize_window = cfg[get_section()].getboolean('minimize_window', False)
-    launch_wait_time_before_tts_init = cfg[get_section()].getfloat('launch_wait_time_before_tts_init', 0.75)
-    tts_wait_time_before_minimize_init = cfg[get_section()].getfloat('tts_wait_time_before_minimize_init', 0.75)
-    max_wait_time_for_close_windows = cfg[get_section()].getfloat('max_wait_time_for_close_windows', 1)
-except Exception as e:
-    raise ValueError(configuration_parsing_error_message + ' ' + str(e))
+minimize_window = cfg('minimize_window').lower() == "true"
+launch_wait_time_before_tts_init = float(cfg('launch_wait_time_before_tts_init'))
+tts_wait_time_before_minimize_init = float(cfg('tts_wait_time_before_minimize_init'))
+max_wait_time_for_close_windows = float(cfg('max_wait_time_for_close_windows'))
 
 EDGE_FILENAME_READ_ALOUD = "linguflex_edge_read_aloud.html"
 
-class TextToSpeechModule_Edge(TextToSpeechModule_IF):
+class TextToSpeech_Edge(TextToSpeechModule):
     def __init__(self):
         temp_file_path = tempfile.gettempdir()
         self.path = os.path.join(temp_file_path, EDGE_FILENAME_READ_ALOUD)
         self.edge_path = os.path.join("C:\\", "Program Files (x86)", "Microsoft", "Edge", "Application", "msedge.exe")        
 
     def perform_text_to_speech(self, 
-            message: LinguFlexMessage) -> None: 
+            request: Request) -> None: 
         with open(self.path, 'w', encoding='utf-8') as file:
-            file.write(message.output_user)
+            file.write(request.output_user)
         # Search and kill running edge instances
         self.close_all_edge_windows()       
         # Start edge and wait for idle
@@ -93,6 +82,7 @@ class TextToSpeechModule_Edge(TextToSpeechModule_IF):
         self.close_all_edge_windows()        
 
     def close_all_edge_windows(self):
+        log(DEBUG_LEVEL_MAX, '  [edge] closing windows')
         while True:
             edge_processes = [p for p in psutil.process_iter() if self.is_running_edge_process(p)]
             if not edge_processes: 

@@ -1,0 +1,9 @@
+{
+    "search_world_wide_web": 
+		{
+			"keywords": ["google", "googel", "such", "internet", "web", "netz", "browse", "online", "recherch", "inform", "ergebnis", "anfrage", "surf", "www", "sites", "online", "find", "raus"],
+			"init_prompt": "",
+			"success_prompt": "",
+			"fail_prompt": ""
+		}
+}

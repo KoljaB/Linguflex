@@ -1,0 +1,9 @@
+{
+    "switch_personality": 
+		{
+			"keywords": ["char", "behavior", "mimic", "become", "transform", "slip", "role", "embody", "identity", "person", "figure", "avatar", "assume", "profile", "switch", "change", "adapt", "personality"],
+			"init_prompt": "",
+			"success_prompt": "The character or personality has been switched.",
+			"fail_prompt": ""
+		}
+}

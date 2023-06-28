@@ -1,62 +1,93 @@
-import sys
-sys.path.insert(0, '..')
-import pyaudio
-import wave
+import json
 import os
-
-from linguflex_interfaces import TextToSpeechModule_IF
-from linguflex_log import log, DEBUG_LEVEL_OFF, DEBUG_LEVEL_MIN, DEBUG_LEVEL_MID, DEBUG_LEVEL_MAX
-from linguflex_config import cfg, set_section, get_section, configuration_parsing_error_message
-from linguflex_message import LinguFlexMessage
-from elevenlabs_texttospeech_helper import ConvertNumbersToText
-from elevenlabs import set_api_key, generate, play
+from core import TextToSpeechModule, Request, cfg, log, DEBUG_LEVEL_MAX, DEBUG_LEVEL_ERR
+from elevenlabs import voices, set_api_key, generate, play
 from elevenlabs.api import Voice, VoiceSettings
+from elevenlabs_texttospeech_helper import ConvertNumbersToText
 
-set_section('elevenlabs_texttospeech')
+class TextToSpeech_ElevenLabs(TextToSpeechModule):
+    """
+    Text to speech implementation for ElevenLabs service.
+    """
 
-API_KEY_NOT_FOUND_ERROR_MESSAGE = 'Elevenlabs Speech API-Key not found. Please define the key in your linguflex config file or set the key in the environment variable LINGU_ELEVENLABS_SPEECH_KEY.'
+    def __init__(self):
+        """
+        Initialize the text to speech module with settings from the configuration and loading available voices.
+        """
 
-# Import Elevenlabs Speech API-Key from either registry (LINGU_ELEVENLABS_SPEECH_KEY) or config file tts_elevenlabs/elevenlabs_speech_api_key
-api_key = os.environ.get('LINGU_ELEVENLABS_SPEECH_KEY')
-if api_key is None:
-    try:
-        api_key = cfg[get_section()]['elevenlabs_speech_api_key']
-    except Exception as e:
-        raise ValueError(configuration_parsing_error_message + ' ' + str(e))
-if api_key is None:
-    raise ValueError(API_KEY_NOT_FOUND_ERROR_MESSAGE)
-set_api_key(api_key)
+        # Get configuration settings
+        self.voice = cfg('voice')
+        self.language = cfg('language')
+        self.log_voices = cfg('log_voices').lower() == 'true'
+        self.api_key = cfg('api_key', 'LINGU_ELEVENLABS_SPEECH_KEY')
 
-# Read module configuration
-try:
-    voice = cfg[get_section()].get('voice', 'Adam')
-except Exception as e:
-    raise ValueError(configuration_parsing_error_message + ' ' + str(e))
+        # Set API key for the ElevenLabs service
+        set_api_key(self.api_key)
 
-text_converter = ConvertNumbersToText()
+        # Initialize text converter
+        self.text_converter = ConvertNumbersToText()
 
-class TextToSpeechModule_ElevenLabs(TextToSpeechModule_IF):
-    def perform_text_to_speech(self, 
-            message: LinguFlexMessage) -> None: 
-        output_optimized = text_converter.optimiere(message.output_user)
+        # Load available voices
+        current_directory = os.path.dirname(os.path.abspath(__file__))
+        file_path = os.path.join(current_directory, f"elevenlabs_texttospeech.voices.{self.language}.json")
+        
+        try:
+            # Load voices from file
+            with open(file_path, "r", encoding='utf-8') as file:
+                self.available_voices = json.load(file)
+        except (FileNotFoundError, json.JSONDecodeError) as e:
+            # Log error and use empty list as fallback
+            log(DEBUG_LEVEL_ERR, f"Error loading voices file: {e}")
+            self.available_voices = []
+
+        # Log voices if configured to do so
+        if self.log_voices:
+            installed_voices = voices()
+            log(DEBUG_LEVEL_MAX, f"  [tts_eleven] installed voices: {installed_voices}")
+        log(DEBUG_LEVEL_MAX, f"  [tts_eleven] available voices: {self.available_voices}")
+
+    def is_voice_available(self, request: Request) -> bool:
+        """
+        Check if the requested voice is available.
+
+        Returns:
+            A boolean indicating if the voice is available.
+        """
+
+        # Check if any voice in available voices matches the requested one
+        return any(voice["voice"] == request.character for voice in self.available_voices)
+
+    def perform_text_to_speech(self, request: Request) -> None:
+        """
+        Perform text to speech using the ElevenLabs service.
+        """
+
+        # Optimize output if language is German
+        output_optimized = self.text_converter.optimiere(request.output_user) if self.language == "de" else request.output_user
+
+        # Log start of TTS process and output
+        log(DEBUG_LEVEL_MAX, f"  [tts_eleven] tts started, favoured voice {request.character}")
         log(DEBUG_LEVEL_MAX, '  [tts_eleven] output [{}]'.format(output_optimized))
 
-        # use cloned voice:
-        # voice = Voice(
-        #     voice_id="yourVoiceId",
-        #     name="yourVoiceName",
-        #     category="cloned",
-        #     settings=VoiceSettings(stability=0.85, similarity_boost=0.85),
-        # )
+        # Select requested voice if available, fallback to first available or "Bella" if none
+        selected_voice = next((voice for voice in self.available_voices if voice["voice"] == request.character), self.available_voices[0] if self.available_voices else "Bella")
 
-        audio = generate(
-            text=output_optimized,
-            voice=voice,
-            model="eleven_multilingual_v1"
-            )        
+        # If selected voice is a dict, create Voice object
+        if isinstance(selected_voice, dict):
+            voice_object = Voice(
+                voice_id=selected_voice["id"],
+                name=selected_voice["name"],
+                category=selected_voice["category"],
+                settings=VoiceSettings(stability=float(selected_voice["stability"]), similarity_boost=float(selected_voice["similarity"]))
+            )
+            # Generate audio using the selected voice
+            audio = generate(text=output_optimized, voice=voice_object, model="eleven_multilingual_v1")        
+        else:
+            # Generate audio using the fallback voice
+            audio = generate(text=output_optimized, voice=selected_voice, model="eleven_multilingual_v1")
         
+        # Play the generated audio
         play(audio)
-
 
 #  voice_id='21m00Tcm4TlvDq8ikWAM', name='Rachel', category='premade', settings=VoiceSettings(stability=0.75, similarity_boost=0.75
 #  voice_id='AZnzlk1XvdvUeBnXmlld', name='Domi', category='premade', settings=VoiceSettings(stability=0.75, similarity_boost=0.75

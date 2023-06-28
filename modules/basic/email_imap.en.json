@@ -1,0 +1,9 @@
+{
+    "retrieve_emails": 
+		{
+			"keywords": ["mail"],
+			"init_prompt": "",
+			"success_prompt": "Summarize emails in a highly condensed form without letter-number combinations such as order numbers or invoice numbers. ",
+			"fail_prompt": ""
+		}
+}

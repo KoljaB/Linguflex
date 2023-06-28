@@ -1,38 +1,38 @@
-import sys
-sys.path.insert(0, '..')
+from core import InputModule, Request, log, DEBUG_LEVEL_OFF, DEBUG_LEVEL_MIN, DEBUG_LEVEL_MID, DEBUG_LEVEL_MAX
 
-from linguflex_interfaces import Module_IF
-from linguflex_log import log, DEBUG_LEVEL_OFF, DEBUG_LEVEL_MIN, DEBUG_LEVEL_MID, DEBUG_LEVEL_MAX
-from linguflex_message import LinguFlexMessage
-from user_interface_helper import UI_Window
+from user_interface_helper import UIWindow
 
-class UserInterfaceModule(Module_IF):   
+class UserInterfaceModule(InputModule):   
+    def finish_request(self, request: Request) -> None: 
+        if hasattr(request, "notebook"):
+            self.ui.set_notebook_data(request.notebook)
+
     def __init__(self) -> None:
-        self.ui = UI_Window()
+        self.ui = UIWindow()
         self.started = False
         self.is_running = True
         self.ui.set_close_notify_method(self.close_notify)
 
+    def user_text(self, text) -> None:
+        self.ui.add_label(text, text_color="#FFFFFF", text_backgroundcolor="#222222", align_right=True)
+
+    def answer_text(self, text) -> None:
+        self.ui.add_label(text, font_size=17)
+
+
+
     def close_notify(self) -> None:
         self.is_running = False
 
-    def log(self, 
-            dbg_lvl: int, 
-            text: str) -> None:
-        if DEBUG_LEVEL_MIN >= dbg_lvl and not self.started:
-            self.ui.startup(text)
-        elif DEBUG_LEVEL_OFF >= dbg_lvl:
-            self.ui.system(text)        
-
     def handle_input(self, 
-            message: LinguFlexMessage) -> None: 
-        if not message.skip_input:
-            self.ui.user(message.input)
+            request: Request) -> None: 
+        if not request.skip_input:
+            self.user_text(request.input)
 
     def handle_output(self, 
-            message: LinguFlexMessage) -> None: 
-        if not message.skip_output:
-            self.ui.assistant(message.output_user)
+            request: Request) -> None: 
+        if not request.skip_output:
+            self.answer_text(request.output_user)
 
     def shutdown_request(self) -> None:
         return not self.is_running
@@ -41,8 +41,10 @@ class UserInterfaceModule(Module_IF):
         if self.is_running: 
             self.ui.close()
 
-    def cycle(self, 
-            message: LinguFlexMessage) -> None: 
-        if not self.started:
-            self.ui.startup_ready('system ready')
-        self.started = True
+    def create_text_input(self,
+            request: Request) -> None: 
+        potential_input = self.ui.user_input.strip()
+        if potential_input:
+            request.input = potential_input
+            self.ui.user_input = ''
+
