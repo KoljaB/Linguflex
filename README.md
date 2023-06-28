@@ -1,52 +1,41 @@
 # Linguflex
-
 Linguflex ist ein **persönlicher KI-Assistent** ähnlich wie "**Jarvis**", der **auf gesprochenes Wort reagiert**.
 
 ## Key Features
-
-Er kann verschiedene **Persönlichkeiten** nachahmen, **Musik** abspielen, **Termine** managen, eure **E-Mails** abrufen, euch das **Wetter** ansagen, euch **Nachrichten** präsentieren, das **Licht** in eurem Zimmer kontrollieren, für euch Texte oder Bilder **im Internet suchen**, auf Grundlage eurer Beschreibungen **Bilder erzeugen** und hat euer Aktienportfolio im Auge. 
+Linguflex kann:
+- beliebige **Persönlichkeiten** nachahmen
+- **Musik** abspielen
+- **Termine** managen
+- **E-Mails** abrufen
+- das **Wetter** ansagen
+- **Nachrichten** präsentieren
+- **im Internet suchen** (Texte oder Bilder)
+- **Bilder erzeugen** auf Grundlage eurer Beschreibungen  
+und hat euer Aktienportfolio im Auge. 
+- **Licht** in eurem Zimmer kontrollieren
 
 ## Voraussetzungen
-
-- Python 3.9.9
-- OpenAI API key
-
-Um einen OpenAI API-Schlüssel zu erhalten, gegebenenfalls ein Konto auf [platform.openai.com](https://platform.openai.com/) erstellen. Klicken Sie danach auf Ihren Profilnamen in der rechten oberen Ecke, navigieren Sie im Menü zu "View API Keys" und klicken Sie auf "Create new secret key".
+- [Python 3.9.9](https://www.python.org/downloads/release/python-399/)
+- [OpenAI API key](https://platform.openai.com/) 
 
 ## Installation
+```
+pip install -r requirements.txt
+```
+oder für eine Minimalkonfiguration ("Vanilla"): `pip install -r requirements_minimal.txt`
 
-1. Installieren Sie [Python 3.9.9](https://www.python.org/downloads/release/python-399/)
-2. Klonen Sie das Linguflex-Repository:
-   - laden Sie die ZIP-Datei herunter und extrahieren Sie sie, oder
-   - führen Sie `git clone https://github.com/KoljaB/Linguflex.git` aus, falls Sie Git installiert haben.
-3. Navigieren Sie zum Linguflex-Verzeichnis: `cd linguflex`
-4. (Optional) Erstellen Sie eine virtuelle Umgebung: `python -m venv env` und aktivieren Sie sie mit `env\Scripts\activate`
-5. Installieren Sie die Abhängigkeiten entsprechend dem gewünschten Installationstyp:
-   - für eine Vanilla-Installation: `pip install -r requirements.txt`
-   - für eine Basis-Installation: `pip install -r requirements_basic.txt`
-   - für eine Komplett-Installation: `pip install -r requirements_full.txt`
-6. Geben Sie den OpenAI API-Schlüssel ein:
-   - Datei `config.txt` öffnnen API-Schlüssel im Abschnitt `[openai_generator]` eintragen
-
-Hinweis: Die Verwendung zusätzlicher Module über die Vanilla-Installation hinaus kann zusätzliche Konfigurationsänderungen erfordern, wie das Hinzufügen weiterer API-Schlüssel. Weitere Informationen dazu gibt es in den Modulbeschreibungen.
+OpenAI API-Schlüssel entweder:
+- in die Datei `config.txt` im Bereich [openai_generator] in den Schlüssel "api_key" eintragen
+- oder in die Umgebungsvariable LINGU_OPENAI_API_KEY eintragen
 
 ## Start
-
-Um Linguflex zu starten, öffnen Sie ein Konsolenfenster und geben Sie folgenden Befehl ein:
 ```
 python linguflex
 ```
 
 ## Konfiguration
 
-Eine Linguflex-Konfiguration ist eine Textdatei, die die zu ladenden Module und ihre Einstellungen beschreibt. Standardmäßig lädt Linguflex die Konfiguration aus der Datei `config.txt`. Alternativ können Sie den Pfad zu einer anderen Konfigurationsdatei als Kommandozeilenparameter angeben.
-
-Das Repository enthält drei Beispielkonfigurationen:
-1. Standard (Vanilla): Ermöglicht eine grundlegende Sprachkommunikation mit dem GPT-Modell
-2. Basis (Basic): Beinhaltet zusätzliche Module für erweiterte Funktionen
-3. Voll (Full): Stellt alle verfügbaren Module bereit
-
-Wir empfehlen, mit der Vanilla-Konfiguration zu beginnen und nach und nach bevorzugte Module hinzuzufügen, da einige Module zusätzliche Einrichtungsschritte erfordern. Bitte schauen Sie dazu in die Dateien `config_basic.txt` oder `config_full.txt`, um zu sehen, wie einzelne Module konfiguriert und zur `config.txt`-Datei hinzugefügt werden können.
+In der Konfigurationsdatei `config.txt` werden die zu ladenden Module festgelegt und deren Einstellungen verwaltet.
 
 
 ## Module
