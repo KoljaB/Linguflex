@@ -3,16 +3,17 @@ Linguflex ist ein **persönlicher KI-Assistent** ("Jarvis"), der **auf gesproche
 
 ## Key Features
 Linguflex kann:
-- **Persönlichkeiten** nachahmen
-- **Musik** abspielen
-- **Termine** managen
-- **E-Mails** abrufen
-- das **Wetter** ansagen
-- **Nachrichten** präsentieren
-- **im Internet suchen** (Texte oder Bilder)
-- **Bilder erzeugen** auf Grundlage eurer Beschreibungen  
-- **Licht** in eurem Zimmer kontrollieren
-- und hat euer Aktienportfolio im Auge.
+
+- **Persönlichkeiten nachahmen** 🎭
+- **Musik abspielen** 🎵
+- **Termine managen** 📆
+- **E-Mails abrufen** 📧
+- **das Wetter ansagen** ☀️🌦️
+- **Nachrichten präsentieren** 📰
+- **im Internet suchen** (Texte oder Bilder) 🔍
+- **Bilder erzeugen** 🎨
+- **Lampen steuern** 💡
+- **und hat euer Aktienportfolio im Auge** 📊
   
 Linguflex ist auf englisch und deutsch verfügbar.
 
@@ -43,7 +44,9 @@ Die `config.txt` beinhaltet:
 - die zu ladenden Module im Abschnitt [modules] (Module werden in der hier angegebenen Reihenfolge geladen und gestartet)
 - die Einstellungsparameter der Module
 
-### Basismodule
+---
+
+# Basismodule
 
 ```
 user_interface
@@ -55,11 +58,12 @@ system_texttospeech
 
 Ermöglichen grundlegende Sprachkommunikation mit dem Assistenten.  
 
-#### Mikrophon-Kalibrierung
+## Mikrophon-Kalibrierung
 Zunächst sollte das Mikrophons in der Sektion [microphone_recorder] der Konfigurationsdatei config.txt eingestellt werden. Die Aufzeichnung beginnt, wenn der Pegel den Wert in `volume_start_recording` übersteigt und stoppt, wenn der Pegel unter den Wert in `volume_stop_recording` fällt. Um diese Werte zu ermitteln, wird debug_show_volume = True gesetzt und Linguflex gestartet, die exakten Pegelwerte werden dann in das Consolefenster geschrieben.
 
+---
 
-###  Text-zu-Sprache-Module
+#  Text-zu-Sprache-Module
 
 Diese Module ermöglichen eine verbesserte Sprachausgabe und ersetzen das vorhandene Modul `system_texttospeech` im Abschnitt `[modules]` der Konfigurationsdatei.  
 
@@ -70,111 +74,126 @@ Diese beiden Module besitzen zur Konfiguration jeweils eigenen
   - `edge_texttospeech` nutzt das Fenster des Edge-Browsers für die Sprachausgabe, bietet eine kostenlose, qualitativ hochwertige Sprachsynthese, aufgrund der Verwendung des Browserfenstersaber mit etwas herabgesetzter Stabilität und Komfort 
   - `azure_texttospeech` bietet eine qualitativ hochwertige, stabile und komfortable Sprachsynthese und benötigt jedoch einen [Microsoft Azure API-Schlüssel](https://portal.azure.com/), Umgebungsvariable für den API-Key: LINGU_AZURE_SPEECH_KEY, Stimm-Konfigurationsdatei: azure_texttospeech.voices.de/en.json
   - `elevenlabs_texttospeech` bietet ebenfalls qualitativ hochwertige, stabile und komfortable Sprachsynthese mit emotionaler Ausgabe und benötigt einen [Elevenlabs API-Schlüssel](https://beta.elevenlabs.io/Elevenlabs), Umgebungsvariable für den API-Key: LINGU_ELEVENLABS_SPEECH_KEY, Stimm-Konfigurationsdatei: elevenlabs_texttospeech.voices.de/en.json
-  
-###  Erweiterungsmodule
 
-- personality_switch
-  - wechselt zur angegebenen Persönlichkeit
-  - die Startpersönlichkeit kann in der Konfiguration unter "character" angegeben werden
-  - verfügbare Persönlichkeiten werden in der personality_switch.de/en.json-Datei in modules/basic verwaltet
+---
 
-  Anwendungsbeispiele:
-    - "verwandele dich in Bruce Willis"
-	- "sei Micky Maus"
-	- "wechsle den Charakter zum Assistenten"
+# Erweiterungsmodule
 
-- notebook
-  - kann als Zwischenablage für Informationen genutzt werden
+## Persönlichkeiten nachahmen 🎭
+´personality_switch´
+- Funktion: Wechselt zur angegebenen Persönlichkeit.
+- Hinweis: Die Startpersönlichkeit kann in der Konfiguration unter "character" angegeben werden. Verfügbare Persönlichkeiten werden in der personality_switch.de/en.json-Datei in modules/basic verwaltet.
 
-  Anwendungsbeispiel:
-    - "schreib die URL vom laufenden Song ins Notizbuch"
-    - "erzeuge ein Notizbuch Tiere und schreibe Katze, Maus und Elefant hinein"
+**Beispiele:**
+- *"Verwandle dich in Bruce Willis"*
+- *"Sei Micky Maus"*
+- *"Wechsle den Charakter zum Assistenten"*
 
-- media_playout
-  - ermöglicht Suche und Abspiel von Musikstücken und Musikplaylists
-  - lauter und leiser
-  - in Playlists kann ein Lied vor und zurück gesprungen werden
-  - benötigt einen [Google Cloud API key](https://console.cloud.google.com/) mit Zugriff auf die YouTube Data API v3 (Projekt erstellen, YouTube API für das Projekt aktivieren, API-Schlüssel erstellen)
-  
-  Anwendungsbeispiel:
-    - "spiele eine Playlist von Robbie Williams"
-    - "ein Lied weiter"
-    - "leiser", "stop", "pause", "weiter"
-  
-- google_information
-  - ruft Echtzeitinformationen aus dem Internet ab
-  - benötigt einen [SerpAPI-Schlüssel](https://serpapi.com/), der in der Konfigurationsdatei oder in der Umgebungsvariable LINGU_SERP_API_KEY hinterlegt wird
-  
-  Anwendungsbeispiel:
-    - "google, wer 2023 Fussballmeister wurde"
+---
 
-- auto_action
-  - ermöglicht dem Assistenten bei schwierigen Fragen den Zugriff auf die Fähigkeiten aller Module
-  
-  Anwendungsbeispiel:
-    - "wer wurde 2023 Fussballmeister?"
+## Notizbuch 📔
+´notebook´
+- Funktion: Kann als Zwischenablage für Informationen genutzt werden
 
-- google_calendar
-  - integriert den Google Kalenders, um Ereignisse abzurufen und hinzuzufügen, nutzt die Google Calendar API 
-  - benötigt die Datei [credentials.json](https://developers.google.com/calendar/api/quickstart/python?hl=de#authorize_credentials_for_a_desktop_application) im Ausführungsverzeichnis von Linguflex
-  - bei der ersten Ausführung auf einem Gerät wird der Benutzer weiterhin aufgefordert, seine Google-Anmeldedaten einzugeben
-  
-  Anwendungsbeispiel:
-    - "was habe ich für Termine?"
-    - "neuer Termin übermorgen 9 Uhr Zahnarzt"
-    - "verschiebe den Termin mit dem Abendessen um eine Stunde"
-  
-- weather_forecast
-  - ruft aktuelle Wetterdaten ab
-  - benötigt einen [OpenWeatherMap-API-Schlüssel](https://openweathermap.org/api), der in der Konfigurationsdatei oder in der Umgebungsvariable LINGU_OPENWEATHERMAP_API_KEY hinterlegt wird
-  
-  Anwendungsbeispiel:
-    - "wie wird das Wetter morgen früh?"
+**Beispiele:**
+- *"Schreib die URL vom laufenden Song ins Notizbuch"*
+- *"Erzeuge ein Notizbuch Tiere und schreibe Katze, Maus und Elefant hinein"*
 
-- news_summary
-  - fasst die aktuelle Nachrichten der Tagesschau zusammen aus den Themengebieten Allgemeine Nachrichten, Wirtschaft, Technologie, Forschung, Inland, Ausland oder Gesellschaft 
-  
-  Anwendungsbeispiel:
-    - "wie sind die Technik-Nachrichten?"
-  
-- picture_search
-  - sucht im Internet nach einem Bild und zeigt es an
-  - benötigt einen [Google API-Schlüssel](https://console.cloud.google.com) mit Freigabe für die Custom Search API und einen [CX-Schlüssel](https://cse.google.com/cse/all)
-  - diese Schlüssel werden in der Konfigurationsdatei unter api_key und cx_key eingegeben oder als die Umgebungsvariablen LINGU_GOOGLE_API_KEY und LINGU_GOOGLE_CX_KEY festgelegt
-  
-  Anwendungsbeispiel:
-    - "zeige ein Bild von Salvador Dali"
+---
 
-- picture_generator
-  - generiert ein Bild mit der DALL-E Bildgenerator-API, die von OpenAI bereitgestellt wird, und zeigt es an
-  - kann bei intensiver Nutzung [gewisse Kosten](https://openai.com/pricing) verursachen  
+## Media Playout 🎵
+´media_playout´
+- Funktion: Ermöglicht Suche und Abspiel von Musikstücken und Musikplaylists. In Playlists kann ein Lied vor und zurück gesprungen werden.
+- Hinweis: Benötigt einen [Google Cloud API key](https://console.cloud.google.com/) mit Zugriff auf die YouTube Data API v3.
 
-  Anwendungsbeispiel:
-    - "male ein Bild vom Eiffelturm im Stil von Salvador Dali"
+**Beispiele:**
+- *"Spiele eine Playlist von Robbie Williams"*
+- *"Ein Lied weiter"*
+- *"Leiser", "Stop", "Pause", "Weiter"*
 
-- email_imap
-  - ruft E-Mails mit dem IMAP-Protokoll ab
-  - Anmeldedaten (IMAP-Server, Benutzername und Passwort) werden in der Konfigurationsdatei hinterlegt
+---
 
-  Anwendungsbeispiel:
-    - "habe ich neue EMails?"
- 
-- stocks_portfolio  
-  - ruft Daten des Anlageportfolios ab und fasst diese zusammen
-  - abrufbare Anlageportfolios werden als comdirect Musterportfolio erstellt und in der Konfigurationsdatei hinterlegt
+## Internetsuche Text 🔍 
+´google_information´
+- Funktion: Ruft Echtzeitinformationen aus dem Internet ab.
+- Hinweis: Benötigt einen [SerpAPI-Schlüssel](https://serpapi.com/).
 
-  Anwendungsbeispiel:
-    - "wie geht es meinen Aktien?"
-  
-- emoji_game 
-  - startet ein Ratespiel, in dem der Nutzer ein "zufällig" ausgewähltes Werk (Film, Buch oder Serie) anhand von Emojis erraten muss
-    - "lass uns Emojis raten spielen"
+**Beispiel:**
+- *"Google, wer wurde 2023 Fußballmeister?"*
 
-- lights_control
-  - steuert Farben und Helligkeit von Tuya Smartbulbs
-  - Lampen werden in der lights_control.json im Verzeichnis modules/full eingerichtet
-  - detaillierte Anweisungen zum Erhalten der notwendigen Daten (Namen, Geräte-ID, IP-Adresse, "Local Key" und Version) erhalten Sie auf der Website des [tinytuya Projekts](https://pypi.org/project/tinytuya/) im Abschnitt "Setup Wizard - Getting Local Keys"
-  
-    - "mach die Lampe am PC gelb"
-    - "tauche alle Lampen in Sonnenuntergangsfarben"
-  
+---
+
+## Auto Action ✨
+- Funktion: Ermöglicht dem Assistenten bei schwierigen Fragen den Zugriff auf die Fähigkeiten aller Module.
+
+**Beispiel:**
+- *"Wer wurde 2023 Fußballmeister?"*
+
+---
+
+## Termine managen 📆
+´google_calendar´
+- Funktion: Integriert den Google Kalender, um Ereignisse abzurufen und hinzuzufügen.
+- Hinweis: Benötigt die Datei [credentials.json](https://developers.google.com/calendar/api/quickstart/python?hl=de#authorize_credentials_for_a_desktop_application).
+
+**Beispiele:**
+- *"Was habe ich für Termine?"*
+- *"Neuer Termin übermorgen 9 Uhr Zahnarzt"*
+- *"Verschiebe den Termin mit dem Abendessen um eine Stunde"*
+
+---
+
+## Wetter ☀️🌦️
+´weather_forecast´
+- Funktion: Ruft aktuelle Wetterdaten ab.
+- Hinweis: Benötigt einen [OpenWeatherMap-API-Schlüssel](https://openweathermap.org/api).
+
+**Beispiel:**
+- *"Wie wird das Wetter morgen früh?"*
+
+---
+
+## Nachrichten 📰
+´news_summary´
+- Funktion: Fasst die aktuelle Nachrichten der Tagesschau zusammen.
+
+**Beispiel:**
+- *"Wie sind die Technik-Nachrichten?"*
+
+---
+
+## Bildsuche 🔍🖼️
+´picture_search´
+- Funktion: Sucht im Internet nach einem Bild und zeigt es an.
+- Hinweis: Benötigt einen [Google API-Schlüssel](https://console.cloud.google.com) mit Freigabe für die Custom Search API und einen [CX-Schlüssel](https://cse.google.com/cse/all).
+
+**Beispiel:**
+- *"Zeige ein Bild von Salvador Dali"*
+
+---
+
+## Bilderzeugung 🎨
+´picture_generator´
+- Funktion: Generiert ein Bild auf Grundlage einer Beschreibung und zeigt es an.
+- Hinweis: Kann bei intensiver Nutzung [gewisse Kosten](https://openai.com/pricing) verursachen.
+
+**Beispiel:**
+- *"Male ein Bild vom Eiffelturm im Stil von Salvador Dali"*
+
+---
+
+## Emailzugriff  📧
+´email_imap´
+- Funktion: Ruft E-Mails mit dem IMAP-Protokoll ab.
+
+**Beispiel:**
+- *"Habe ich neue EMails?"*
+
+---
+
+## Investmentdaten 📊  
+´stocks_portfolio´
+- Funktion: Ruft Daten des Anlageportfolios ab und fasst diese zusammen.
+
+**Beispiel:**
+- *"Wie geht es meinen Aktien"*
