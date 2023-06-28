@@ -1,51 +1,77 @@
-import sys
-sys.path.insert(0, '..')
+from core import BaseModule, Request, cfg
+from linguflex_functions import linguflex_function, LinguFlexBase
+from pydantic import Field
+import enum
 
-from linguflex_interfaces import JsonActionProviderModule_IF
-from linguflex_log import log, DEBUG_LEVEL_OFF, DEBUG_LEVEL_MIN, DEBUG_LEVEL_MID, DEBUG_LEVEL_MAX
-from linguflex_config import cfg, set_section, get_section, configuration_parsing_error_message
-from linguflex_message import LinguFlexMessage
-from media_playout_helper import YoutubeManagement
+from media_playout_helper import YoutubePlayer
+player = YoutubePlayer(cfg("api_key", registry_name="LINGU_GOOGLE_API_KEY"))
 
-playout_action = {
-    'description': 'Musik oder Videos abspielen',
-    'react_to': ['spiel', 'lied', 'song', 'album', 'alben', 'musik', 'video', 'clip', 'filme', 'film', 'stream', 'streaming', 'audio', 'sound', 'playlist', 'titel', 'track', 'medien', 'künstler', 'interpret', 'band', 'youtube', 'hörbuch', 'hörbücher', 'podcast', 'podcasts'],
-    'example_user': 'Spiel Abbey Road von den Beatles',
-    'example_assistant': 'Ok, ich spiele nun das Album "Abbey Road" von den Beatles {"Playout":"Beatles Abbey Road full album"}',
-    'key_description': '"Playout"',
-    'value_description': 'Name des auszuspielenden Werks (Song, Album, Video)',
-    'keys': ['Playout'],
-    'instructions' : 'Im Zweifel Namen ausdenken. Für Alben nutze "full album".'
-}
+class start_music_playback(LinguFlexBase):
+    "Starts music playback of the given song or album title; add \"full album\" to search_terms when asked for album"
+    search_terms: str = Field(..., description="Search terms for the music to be played out; add \"full album\" when asked for albums")
+    only_playlists: bool = Field(default=False, description='Set to True if you only want to look for playlists')
 
-playout_stop_action = {
-    'description': 'Abspiel von Musik oder Videos stoppen',
-    'react_to': ['stopp', 'stop', 'stoppe', 'beende', 'ende', 'halt', 'halte', 'schluss', 'schluß'],
-    'example_user': 'Stop!',
-    'example_assistant': 'Ok, das Ausspiel wird beendet. {"PlayoutStop":"true"}',
-    'key_description': '"PlayoutStop"',
-    'value_description': '"true"',
-    'keys': ['PlayoutStop'],
-    'instructions' : ''
-}
+    def execute(self):
+        songname_played = player.load_and_play(self.search_terms, self.only_playlists)  
+        return {'result': 'playback started', 'name': songname_played}
 
-class MediaPlayoutModule(JsonActionProviderModule_IF):
-    def __init__(self) -> None:
-        self.actions = [playout_action,playout_stop_action]
-        self.playout = YoutubeManagement()
 
-    def perform_action(self, 
-            message: LinguFlexMessage,
-            json) -> None:
-        try:
-            if 'PlayoutStop' in json and json['PlayoutStop'] == 'true':
-                log(DEBUG_LEVEL_MIN, '[playout] stop')
-                self.playout.close()
-            elif 'Playout' in json: 
-                log(DEBUG_LEVEL_MIN, '[playout] start')
-                self.playout.open(json['Playout'])
-        except Exception as e:
-            log(DEBUG_LEVEL_MIN, '  [playout] ERROR:' + e)
+@linguflex_function
+def stop_music_playback():
+    "Stops playback of music"
 
+    player.stop() 
+    return "playback stopped"
+
+
+@linguflex_function
+def pause_or_continue_music():
+    "Switches between music playback pause mode or continue play mode"
+
+    player.pause() 
+    return "music pause mode switched"
+
+@linguflex_function
+def play_next_audio():
+    "Plays the next audio from the playlist"
+
+    return player.next_audio() 
+
+@linguflex_function
+def play_previous_audio():
+    "Plays the previous audio from the playlist"
+
+    return player.previous_audio() 
+
+
+class VolumeDirection(str, enum.Enum):
+    """Enumeration representing the direction of the volume change that can be performed, up for noisier und down for quieter."""
+
+    UP = "up"
+    DOWN = "down"
+
+class change_music_volume(LinguFlexBase):
+    "Changes volume of music playout"
+    type: VolumeDirection = Field(..., description="Direction of volume change")
+
+    def execute(self):
+        if self.type == 'up':
+            player.volume_up()
+        elif self.type == 'down':
+            player.volume_down()
+        else:
+            return "ERROR: type must be either up or down"
+
+        return "music volume successfully changed"
+
+
+class PlayoutHandler(BaseModule):    
+    def cycle(self, 
+            request: Request) -> None: 
+        if player.start_next_audio: 
+            player.next_audio()
+        if not player.song_information is None:
+            player.update_song_info()
+            request.prompt += f'The song currently playing is named "{player.song_information["name"]}", url is "{player.song_information["url"]}. '
     def shutdown(self) -> None:
-        self.playout.shutdown()
+        player.shutdown()

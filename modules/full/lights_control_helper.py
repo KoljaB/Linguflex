@@ -1,3 +1,5 @@
+from core import log, DEBUG_LEVEL_MIN, DEBUG_LEVEL_MID, DEBUG_LEVEL_MAX, DEBUG_LEVEL_ERR
+
 import time
 import tinytuya
 import re
@@ -7,10 +9,6 @@ import json
 from hmac import new
 from typing import Tuple, Dict
 
-from linguflex_log import log, DEBUG_LEVEL_OFF, DEBUG_LEVEL_MIN, DEBUG_LEVEL_MID, DEBUG_LEVEL_MAX
-from linguflex_config import cfg, set_section, get_section, configuration_parsing_error_message
-
-set_section('lights_control')
 
 class SmartBulbThread(threading.Thread):
     def __init__(self, 
@@ -50,7 +48,7 @@ class SmartBulbThread(threading.Thread):
         id = self.bulb_param['id']
         ip = self.bulb_param['ip']
         key = self.bulb_param['key']
-        deviceVersion = float(self.bulb_param['v'])
+        deviceVersion = float(self.bulb_param['version'])
         # Connect to tuya bulb
         self.device = tinytuya.BulbDevice(id, ip, key)
         self.device.set_version(deviceVersion)
@@ -88,7 +86,8 @@ class SmartBulbThread(threading.Thread):
         return (int(rgb[0] * 255), int(rgb[1] * 255), int(rgb[2] * 255))
 
 class LightManager():
-    def __init__(self) -> None:
+    def __init__(self, bulbs) -> None:
+        self.bulb_params = bulbs                        
         self.is_running = True
         self.is_rotation_active = False
         self.rotation_speed = 10
@@ -98,7 +97,8 @@ class LightManager():
         self.bulb_states = []
         self.bulb_colors = []
         self.bulb_rotation_colors = []
-        self.get_bulb_params()
+
+        #self.get_bulb_params()
         num_lamps = len(self.bulb_params)
         # Create event objects
         self.connection_events = [threading.Event() for _ in range(num_lamps)]
@@ -116,6 +116,7 @@ class LightManager():
         self.rotation_worker_thread.start()
 
     def shutdown(self) -> None:
+        log(DEBUG_LEVEL_MAX, '  [lights] shutting down bulb threads')
         self.is_running = False
         for thread in self.bulb_threads:
             thread.shutdown()
@@ -159,6 +160,38 @@ class LightManager():
                 hex_color = data[name]
                 rgb_color = tuple(int(hex_color[i:i+2], 16) for i in (1, 3, 5))
                 self.set_color(name, rgb_color)
+
+
+    def is_valid_hex_color(self, s):
+        """Check if a string is a valid RGB Hex color."""
+        if re.match("^#[0-9a-fA-F]{6}$", s):
+            return True
+        else:
+            return False
+            
+    def convert_from_hex(self, hex_color_str):
+        """Convert a hexadecimal color string to a RGB tuple."""
+        
+        # remove the '#' at the beginning if present
+        if hex_color_str.startswith('#'):
+            hex_color_str = hex_color_str[1:]
+
+        # convert hex to decimal
+        red = int(hex_color_str[0:2], 16)
+        green = int(hex_color_str[2:4], 16)
+        blue = int(hex_color_str[4:6], 16)
+
+        return (red, green, blue)        
+
+    def set_color_hex(self, 
+            bulb_name: str, 
+            color_string: str) -> None:
+        
+        if not self.is_valid_hex_color(color_string):
+            raise ValueError('color must be hex string like #C0C0C0')
+        
+        color = self.convert_from_hex(color_string)
+        self.set_color(bulb_name, color)
 
     def set_color(self, 
             bulb_name: str, 
@@ -221,26 +254,6 @@ class LightManager():
                         last_item = self.bulb_rotation_colors[-1]
                         self.bulb_rotation_colors = [last_item] + self.bulb_rotation_colors[:-1]
             time.sleep(self.rotation_update_pause)
-
-    def get_bulb_params(self) -> None:
-        self.bulb_params = []
-        try:
-            bulb_names = cfg[get_section()].get('bulb_names').split(',')
-            bulb_ids = cfg[get_section()].get('bulb_ids').split(',')
-            bulb_ips = cfg[get_section()].get('bulb_ips').split(',')
-            bulb_keys = cfg[get_section()].get('bulb_keys').split(',')
-            bulb_versions = cfg[get_section()].get('bulb_versions').split(',')
-        except Exception as e:
-            raise ValueError(configuration_parsing_error_message + ' ' + str(e))        
-        for i in range(len(bulb_names)):
-            bulb_param = {
-                'name': bulb_names[i],
-                'id': bulb_ids[i],
-                'ip': bulb_ips[i],
-                'key': bulb_keys[i],
-                'v': bulb_versions[i]
-            }
-            self.bulb_params.append(bulb_param)
 
     def get_names(self) -> str:
         return [entry['name'] for entry in self.bulb_params]

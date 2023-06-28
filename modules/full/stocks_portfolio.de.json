@@ -1,0 +1,9 @@
+{
+    "retrieve_stock_portfolio": 
+	{
+		"keywords": ["aktie", "depot", "stocks", "etfs", "börse", "märkte", "markt", "invest", "portf", "divid", "rendi", "kapit", "anlei", "kurs", "handel", "auszahl", "wachst", "wächst", "bewert", "verlust", "gewinn", "fond", "anlage", "anteil", "performance", "finanz", "bilanz", "ausblick", "beteilig", "kauf", "trend", "prognos", "ertrag", "risik", "entwick", "zins", "vermögen", "kapitalan", "verdienst", "spekul", "trading", "finanzmarkt", "arm", "reich", "leisten"],
+		"init_prompt": "",
+		"success_prompt": "Fasse die wichtigsten heutigen Entwicklungen des Depots zusammen. Runde große Beträge auf Werte auf hunderter oder tausender auf oder ab. Lass Einleitungen und Hinweise weg, gib nur eine knappes Fazit.",
+		"fail_prompt": ""
+	}
+}

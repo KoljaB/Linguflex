@@ -1,0 +1,9 @@
+{
+    "start_emoji_game": 
+	{
+		"keywords": ["emoji", "game", "guess"],
+		"init_prompt": "",
+		"success_prompt": "Print emojis, BUT NOT the name of the work.",
+		"fail_prompt": ""
+	}
+}

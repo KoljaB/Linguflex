@@ -1,0 +1,9 @@
+{
+    "retrieve_weather_forecast": 
+	{
+		"keywords": ["wetter", "sonnig", "sonne", "regen", "regnen", "spazieren", "draußen", "natur", "wolken", "gewitter", "schnei", "schnee", "hagel", "blitz", "donner", "sturm", "nebel", "kalt", "warm", "hitze", "kühl", "eis", "frost", "herbst", "frühling", "sommer", "winter", "bewölkt", "luft", "feucht", "schwül", "wind", "tropisch", "trocken", "niederschlag", "temperatur"],
+		"init_prompt": "",
+		"success_prompt": "Fasse Wetterdaten im Stil eines Wettermoderators stark zusammen, antworte knapp, auf deutsch und nur mit den absolut notwendigen Informationen, ohne Ausschmückungen, Erklärungen, Klarstellungen oder Ratschläge.",
+		"fail_prompt": ""
+	}
+}

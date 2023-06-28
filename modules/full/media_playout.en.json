@@ -1,0 +1,44 @@
+{
+    "start_music_playback": 
+	{
+		"keywords": ["play", "song", "album", "music", "video", "clip", "movie", "stream", "audio", "sound", "playlist", "title", "track", "media", "artist", "interpreter", "band", "youtube", "audiobook", "podcast"],
+		"init_prompt": "",
+		"success_prompt": "Confirm successful music playback.",
+		"fail_prompt": ""
+	},
+	"play_next_audio": 
+	{
+		"keywords": ["next", "further"],
+		"init_prompt": "",
+		"success_prompt": "Next audio is being played.",
+		"fail_prompt": ""
+	},	
+	"play_previous_audio": 
+	{
+		"keywords": ["previous", "end"],
+		"init_prompt": "",
+		"success_prompt": "Previous audio is being played.",
+		"fail_prompt": ""
+	},
+	"stop_music_playback": 
+	{
+		"keywords": ["stop", "end"],
+		"init_prompt": "",
+		"success_prompt": "Confirm successful termination of music playback.",
+		"fail_prompt": ""
+	},
+	"change_music_volume": 
+	{
+		"keywords": ["quiet", "loud"],
+		"init_prompt": "",
+		"success_prompt": "Confirm successful change of volume.",
+		"fail_prompt": ""
+	},
+	"pause_or_continue_music": 
+	{
+		"keywords": ["pause", "continue", "hold"],
+		"init_prompt": "",
+		"success_prompt": "Confirm successful change of pause mode.",
+		"fail_prompt": ""
+	}
+}

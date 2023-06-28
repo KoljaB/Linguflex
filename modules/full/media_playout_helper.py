@@ -1,162 +1,202 @@
-from linguflex_log import log, DEBUG_LEVEL_OFF, DEBUG_LEVEL_MIN, DEBUG_LEVEL_MID, DEBUG_LEVEL_MAX
+from core import log, DEBUG_LEVEL_MAX, DEBUG_LEVEL_MID, DEBUG_LEVEL_ERR
 
-from selenium import webdriver
-from selenium.webdriver.firefox.options import Options
-from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import TimeoutException, InvalidSessionIdException
-from datetime import datetime, timedelta
-
-import urllib.parse
-import threading
+import argparse
 import time
+import threading
+from threading import Thread
+from googleapiclient.discovery import build
+from googleapiclient.errors import HttpError
+from pytube import Playlist
+import vlc
+from yt_dlp import YoutubeDL
 
-YOUTUBE_URL = 'https://www.youtube.com/results?search_query='
-TIME_SLEEP = 0.1
+
+class YoutubePlayer:
+    def __init__(self, api_key: str):
+        self.GOOGLE_CLOUD_API_KEY = api_key
+        self.YOUTUBE_API_SERVICE_NAME = 'youtube'
+        self.YOUTUBE_API_VERSION = 'v3'
+
+       # Create a new instance of vlc player
+        self.instance = vlc.Instance()
+        self.player = self.instance.media_player_new()
+        self.event_manager = self.player.event_manager()
+        self.event_manager.event_attach(vlc.EventType.MediaPlayerEndReached, self.end_reached_callback)
+
+        self.audio_index = 0
+        self.current_playlist = []
+        self.is_playlist = False
+        self.start_next_audio = False
+        self.song_information = None
+
+    def end_reached_callback(self, event):
+        self.song_information = None
+        log(DEBUG_LEVEL_MAX, f"  [music] song finished, trying to playout next audio from playlist")
+        self.start_next_audio = True
+
+    def update_song_info(self):
+        total_length = self.player.get_length() / 1000  # get_length() returns in ms, so we convert to seconds
+        current_time = self.player.get_time() / 1000  # get_time() returns in ms, so we convert to seconds
+        seconds_left = total_length - current_time
+        if self.song_information:
+            self.song_information["seconds_left_to_play"] = seconds_left        
+
+    def youtube_search(self, query, only_playlists=False, max_results=30):
+        youtube = build(self.YOUTUBE_API_SERVICE_NAME, self.YOUTUBE_API_VERSION,
+            developerKey=self.GOOGLE_CLOUD_API_KEY)
+
+        #print (f"youtube_search: {only_playlists}")
+
+        if only_playlists:
+            log(DEBUG_LEVEL_MAX, f"  [music] searching for playlists with query '{query}'")
+            search_response = youtube.search().list(
+                q=query,
+                part='id,snippet',
+                maxResults=max_results,
+                type='playlist'  # This restricts the search to playlists only
+            ).execute()
+        else:
+            log(DEBUG_LEVEL_MAX, f"  [music] searching with query '{query}'")
+            search_response = youtube.search().list(
+                q=query,
+                part='id,snippet',
+                maxResults=max_results
+            ).execute()
+
+        audios = []
+        playlists = []
+        items = search_response.get('items', [])
+
+        log(DEBUG_LEVEL_MAX, f"  [music] search returned {len(items)} items in total")
+
+        for search_result in items:
+            log(DEBUG_LEVEL_MAX, f"  [music] item: {search_result}")
+            if search_result['id']['kind'] == 'youtube#video':
+                audios.append(f"https://www.youtube.com/watch?v={search_result['id']['videoId']}")
+            elif search_result['id']['kind'] == 'youtube#playlist':
+                playlists.append(f"https://www.youtube.com/playlist?list={search_result['id']['playlistId']}")
+
+        return audios, playlists
+    
+    def play_audio(self, url):
+        audio_url, audio_title = self.get_audio_title(url)
+        
+        # Set the media
+        log(DEBUG_LEVEL_MAX, f"  [music] playing {audio_title}")
+        media = self.instance.media_new(audio_url)
+        self.player.set_media(media)
+
+        # Start playing audio
+        time.sleep(0.3) # safety wait to let audio cache and not DDOS the video libraries und any circumstances
+        self.song_information = {
+            "name" : audio_title, 
+            "url" : url
+        }
+        self.player.play() 
+        return audio_title 
 
 
-class YoutubeManagement():
-    def __init__(self) -> None:
-        self.driver = None
-        self.running = True
-        self.watch_ads = False
-        self.watcher_active = False
-        self.ad_playing = False
-        self.desired_volume = 1
-        self.last_mute = datetime.now()
-        worker_thread = threading.Thread(target=self.ad_watcher)
-        worker_thread.start()
+    def play_playlist(self, url):
+        p = Playlist(url)
+        self.current_playlist = p.video_urls  # Save the playlist URLs
+        self.audio_index = 0  # Update the playlist index
+        return self.play_audio(self.current_playlist[self.audio_index])
 
-    def ad_watcher(self)-> None:
-        while self.running:
-            if (self.watch_ads):
-                try:
-                    self.watcher_active = True
-                    self.automute()
-                    self.click('.ytp-ad-skip-button') # autoskip ads
-                except InvalidSessionIdException as ex:
-                    log(DEBUG_LEVEL_MAX, '  [playout] InvalidSessionIdException in ad_watcher, maybe user closed browser window?')
-                    self.watch_ads = False
-                    self.watcher_active = False
-                    self.close()
-                except Exception as ex:
-                    log(DEBUG_LEVEL_MAX, '  [playout] Exception in ad_watcher, wtf happened here: '+ str(ex))
-                    self.watch_ads = False
-                    self.watcher_active = False
-                    self.close()
-            self.watcher_active = False
-            time.sleep(TIME_SLEEP)
 
-    def click(self, 
-            element_name: str) -> None:
-        elements = self.driver.find_elements(By.CSS_SELECTOR, element_name)
-        if len(elements) > 0:
-            try:
-                wait = WebDriverWait(self.driver, 0.5)
-                element = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, element_name)))
-                element.click()
-            except TimeoutException:
-                pass
-            except Exception as ex:
-                log(DEBUG_LEVEL_MAX, '  [playout] Exception in jv_youtube.py click: ' + str(ex))
+    def get_audio_title(self, url):
+        ydl_opts = {'format': 'bestaudio/best'}
+        with YoutubeDL(ydl_opts) as ydl:
+            info_dict = ydl.extract_info(url, download=False)
+            audio_url = info_dict.get("url", None)
+            audio_title = info_dict.get('title', None)
 
-    def volume(self, 
-            volume: float) -> None:
-        volume_string = "{:.2f}".format(volume)
-        volume_string = volume_string.replace(",", ".")
-        # Find the HTML5 video element
-        video = self.driver.find_element(By.CSS_SELECTOR, "video")
-        if video is not None:
-            # Change the volume of the video
-            js = self.driver.execute_script
-            js(f"arguments[0].volume = {volume_string};", video)
-        self.last_mute = datetime.now()
+        return audio_url, audio_title               
 
-    # Mutes on non-skippable ads and unmutes when no ad
-    def automute(self) -> None:
-        ad1 = self.driver.find_elements(By.CSS_SELECTOR, ".ytp-ad-image-overlay")
-        ad2 = self.driver.find_elements(By.CSS_SELECTOR, ".ytp-ad-text-overlay")
-        ad3 = self.driver.find_elements(By.CSS_SELECTOR, ".ytp-ad-player-overlay")
-        ad_playing = len(ad1) > 0 or len(ad2) > 0 or len(ad3) > 0
-        ms_from_last_mute = (datetime.now() -  self.last_mute).microseconds
-        # Set volume when ad playing state changes and additonally every 1 second
-        if self.ad_playing != ad_playing or ms_from_last_mute > 1000:
-            if ad_playing:
-                self.volume(0)
-            else:
-                self.volume(self.desired_volume)
-        self.ad_playing = ad_playing
-
-    def open(self, 
-            search_string: str) -> None:
-        threading.Thread(target=self.open_async, args=(search_string,)).start()
-
-    def open_async(self, 
-            search_string: str) -> None:        
+    def load_and_play(self, query, only_playlists=False):
         try:
-            self.close()
-            encoded_string = urllib.parse.quote(search_string)
-            url = YOUTUBE_URL + encoded_string
+            #print (f"load_and_play: {only_playlists}")
+            audios, playlists = self.youtube_search(query, only_playlists=only_playlists)
 
-            log(DEBUG_LEVEL_MAX, '  [playout] starting firefox')
-            self.driver = webdriver.Firefox()
+            if only_playlists and not playlists:
+                log(DEBUG_LEVEL_MAX, f"  [music] no playlists found.")
+                return "No playlists found."
             
-            # Load the given URL
-            log(DEBUG_LEVEL_MAX, '  [playout] opening ' + url)
-            self.driver.get(url)
-            
-            WebDriverWait(self.driver, 3)
-            time.sleep(0.5) # ? not sure if necessary
-            # skip cookie ask window
-            log(DEBUG_LEVEL_MAX, '  [playout] skip cookie window')
-            actions = ActionChains(self.driver)
-            for i in range(6):
-                actions.send_keys(Keys.TAB).perform()
-                time.sleep(0.1)
-            actions.send_keys(Keys.ENTER).perform()
-            WebDriverWait(self.driver, 3)
-            time.sleep(3)
-            # !!! suboptimal !!!  also returns childvideos from playlists besides main search result videos
-            log(DEBUG_LEVEL_MAX, '  [playout] find search results')
-            search_results = self.driver.find_elements(By.CSS_SELECTOR, '#video-title')
-            # Find best search result
-            log(DEBUG_LEVEL_MAX, '  [playout] calculating best search result')
-            best_result = None
-            max_matches = 0
-            for search_result in search_results:
-                s = search_result.text.lower()
-                words = s.split()
-                # Convert words into a set to remove duplicates 
-                # Otherwise we'd count multiple occurrences of the same word within the search_result.text,
-                # but actually want them to count only as one not prioritizing links that just repeat words
-                unique_words = set(words)
-                matches = sum(1 for word in unique_words if len(word) >= 4 and word in search_string.lower())
-                matches -= 'live' in s  # Subtract 1 if "live" is in the string, 0 otherwise
-                if matches > max_matches:
-                    best_result = search_result
-                    max_matches = matches
-            if best_result is not None:
-                log(DEBUG_LEVEL_MAX, '  [playout] opening best search result')
-                best_result.click()
+            if audios and not only_playlists:
+                self.is_playlist = False
+                return self.play_audio(audios[0])
+            elif playlists:
+                p = Playlist(playlists[0])
+                self.is_playlist = True
+                log(DEBUG_LEVEL_MAX, f"  [music] playlist started ({len(p.video_urls)} audios)")
+                return self.play_playlist(playlists[0])
             else:
-                return            
-            self.watch_ads = True
-        except Exception as ex:
-            log(DEBUG_LEVEL_MAX, '  [playout] Exception in jv_youtube.py open: ' + str(ex))
-            self.close()            
+                log(DEBUG_LEVEL_MAX, f"  [music] no audios or playlists found.")
+                return "No audios or playlists found."
+        except Exception as e:
+            log(DEBUG_LEVEL_MAX, f"  [music] error: {str(e)}")
+            return f"Error: {str(e)}"
 
-    def shutdown(self) -> None:
-        self.running = False
-        self.close()
+    def next_audio(self):
+        self.start_next_audio = False        
+        if not self.is_playlist:
+            log(DEBUG_LEVEL_MAX, f"  [music] cannot move to next audio: a single audio is currently playing.")
+            return "Error: cannot move to next audio: a single audio is currently playing"
 
-    def close(self) -> None:
-        log(DEBUG_LEVEL_MAX, '  [playout] closing running selenium firefox instances')
-        self.watch_ads = False
-        while self.watcher_active:
-            time.sleep(0.1)
-        if hasattr(self, 'driver') and self.driver is not None:
-            self.driver.quit()
-        log(DEBUG_LEVEL_MAX, '  [playout] all selenium firefox instances closed')
+        # Stop the current audio
+        self.stop()
+        # Increment the playlist index
+        self.audio_index += 1
+        if self.audio_index < len(self.current_playlist):
+            # audio_url, audio_title = self.get_audio_title(self.current_playlist[self.audio_index])
+            log(DEBUG_LEVEL_MAX, f"  [music] playlist audio {self.audio_index+1}/{len(self.current_playlist)}")
+            return self.play_audio(self.current_playlist[self.audio_index])
+        else:
+            log(DEBUG_LEVEL_MAX, f"  [music] end of playlist reached")
+            return "Error: end of playlist"                
+        return f"success, new song playing: {audio_title}"
+    
+    def previous_audio(self):
+        if not self.is_playlist:
+            log(DEBUG_LEVEL_MAX, f"  [music] cannot move to previous audio: a single audio is currently playing.")
+            return "Error: cannot move to previous audio: a single audio is currently playing"
+
+        # Stop the current audio
+        self.stop()
+        # Decrement the playlist index
+        self.audio_index -= 1
+        if self.audio_index >= 0:
+            #audio_url, audio_title = self.get_audio_title(self.current_playlist[self.audio_index])
+            log(DEBUG_LEVEL_MAX, f"  [music] playlist audio {self.audio_index+1}/{len(self.current_playlist)}")
+            return self.play_audio(self.current_playlist[self.audio_index])
+        else:
+            log(DEBUG_LEVEL_MAX, f"  [music] start of playlist reached")
+            return "Error: start of playlist"    
+
+    def pause(self):
+        log(DEBUG_LEVEL_MAX, f"  [music] pause player")
+        self.player.pause()
+
+    def stop(self):
+        log(DEBUG_LEVEL_MAX, f"  [music] stop player")
+        self.player.stop()
+        time.sleep(0.3) # safety wait to not DDOS the video libraries und any circumstances
+
+    def volume_up(self, increment=20):
+        log(DEBUG_LEVEL_MAX, f"  [music] volume up player")
+        self.player.audio_set_volume(min(self.player.audio_get_volume() + increment, 100))
+
+    def volume_down(self, decrement=20):
+        log(DEBUG_LEVEL_MAX, f"  [music] volume down player")
+        self.player.audio_set_volume(max(self.player.audio_get_volume() - decrement, 0))
+
+    def shutdown(self):
+        log(DEBUG_LEVEL_MAX, f"  [music] shutdown")
+        self.stop()
+
+        # Release the media player instance
+        log(DEBUG_LEVEL_MAX, f"  [music] shutdown release player")
+        self.player.release()
+
+        # Release the vlc instance
+        log(DEBUG_LEVEL_MAX, f"  [music] shutdown release vlc instance")
+        self.instance.release()

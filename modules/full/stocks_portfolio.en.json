@@ -1,0 +1,9 @@
+{
+    "retrieve_stock_portfolio": 
+	{
+		"keywords": ["stock", "portf", "divid", "return", "capit", "bond", "price", "trade", "invest", "payout", "grow", "valuat", "value", "loss", "profit", "fund", "asset", "share", "perform", "financ", "balanc", "outlook", "particip", "buy", "trend", "forecast", "earn", "risk", "develop", "interest", "wealth", "capital", "income", "specul", "trading", "finmarket", "poor", "rich", "afford", "equity"],
+		"init_prompt": "",
+		"success_prompt": "Summarize the most important developments of the portfolio today. Round large amounts up or down to the nearest hundreds or thousands. Leave out introductions and notes, just give a brief conclusion.",
+		"fail_prompt": ""
+	}
+}

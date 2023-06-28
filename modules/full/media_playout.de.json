@@ -1,0 +1,44 @@
+{
+    "start_music_playback": 
+	{
+		"keywords": ["spiel", "lied", "song", "album", "alben", "musik", "video", "clip", "film", "stream", "audio", "sound", "playlist", "titel", "track", "medien", "künstler", "interpret", "band", "youtube", "hörb", "podcast"],
+		"init_prompt": "",
+		"success_prompt": "Bestätige das erfolgreiche Ausspiel der Musik. Erwähne keine URLs.",
+		"fail_prompt": ""
+	},
+	"play_next_audio": 
+	{
+		"keywords": ["nächst", "weiter", "vor"],
+		"init_prompt": "",
+		"success_prompt": "Das nächste Audio wird ausgespielt. Erwähne keine URLs.",
+		"fail_prompt": ""
+	},
+	"play_previous_audio": 
+	{
+		"keywords": ["zurück", "vorhe", "davor"],
+		"init_prompt": "",
+		"success_prompt": "Das vorige Audio wird ausgespielt. Erwähne keine URLs.",
+		"fail_prompt": ""
+	},
+	"stop_music_playback": 
+	{
+		"keywords": ["stop", "end", "halt", "schluss", "schluß"],
+		"init_prompt": "",
+		"success_prompt": "Bestätige das erfolgreiche Beenden des Musikausspiels.",
+		"fail_prompt": ""
+	},
+	"change_music_volume": 
+	{
+		"keywords": ["leise", "laut"],
+		"init_prompt": "",
+		"success_prompt": "Bestätige das erfolgreiche Ändern der Lautstärke.",
+		"fail_prompt": ""
+	},
+	"pause_or_continue_music": 
+	{
+		"keywords": ["pause", "weiter", "halt"],
+		"init_prompt": "",
+		"success_prompt": "Bestätige das erfolgreiche Ändern des Pausemodus.",
+		"fail_prompt": ""
+	}
+}

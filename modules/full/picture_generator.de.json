@@ -1,0 +1,9 @@
+{
+    "create_picture_with_dalle": 
+	{
+		"keywords": ["bild", "bilder", "gemälde", "erzeuge", "erzeug", "erstelle", "kreiere", "kreier", "schaffe", "illustr", "grafik", "zeichn", "foto", "fotografie", "entwerfe", "entwurf", "design", "gestalte", "gestaltung", "kunstwerk", "kunst", "visuell", "visual", "skizze", "skizzier", "collage", "konzept", "konzept", "darstellung", "abbildung", "muster", "motiv", "komposition"],
+		"init_prompt": "",
+		"success_prompt": "Bestätige die erfolgreiche Erstellung des Bildes.",
+		"fail_prompt": ""
+	}
+}

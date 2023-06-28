@@ -1,0 +1,9 @@
+{
+    "start_emoji_game": 
+	{
+		"keywords": ["emoji", "spiel", "rate"],
+		"init_prompt": "",
+		"success_prompt": "Gebe die Emojis aus, ABER NICHT den Namen des Werks.",
+		"fail_prompt": ""
+	}
+}

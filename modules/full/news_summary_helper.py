@@ -3,7 +3,7 @@ from requests import get
 from urllib.parse import urljoin
 import json
 
-max_chars = 12000
+max_chars = 10000
 max_articles = 3
 
 class NewsParser:

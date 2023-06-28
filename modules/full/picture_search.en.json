@@ -1,0 +1,9 @@
+{
+    "search_for_picture": 
+	{
+		"keywords": ["pic", "show", "search", "photo", "foto", "display", "present", "illustr", "graph", "visual", "image", "shot"],
+		"init_prompt": "",
+		"success_prompt": "Confirm successful finding and displaying of the picture.",
+		"fail_prompt": ""
+	}
+}

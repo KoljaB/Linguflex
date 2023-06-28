@@ -1,0 +1,9 @@
+{
+    "set_bulb_light_color": 
+	{
+		"keywords": ["lampe", "licht", "farb", "stimmung", "leucht", "licht", "wechsel", "ambiente", "atmosphäre", "hell", "dimm", "stell", "regulier", "regel", "ton"],
+		"init_prompt": "Gib Lampenfarben IMMER (!) als hex string an (zB #FF00A0).",
+		"success_prompt": "Lampenfarben wurden erfolgreich geändert.",
+		"fail_prompt": ""
+	}
+}
