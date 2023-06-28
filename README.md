@@ -1,52 +1,52 @@
 # Linguflex
-Linguflex ist ein **persönlicher KI-Assistent** ("Jarvis"), der **auf gesprochenes Wort reagiert**.
+Linguflex is a **personal AI assistant** ("Jarvis") that **responds to spoken word**.
 
 ## Key Features
-Linguflex kann:
+Linguflex can:
 
-- **Persönlichkeiten nachahmen** 🎭
-- **Musik abspielen** 🎵
-- **Termine managen** 📆
-- **E-Mails abrufen** 📧
-- **das Wetter ansagen** ☀️🌦️
-- **Nachrichten präsentieren** 📰
-- **im Internet suchen** (Texte oder Bilder) 🔍
-- **Bilder erzeugen** 🎨
-- **Lampen steuern** 💡
-- **und hat euer Aktienportfolio im Auge** 📊
-  
-Linguflex ist auf englisch und deutsch verfügbar.
+- **Mimic personalities** 🎭
+- **Play music** 🎵
+- **Manage appointments** 📆
+- **Retrieve emails** 📧
+- **Announce the weather** ☀️🌦️
+- **Present news** 📰
+- **Search the Internet** (texts or images) 🔍
+- **Generate images** 🎨
+- **Control lamps** 💡
+- **Keep an eye on your stock portfolio** 📊
 
-## Voraussetzungen
+Linguflex is available in English and German.
+
+## Prerequisites
 - [Python 3.9.9](https://www.python.org/downloads/release/python-399/)
-- [OpenAI API Schlüssel](https://platform.openai.com/) 
+- [OpenAI API Key](https://platform.openai.com/) 
 
 ## Installation
 ```
 pip install -r requirements.txt
 ```
-oder für eine Minimalkonfiguration ("Vanilla"): `pip install -r requirements_minimal.txt`
+or for a minimal configuration ("Vanilla"): `pip install -r requirements_minimal.txt`
 
-OpenAI API-Schlüssel entweder:
-- in die Datei `config.txt` im Bereich [openai_generator] in den Schlüssel "api_key" eintragen
-- oder in die Umgebungsvariable LINGU_OPENAI_API_KEY eintragen
+Enter OpenAI API key either:
+- into the file `config.txt` in the section [openai_generator] into the key "api_key"
+- or into the environment variable LINGU_OPENAI_API_KEY
 
-Hinweis: für schnellere Spracherkennung mit GPU-Unterstützung sollte vor der (pytorch-)Installation das [NVIDIA® CUDA® Toolkit](https://developer.nvidia.com/cuda-toolkit) installiert werden.
+Note: For faster speech recognition with GPU support, the [NVIDIA® CUDA® Toolkit](https://developer.nvidia.com/cuda-toolkit) should be installed before the (pytorch-)installation.
 
 ## Start
 ```
 python linguflex
 ```
 
-## Konfiguration
-Die `config.txt` beinhaltet:
-- Systemeinstellungen wie zB die verwendeten Sprache
-- die zu ladenden Module im Abschnitt [modules] (Module werden in der hier angegebenen Reihenfolge geladen und gestartet)
-- die Einstellungsparameter der Module
+## Configuration
+The `config.txt` includes:
+- System settings such as the languages used
+- the modules to be loaded in the [modules] section (modules are loaded and started in the order specified here)
+- the configuration parameters of the modules
 
 ---
 
-# Basismodule
+# Basic Modules
 
 ```
 user_interface
@@ -56,144 +56,146 @@ whisper_speechtotext
 system_texttospeech
 ```
 
-Ermöglichen grundlegende Sprachkommunikation mit dem Assistenten.  
+Enable basic voice communication with the assistant. 
 
-## Mikrophon-Kalibrierung
-Zunächst sollte das Mikrophons in der Sektion [microphone_recorder] der Konfigurationsdatei config.txt eingestellt werden. Die Aufzeichnung beginnt, wenn der Pegel den Wert in `volume_start_recording` übersteigt und stoppt, wenn der Pegel unter den Wert in `volume_stop_recording` fällt. Um diese Werte zu ermitteln, wird debug_show_volume = True gesetzt und Linguflex gestartet, die exakten Pegelwerte werden dann in das Consolefenster geschrieben.
-
----
-
-#  Text-zu-Sprache-Module
-
-Diese Module ermöglichen eine verbesserte Sprachausgabe und ersetzen das vorhandene Modul `system_texttospeech` im Abschnitt `[modules]` der Konfigurationsdatei.  
-
-Die Module für Azure und Elevenlabs können parallel betrieben werden und benötigen API Keys, die in der jeweiligen Sektion in der Konfigurationsdatei hinterlegt oder als Umgebungsvariable definiert werden. Lokalisierte Stimmen werden für diese beiden Module in ihrer jeweiligen Stimm-Konfigurationsdatei verwaltet.
-Diese beiden Module besitzen zur Konfiguration jeweils eigenen 
-
-
-  - `edge_texttospeech` nutzt das Fenster des Edge-Browsers für die Sprachausgabe, bietet eine kostenlose, qualitativ hochwertige Sprachsynthese, aufgrund der Verwendung des Browserfenstersaber mit etwas herabgesetzter Stabilität und Komfort 
-  - `azure_texttospeech` bietet eine qualitativ hochwertige, stabile und komfortable Sprachsynthese und benötigt jedoch einen [Microsoft Azure API-Schlüssel](https://portal.azure.com/), Umgebungsvariable für den API-Key: LINGU_AZURE_SPEECH_KEY, Stimm-Konfigurationsdatei: azure_texttospeech.voices.de/en.json
-  - `elevenlabs_texttospeech` bietet ebenfalls qualitativ hochwertige, stabile und komfortable Sprachsynthese mit emotionaler Ausgabe und benötigt einen [Elevenlabs API-Schlüssel](https://beta.elevenlabs.io/Elevenlabs), Umgebungsvariable für den API-Key: LINGU_ELEVENLABS_SPEECH_KEY, Stimm-Konfigurationsdatei: elevenlabs_texttospeech.voices.de/en.json
+## Microphone Calibration
+First, the microphone should be set in the section [microphone_recorder] of the configuration file config.txt. Recording begins when the level exceeds the value in `volume_start_recording` and stops when the level falls below the value in `volume_stop_recording`. To determine these values, set debug_show_volume = True and start Linguflex, the exact level values are then written to the console window.
 
 ---
 
-# Erweiterungsmodule
+# Text-to-Speech Modules
 
-## Persönlichkeiten nachahmen 🎭
+These modules provide enhanced speech output and replace the existing `system_texttospeech` module in the `[modules]` section of the configuration file.
+
+The modules for Azure and Elevenlabs can be operated in parallel and need API keys, which are stored in the respective section in the configuration file or defined as an environment variable. Localized voices are managed for these two modules in their respective voice configuration file.
+
+  - `edge_texttospeech` uses the Edge browser window for speech output, provides free, high-quality speech synthesis, but with slightly reduced stability and comfort due to the use of the browser window.
+  - `azure_texttospeech` provides high-quality, stable and comfortable speech synthesis and however requires a [Microsoft Azure API Key](https://portal.azure.com/), environment variable for the API Key: LINGU_AZURE_SPEECH_KEY, voice configuration file: azure_texttospeech.voices.de/en.json
+  - `elevenlabs_texttospeech` also offers high-quality, stable and comfortable speech synthesis with emotional output and requires an [Elevenlabs API Key](https://beta.elevenlabs.io/Elevenlabs), environment variable for the API Key: LINGU_ELEVENLABS_SPEECH
+
+_KEY, voice configuration file: elevenlabs_texttospeech.voices.de/en.json
+
+---
+
+# Extension Modules
+
+## Mimic Personalities 🎭
 ´personality_switch´
-- Funktion: Wechselt zur angegebenen Persönlichkeit.
-- Hinweis: Die Startpersönlichkeit kann in der Konfiguration unter "character" angegeben werden. Verfügbare Persönlichkeiten werden in der personality_switch.de/en.json-Datei in modules/basic verwaltet.
+- Function: Switches to the specified personality.
+- Note: The starting personality can be specified in the configuration under "character". Available personalities are managed in the personality_switch.de/en.json file in modules/basic.
 
-**Beispiele:**
-- *"Verwandle dich in Bruce Willis"*
-- *"Sei Micky Maus"*
-- *"Wechsle den Charakter zum Assistenten"*
+**Examples:**
+- *"Transform into Bruce Willis"*
+- *"Be Mickey Mouse"*
+- *"Change character to Assistant"*
 
 ---
 
-## Notizbuch 📔
+## Notebook 📔
 ´notebook´
-- Funktion: Kann als Zwischenablage für Informationen genutzt werden
+- Function: Can be used as a clipboard for information.
 
-**Beispiele:**
-- *"Schreib die URL vom laufenden Song ins Notizbuch"*
-- *"Erzeuge ein Notizbuch Tiere und schreibe Katze, Maus und Elefant hinein"*
+**Examples:**
+- *"Write the URL of the current song into the notebook"*
+- *"Create a notebook Animals and write Cat, Mouse and Elephant into it"*
 
 ---
 
 ## Media Playout 🎵
 ´media_playout´
-- Funktion: Ermöglicht Suche und Abspiel von Musikstücken und Musikplaylists. In Playlists kann ein Lied vor und zurück gesprungen werden.
-- Hinweis: Benötigt einen [Google Cloud API key](https://console.cloud.google.com/) mit Zugriff auf die YouTube Data API v3.
+- Function: Allows search and playback of music tracks and music playlists. In playlists, a song can be skipped forward and backward.
+- Note: Requires a [Google Cloud API key](https://console.cloud.google.com/) with access to the YouTube Data API v3.
 
-**Beispiele:**
-- *"Spiele eine Playlist von Robbie Williams"*
-- *"Ein Lied weiter"*
-- *"Leiser", "Stop", "Pause", "Weiter"*
+**Examples:**
+- *"Play a playlist by Robbie Williams"*
+- *"Next song"*
+- *"Quieter", "Stop", "Pause", "Continue"*
 
 ---
 
-## Internetsuche Text 🔍 
+## Internet Search Text 🔍 
 ´google_information´
-- Funktion: Ruft Echtzeitinformationen aus dem Internet ab.
-- Hinweis: Benötigt einen [SerpAPI-Schlüssel](https://serpapi.com/).
+- Function: Retrieves real-time information from the Internet.
+- Note: Requires a [SerpAPI Key](https://serpapi.com/).
 
-**Beispiel:**
-- *"Google, wer wurde 2023 Fußballmeister?"*
+**Example:**
+- *"Google, who was the 2023 football champion?"*
 
 ---
 
 ## Auto Action ✨
-- Funktion: Ermöglicht dem Assistenten bei schwierigen Fragen den Zugriff auf die Fähigkeiten aller Module.
+- Function: Allows the assistant to access the abilities of all modules for difficult questions.
 
-**Beispiel:**
-- *"Wer wurde 2023 Fußballmeister?"*
+**Example:**
+- *"Who was the 2023 football champion?"*
 
 ---
 
-## Termine managen 📆
+## Manage Appointments 📆
 ´google_calendar´
-- Funktion: Integriert den Google Kalender, um Ereignisse abzurufen und hinzuzufügen.
-- Hinweis: Benötigt die Datei [credentials.json](https://developers.google.com/calendar/api/quickstart/python?hl=de#authorize_credentials_for_a_desktop_application).
+- Function: Integrates the Google Calendar to retrieve and add events.
+- Note: Requires the [credentials.json](https://developers.google.com/calendar/api/quickstart/python?hl=de#authorize_credentials_for_a_desktop_application) file.
 
-**Beispiele:**
-- *"Was habe ich für Termine?"*
-- *"Neuer Termin übermorgen 9 Uhr Zahnarzt"*
-- *"Verschiebe den Termin mit dem Abendessen um eine Stunde"*
+**Examples:**
+- *"What appointments do I have?"*
+- *"New appointment the day after tomorrow at 9 am dentist"*
+- *"Postpone the dinner appointment by one hour"*
 
 ---
 
-## Wetter ☀️🌦️
+## Weather ☀️🌦️
 ´weather_forecast´
-- Funktion: Ruft aktuelle Wetterdaten ab.
-- Hinweis: Benötigt einen [OpenWeatherMap-API-Schlüssel](https://openweathermap.org/api).
+- Function: Retrieves current weather data.
+- Note: Requires an [OpenWeatherMap API Key](https://openweathermap.org/api).
 
-**Beispiel:**
-- *"Wie wird das Wetter morgen früh?"*
+**Example:**
+- *"What's the weather like tomorrow morning?"*
 
 ---
 
-## Nachrichten 📰
+## News 📰
 ´news_summary´
-- Funktion: Fasst die aktuelle Nachrichten der Tagesschau zusammen.
+- Function: Summarizes the current news of Tagesschau.
 
-**Beispiel:**
-- *"Wie sind die Technik-Nachrichten?"*
+**Example:**
+- *"What's the tech news?"*
 
 ---
 
-## Bildsuche 🔍🖼️
+## Picture Search 🔍🖼️
 ´picture_search´
-- Funktion: Sucht im Internet nach einem Bild und zeigt es an.
-- Hinweis: Benötigt einen [Google API-Schlüssel](https://console.cloud.google.com) mit Freigabe für die Custom Search API und einen [CX-Schlüssel](https://cse.google.com/cse/all).
+- Function: Searches the Internet for a picture and displays it.
+- Note: Requires a [Google API Key](https://console.cloud.google.com) with clearance for the Custom Search API and a [CX Key](https://cse.google.com/cse/all).
 
-**Beispiel:**
-- *"Zeige ein Bild von Salvador Dali"*
+**Example:**
+- *"Show a picture of Salvador Dali"*
 
 ---
 
-## Bilderzeugung 🎨
+## Image Generation 🎨
 ´picture_generator´
-- Funktion: Generiert ein Bild auf Grundlage einer Beschreibung und zeigt es an.
-- Hinweis: Kann bei intensiver Nutzung [gewisse Kosten](https://openai.com/pricing) verursachen.
+- Function: Generates an image based on a description and displays it.
+- Note: Intense use can [incur costs](https://openai.com/pricing).
 
-**Beispiel:**
-- *"Male ein Bild vom Eiffelturm im Stil von Salvador Dali"*
+**Example:**
+- *"Paint a picture of the Eiffel Tower in the style of Salvador Dali"*
 
 ---
 
-## Emailzugriff  📧
+## Email Access  📧
 ´email_imap´
-- Funktion: Ruft E-Mails mit dem IMAP-Protokoll ab.
+- Function: Retrieves emails using the IMAP protocol.
 
-**Beispiel:**
-- *"Habe ich neue EMails?"*
+**Example:**
+- *"Do I have new emails?"*
 
 ---
 
-## Investmentdaten 📊  
-´stocks_portfolio´
-- Funktion: Ruft Daten des Anlageportfolios ab und fasst diese zusammen.
+##
 
-**Beispiel:**
-- *"Wie geht es meinen Aktien"*
+ Investment Data 📊  
+´stocks_portfolio´
+- Function: Retrieves investment portfolio data and summarizes it.
+
+**Example:**
+- *"How are my stocks doing"*
