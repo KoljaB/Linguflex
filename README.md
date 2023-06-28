@@ -102,7 +102,7 @@ The modules for Azure and Elevenlabs can be operated in parallel and need API ke
 ## Media Playout 🎵
 ´media_playout´
 - Function: Allows search and playback of music tracks and music playlists. In playlists, a song can be skipped forward and backward.
-- Note: Requires a [Google Cloud API key](https://console.cloud.google.com/) with access to the YouTube Data API v3.
+- Note: Requires a [Google Cloud API key](https://console.cloud.google.com/) with access to the YouTube Data API v3 in config.txt or environment variable LINGU_GOOGLE_API_KEY 
 
 **Examples:**
 - *"Play a playlist by Robbie Williams"*
@@ -114,7 +114,7 @@ The modules for Azure and Elevenlabs can be operated in parallel and need API ke
 ## Internet Search Text 🔍 
 ´google_information´
 - Function: Retrieves real-time information from the Internet.
-- Note: Requires a [SerpAPI Key](https://serpapi.com/).
+- Note: Requires a [SerpAPI Key](https://serpapi.com/) in config.txt or environment variable LINGU_SERP_API_KEY 
 
 **Example:**
 - *"Google, who was the 2023 football champion?"*
@@ -144,7 +144,7 @@ The modules for Azure and Elevenlabs can be operated in parallel and need API ke
 ## Weather ☀️🌦️
 ´weather_forecast´
 - Function: Retrieves current weather data.
-- Note: Requires an [OpenWeatherMap API Key](https://openweathermap.org/api).
+- Note: Requires an [OpenWeatherMap API Key](https://openweathermap.org/api) in config.txt or environment variable LINGU_OPENWEATHERMAP_API_KEY 
 
 **Example:**
 - *"What's the weather like tomorrow morning?"*
@@ -163,7 +163,7 @@ The modules for Azure and Elevenlabs can be operated in parallel and need API ke
 ## Picture Search 🔍🖼️
 ´picture_search´
 - Function: Searches the Internet for a picture and displays it.
-- Note: Requires a [Google API Key](https://console.cloud.google.com) with clearance for the Custom Search API and a [CX Key](https://cse.google.com/cse/all).
+- Note: Requires a [Google API Key](https://console.cloud.google.com) with clearance for the Custom Search API and a [CX Key](https://cse.google.com/cse/all) in config.txt or environment variables LINGU_GOOGLE_API_KEY and LINGU_GOOGLE_CX_KEY 
 
 **Example:**
 - *"Show a picture of Salvador Dali"*
@@ -192,6 +192,7 @@ The modules for Azure and Elevenlabs can be operated in parallel and need API ke
 ## Investment Data 📊  
 ´stocks_portfolio´
 - Function: Retrieves investment portfolio data and summarizes it.
+- Note: Portfolio links are written in config.txt as "comdirect Musterportfolio"
 
 **Example:**
 - *"How are my stocks doing"*
