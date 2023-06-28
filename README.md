@@ -4,16 +4,16 @@ Linguflex is a **personal AI assistant** ("Jarvis") that **responds to spoken wo
 ## Key Features
 Linguflex can:
 
-- **Mimic personalities** 🎭
-- **Play music** 🎵
-- **Manage appointments** 📆
-- **Retrieve emails** 📧
-- **Announce the weather** ☀️🌦️
-- **Present news** 📰
+- Mimic **personalities** 🎭
+- Play **music** 🎵
+- Manage **appointments** 📆
+- Retrieve **emails** 📧
+- Announce the **weather** ☀️🌦️
+- Present **news** 📰
 - **Search the Internet** (texts or images) 🔍
 - **Generate images** 🎨
 - **Control lamps** 💡
-- **Keep an eye on your stock portfolio** 📊
+- Keep an eye on your stock portfolio 📊
 
 Linguflex is available in English and German.
 
