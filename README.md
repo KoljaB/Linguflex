@@ -1,19 +1,10 @@
 # Linguflex
 
-Linguflex ist ein **persönlicher Assistent**, der **auf gesprochenes Wort reagiert**, wie es ein Mensch tun würde.
-
-Sie sprechen ins Mikrophon, Linguflex hört zu und reagiert auf Ihre Anweisungen. Sie können Linguflex bitten, Ihre **Termine zu planen**, Updates zu **E-Mails**, **Wetter** und **Nachrichten** zu liefern, **Medien abzuspielen** oder Ihre **Smart-Home**-Geräte zu steuern. Sie können Linguflex erweitern und anpassen, um genau das zu tun, was Sie benötigen.
+Linguflex ist ein **persönlicher KI-Assistent** ähnlich wie "**Jarvis**", der **auf gesprochenes Wort reagiert**.
 
 ## Key Features
 
-- **Sprachsteuerung**  
-  - versteht gesprochene Anweisungen und kann darauf reagieren
-- **Persönlicher Assistent**
-  - präsentiert aktuelle Nachrichten, Wetter, EMails und verwaltet Termine
-- **Home-Automation**
-  - kann Smart-Home-Geräte steuern und Musik oder Videos abspielen
-- **Personalisierung**
-  - modular aufgebaut, kann individuell auf die Bedürfnisse des Benutzers angepasst werden
+Er kann verschiedene **Persönlichkeiten** nachahmen, **Musik** abspielen, **Termine** managen, eure **E-Mails** abrufen, euch das **Wetter** ansagen, euch **Nachrichten** präsentieren, das **Licht** in eurem Zimmer kontrollieren, für euch Texte oder Bilder **im Internet suchen**, auf Grundlage eurer Beschreibungen **Bilder erzeugen** und hat euer Aktienportfolio im Auge. 
 
 ## Voraussetzungen
 
