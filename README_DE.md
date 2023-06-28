@@ -4,16 +4,16 @@ Linguflex ist ein **persönlicher KI-Assistent** ("Jarvis"), der **auf gesproche
 ## Key Features
 Linguflex kann:
 
-- **Persönlichkeiten nachahmen** 🎭
-- **Musik abspielen** 🎵
-- **Termine managen** 📆
-- **E-Mails abrufen** 📧
-- **das Wetter ansagen** ☀️🌦️
-- **Nachrichten präsentieren** 📰
-- **im Internet suchen** (Texte oder Bilder) 🔍
+- **Persönlichkeiten** nachahmen 🎭
+- **Musik** abspielen 🎵
+- **Termine** managen 📆
+- **E-Mails** abrufen 📧
+- das **Wetter** ansagen ☀️🌦️
+- **Nachrichten** präsentieren 📰
+- im **Internet suchen** (Texte oder Bilder) 🔍
 - **Bilder erzeugen** 🎨
 - **Lampen steuern** 💡
-- **und hat euer Aktienportfolio im Auge** 📊
+- und hat euer Aktienportfolio im Auge 📊
   
 Linguflex ist auf englisch und deutsch verfügbar.
 
