@@ -1,25 +1,13 @@
-import sys
-sys.path.insert(0, '..')
+from core import SpeechRecognitionModule, Request, cfg, log, DEBUG_LEVEL_OFF, DEBUG_LEVEL_MIN, DEBUG_LEVEL_MID, DEBUG_LEVEL_MAX
 import whisper
 import torch
 
-from linguflex_interfaces import SpeechRecognitionModule_IF
-from linguflex_log import log, DEBUG_LEVEL_OFF, DEBUG_LEVEL_MIN, DEBUG_LEVEL_MID, DEBUG_LEVEL_MAX
-from linguflex_config import cfg, set_section, get_section, configuration_parsing_error_message
-from linguflex_message import LinguFlexMessage
+language = cfg('language')
+model_size = cfg('model_size')
 
-set_section('whisper_speechtotext')
-
-try:
-    language = cfg[get_section()].get('language', 'de')
-    model_size = cfg[get_section()].get('model_size', 'medium')
-except Exception as e:
-    raise ValueError(configuration_parsing_error_message + ' ' + str(e))
-
-class WhisperASRModule(SpeechRecognitionModule_IF):
+class WhisperASRModule(SpeechRecognitionModule):
     def __init__(self):
         global model_size
-        log(DEBUG_LEVEL_MAX, '  [whisper] initializing speech recognition module')
         log(DEBUG_LEVEL_MAX, f'  [whisper] language: {language}')
         whisperdevice = 'cpu'
         if torch.has_cuda:
@@ -33,9 +21,15 @@ class WhisperASRModule(SpeechRecognitionModule_IF):
         self.model = whisper.load_model(model_size, whisperdevice)
         log(DEBUG_LEVEL_MID, '  [whisper] ready')                
 
-    def transcribe_audio_input_to_text(self,
-            message: LinguFlexMessage):
+    def transcribe_audio_input_to_text(self, request: Request):
         log(DEBUG_LEVEL_MAX, '  [whisper] transcribing')                
-        result = self.model.transcribe(message.audio, language=language)
+        result = self.model.transcribe(request.audio, language=language)
         log(DEBUG_LEVEL_MID, '  [whisper] transcribed text:' + result['text']) 
-        message.input = result['text']
+        request.input = result['text']
+
+# Size	Parameters	English-only    Multilingual 	Required VRAM	Relative speed
+# tiny	39 M	    tiny.en	        tiny	        ~1 GB	        ~32x
+# base	74 M	    base.en     	base	        ~1 GB	        ~16x
+# small	244 M	    small.en	    small	        ~2 GB	        ~6x
+# medium769 M	    medium.en	    medium	        ~5 GB	        ~2x
+# large	1550 M	    N/A	            large	        ~10 GB          1x

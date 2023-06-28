@@ -1,5 +1,4 @@
-import sys
-sys.path.insert(0, '..')
+from core import InputModule, Request, cfg, log, DEBUG_LEVEL_OFF, DEBUG_LEVEL_MIN, DEBUG_LEVEL_MID, DEBUG_LEVEL_MAX
 import wave
 import numpy as np
 import pyaudio
@@ -7,21 +6,11 @@ import tempfile
 import os
 import time
 
-from linguflex_interfaces import InputProviderModule_IF
-from linguflex_log import log, DEBUG_LEVEL_OFF, DEBUG_LEVEL_MIN, DEBUG_LEVEL_MID, DEBUG_LEVEL_MAX
-from linguflex_config import cfg, set_section, get_section, configuration_parsing_error_message
-from linguflex_message import LinguFlexMessage
-
-set_section('microphone_recorder')
-
-try:
-    mic_debug_show_volume = cfg[get_section()].getboolean('debug_show_volume', False)
-    volume_start_recording = cfg[get_section()].getint('volume_start_recording', 5)
-    volume_stop_recording = cfg[get_section()].getint('volume_stop_recording', 5)
-    audio_sampling_rate = cfg[get_section()].getint('sampling_rate', 44100)
-    tts = cfg[get_section()].get('tts', 'default')
-except Exception as e:
-    raise ValueError(configuration_parsing_error_message + ' ' + str(e))
+mic_debug_show_volume = cfg('debug_show_volume').lower() == 'true'
+volume_start_recording = int(cfg('volume_start_recording'))
+volume_stop_recording = int(cfg('volume_stop_recording'))
+audio_sampling_rate = int(cfg('sampling_rate'))
+tts = cfg('tts', default='default')
 
 MIC_AUDIO_FORMAT = pyaudio.paInt16
 MIC_AUDIO_CHANNEL_COUNT = 1
@@ -29,7 +18,7 @@ MIC_AUDIO_CHUNK_SIZE = 1024
 MIC_FILENAME_RECORDINGS = 'linguflex_microphone_recording.wav'
 MIC_ORIGIN = 'microphone'
 
-class MicListenerModule(InputProviderModule_IF):
+class MicListenerModule(InputModule):
     def __init__(self):
         log(DEBUG_LEVEL_MAX, '  [microphone] open audio stream')
         self.wave_path = None
@@ -57,7 +46,7 @@ class MicListenerModule(InputProviderModule_IF):
         return audio, stream, frames     
     
     def cycle(self,
-            message: LinguFlexMessage):
+            request: Request):
 
         if self.stream is None:
             current_time = time.time()
@@ -74,7 +63,7 @@ class MicListenerModule(InputProviderModule_IF):
             np_data = np.frombuffer(data, dtype=np.int16)
             pegel = np.abs(np_data).mean()
             if mic_debug_show_volume: 
-                log(DEBUG_LEVEL_MAX, f'  [microphone] volume: {pegel}')
+                log(DEBUG_LEVEL_MIN, f'  [microphone] volume: {pegel}')
             if not self.is_recording and pegel > volume_start_recording:
                 log(DEBUG_LEVEL_MID, '  [microphone] recording')
                 self.is_recording = True
@@ -111,9 +100,9 @@ class MicListenerModule(InputProviderModule_IF):
         self.wavefile_available = True
 
     def create_audio_input(self,
-            message: LinguFlexMessage):
+            request: Request):
         if self.wavefile_available:
             self.wavefile_available = False
-            message.audio = self.wave_path
-            message.tts = tts
-            message.user_id = 'Microphone'
+            request.audio = self.wave_path
+            request.tts = tts
+            request.user_id = 'Microphone'

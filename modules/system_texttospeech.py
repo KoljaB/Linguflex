@@ -1,22 +1,10 @@
-import sys
-sys.path.insert(0, '..')
+from core import TextToSpeechModule, Request, cfg, log, DEBUG_LEVEL_OFF, DEBUG_LEVEL_MIN, DEBUG_LEVEL_MID, DEBUG_LEVEL_MAX
+from distutils.command import clean
 import pyttsx3
 
-from linguflex_interfaces import TextToSpeechModule_IF
-from linguflex_log import log, DEBUG_LEVEL_OFF, DEBUG_LEVEL_MIN, DEBUG_LEVEL_MID, DEBUG_LEVEL_MAX
-from linguflex_config import cfg, set_section, get_section, configuration_parsing_error_message
-from linguflex_message import LinguFlexMessage
-from distutils.command import clean
+voice = cfg('voice')
 
-set_section('system_texttospeech')
-
-try:
-    voice = cfg[get_section()].get('voice', 'Microsoft Stefan - German (Germany)')
-except Exception as e:
-    raise ValueError(configuration_parsing_error_message + ' ' + str(e))
-    pass
-
-class TextToSpeechModule_Pyttsx(TextToSpeechModule_IF):
+class TextToSpeech_System(TextToSpeechModule):
     def __init__(self) -> None:
         self.engine = pyttsx3.init()
         installed_voices = self.engine.getProperty('voices')
@@ -28,7 +16,7 @@ class TextToSpeechModule_Pyttsx(TextToSpeechModule_IF):
             self.engine.setProperty('voice', voice)
 
     def perform_text_to_speech(self, 
-            message: LinguFlexMessage) -> None: 
-        log(DEBUG_LEVEL_MAX, f'  [pyttsx] speech synthesized for text [{message.output_user}]')
-        self.engine.say(message.output_user)
+            request: Request) -> None: 
+        log(DEBUG_LEVEL_MAX, f'  [pyttsx] speech synthesized for text [{request.output_user}]')
+        self.engine.say(request.output_user)
         self.engine.runAndWait()
