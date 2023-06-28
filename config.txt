@@ -61,7 +61,7 @@ max_tokens_per_msg = 600
 max_total_tokens = 2500
 
 [microphone_recorder]
-debug_show_volume=True	
+debug_show_volume=False	
 volume_start_recording=5
 volume_stop_recording=5
 sampling_rate=44100
