@@ -71,9 +71,7 @@ The modules for Azure and Elevenlabs can be operated in parallel and need API ke
 
   - `edge_texttospeech` uses the Edge browser window for speech output, provides free, high-quality speech synthesis, but with slightly reduced stability and comfort due to the use of the browser window.
   - `azure_texttospeech` provides high-quality, stable and comfortable speech synthesis and however requires a [Microsoft Azure API Key](https://portal.azure.com/), environment variable for the API Key: LINGU_AZURE_SPEECH_KEY, voice configuration file: azure_texttospeech.voices.de/en.json
-  - `elevenlabs_texttospeech` also offers high-quality, stable and comfortable speech synthesis with emotional output and requires an [Elevenlabs API Key](https://beta.elevenlabs.io/Elevenlabs), environment variable for the API Key: LINGU_ELEVENLABS_SPEECH
-
-_KEY, voice configuration file: elevenlabs_texttospeech.voices.de/en.json
+  - `elevenlabs_texttospeech` also offers high-quality, stable and comfortable speech synthesis with emotional output and requires an [Elevenlabs API Key](https://beta.elevenlabs.io/Elevenlabs), environment variable for the API Key: LINGU_ELEVENLABS_SPEECH, voice configuration file: elevenlabs_texttospeech.voices.de/en.json
 
 ---
 
