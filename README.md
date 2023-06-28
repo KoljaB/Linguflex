@@ -189,9 +189,7 @@ The modules for Azure and Elevenlabs can be operated in parallel and need API ke
 
 ---
 
-##
-
- Investment Data 📊  
+## Investment Data 📊  
 ´stocks_portfolio´
 - Function: Retrieves investment portfolio data and summarizes it.
 
