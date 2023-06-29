@@ -6,7 +6,7 @@ from io import BytesIO
 from typing import Optional
 import requests
 
-api_key = cfg('api_key', 'LINGU_OPENAI_API_KEY')
+api_key = cfg('api_key', 'OPENAI_API_KEY')
 
 class create_picture_with_dalle(LinguFlexBase):
     "Creates and displays image with DALL-E 2 from a prompt, which should describe in detail how the picture could look"

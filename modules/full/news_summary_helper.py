@@ -3,7 +3,7 @@ from requests import get
 from urllib.parse import urljoin
 import json
 
-max_chars = 10000
+max_chars = 8000
 max_articles = 3
 
 class NewsParser:
@@ -73,7 +73,8 @@ class NewsParser:
             full_link = urljoin(self.baseurl, parent_teaser_link['href'])
             response = get(full_link)
             article = self.get_news_info(response.text)
-            articles.append(f"Artikel {i+1}:\n{article}\n\n")
+            #articles.append(f"Artikel {i+1}:\n{article}\n\n")
+            articles.append(article)
 
         while sum(len(a) for a in articles) > max_chars:
             # Find the longest article
@@ -81,4 +82,4 @@ class NewsParser:
             # Remove one character from the longest article
             articles[articles.index(longest_article)] = longest_article[:-1]
 
-        return "".join(articles)
+        return articles

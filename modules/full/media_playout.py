@@ -4,7 +4,7 @@ from pydantic import Field
 import enum
 
 from media_playout_helper import YoutubePlayer
-player = YoutubePlayer(cfg("api_key", registry_name="LINGU_GOOGLE_API_KEY"))
+player = YoutubePlayer(cfg("api_key", registry_name="GOOGLE_API_KEY"))
 
 class start_music_playback(LinguFlexBase):
     "Starts music playback of the given song or album title; add \"full album\" to search_terms when asked for album"

@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from pydantic import Field
 import requests
 
-api_key = cfg('api_key', 'LINGU_OPENWEATHERMAP_API_KEY')
+api_key = cfg('api_key', 'OPENWEATHERMAP_API_KEY')
 default_city = cfg('city')
 
 class retrieve_weather_forecast(LinguFlexBase):

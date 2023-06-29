@@ -6,8 +6,8 @@ from PIL import Image, UnidentifiedImageError
 from io import BytesIO
 import requests
 
-api_key = cfg('api_key', 'LINGU_GOOGLE_API_KEY')
-cx_key = cfg('cx_key', 'LINGU_GOOGLE_CX_KEY')
+api_key = cfg('api_key', 'GOOGLE_API_KEY')
+cx_key = cfg('cx_key', 'GOOGLE_CX_KEY')
  
 class search_for_picture(LinguFlexBase):
     "Searches for a picture in the www and displays it"
