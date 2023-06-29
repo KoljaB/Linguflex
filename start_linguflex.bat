@@ -36,6 +36,11 @@ set LINGU_SERP_API_KEY=
 :: - optional [weather_forecast]
 set LINGU_OPENWEATHERMAP_API_KEY=
 
+:: Check if LINGU_OPENAI_API_KEY is set
+if not defined LINGU_OPENAI_API_KEY (
+    echo LINGU_OPENAI_API_KEY environment variable is not set. 
+    echo OpenAI API Key expected in config.txt[openai_generator][api_key].
+)
 
 :: start linguflex
 ::────────────────────────────────────
