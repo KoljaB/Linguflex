@@ -80,121 +80,100 @@ Diese beiden Module besitzen zur Konfiguration jeweils eigenen
 # Erweiterungsmodule
 
 ## Persönlichkeiten nachahmen 🎭
-´personality_switch´
+`personality_switch`
 - Funktion: Wechselt zur angegebenen Persönlichkeit.
 - Hinweis: Die Startpersönlichkeit kann in der Konfiguration unter "character" angegeben werden. Verfügbare Persönlichkeiten werden in der personality_switch.de/en.json-Datei in modules/basic verwaltet.
 
-**Beispiele:**
-- *"Verwandle dich in Bruce Willis"*
-- *"Sei Micky Maus"*
-- *"Wechsle den Charakter zum Assistenten"*
-
----
+  **Beispiele:**
+  - *"Verwandle dich in Bruce Willis"*
+  - *"Sei Micky Maus"*
+  - *"Wechsle den Charakter zum Assistenten"*
 
 ## Notizbuch 📔
-´notebook´
+`notebook`
 - Funktion: Kann als Zwischenablage für Informationen genutzt werden
 
-**Beispiele:**
-- *"Schreib die URL vom laufenden Song ins Notizbuch"*
-- *"Erzeuge ein Notizbuch Tiere und schreibe Katze, Maus und Elefant hinein"*
-
----
+  **Beispiele:**
+  - *"Schreib die URL vom laufenden Song ins Notizbuch"*
+  - *"Erzeuge ein Notizbuch Tiere und schreibe Katze, Maus und Elefant hinein"*
 
 ## Media Playout 🎵
-´media_playout´
+`media_playout`
 - Funktion: Ermöglicht Suche und Abspiel von Musikstücken und Musikplaylists. In Playlists kann ein Lied vor und zurück gesprungen werden.
 - Hinweis: Benötigt einen [Google Cloud API key](https://console.cloud.google.com/) mit Zugriff auf die YouTube Data API v3 in config.txt oder Umgebungsvariable LINGU_GOOGLE_API_KEY.
 
-**Beispiele:**
-- *"Spiele eine Playlist von Robbie Williams"*
-- *"Ein Lied weiter"*
-- *"Leiser", "Stop", "Pause", "Weiter"*
-
----
+  **Beispiele:**
+  - *"Spiele eine Playlist von Robbie Williams"*
+  - *"Ein Lied weiter"*
+  - *"Leiser", "Stop", "Pause", "Weiter"*
 
 ## Internetsuche Text 🔍 
-´google_information´
+`google_information`
 - Funktion: Ruft Echtzeitinformationen aus dem Internet ab.
 - Hinweis: Benötigt einen [SerpAPI-Schlüssel](https://serpapi.com/) in config.txt oder Umgebungsvariable LINGU_SERP_API_KEY.
 
-**Beispiel:**
-- *"Google, wer wurde 2023 Fußballmeister?"*
-
----
+  **Beispiel:**
+  - *"Google, wer wurde 2023 Fußballmeister?"*
 
 ## Auto Action ✨
+`auto_action`
 - Funktion: Ermöglicht dem Assistenten bei schwierigen Fragen den Zugriff auf die Fähigkeiten aller Module.
 
-**Beispiel:**
-- *"Wer wurde 2023 Fußballmeister?"*
-
----
+  **Beispiel:**
+  - *"Wer wurde 2023 Fußballmeister?"*
 
 ## Termine managen 📆
-´google_calendar´
+`google_calendar`
 - Funktion: Integriert den Google Kalender, um Ereignisse abzurufen und hinzuzufügen.
 - Hinweis: Benötigt die Datei [credentials.json](https://developers.google.com/calendar/api/quickstart/python?hl=de#authorize_credentials_for_a_desktop_application).
 
-**Beispiele:**
-- *"Was habe ich für Termine?"*
-- *"Neuer Termin übermorgen 9 Uhr Zahnarzt"*
-- *"Verschiebe den Termin mit dem Abendessen um eine Stunde"*
-
----
+  **Beispiele:**
+  - *"Was habe ich für Termine?"*
+  - *"Neuer Termin übermorgen 9 Uhr Zahnarzt"*
+  - *"Verschiebe den Termin mit dem Abendessen um eine Stunde"*
 
 ## Wetter ☀️🌦️
-´weather_forecast´
+`weather_forecast`
 - Funktion: Ruft aktuelle Wetterdaten ab.
 - Hinweis: Benötigt einen [OpenWeatherMap-API-Schlüssel](https://openweathermap.org/api) in config.txt oder Umgebungsvariable LINGU_OPENWEATHERMAP_API_KEY.
 
-**Beispiel:**
-- *"Wie wird das Wetter morgen früh?"*
-
----
+  **Beispiel:**
+  - *"Wie wird das Wetter morgen früh?"*
 
 ## Nachrichten 📰
-´news_summary´
+`news_summary`
 - Funktion: Fasst die aktuelle Nachrichten der Tagesschau zusammen.
 
-**Beispiel:**
-- *"Wie sind die Technik-Nachrichten?"*
-
----
+  **Beispiel:**
+  - *"Wie sind die Technik-Nachrichten?"*
 
 ## Bildsuche 🔍🖼️
-´picture_search´
+`picture_search`
 - Funktion: Sucht im Internet nach einem Bild und zeigt es an.
 - Hinweis: Benötigt einen [Google API-Schlüssel](https://console.cloud.google.com) mit Freigabe für die Custom Search API und einen [CX-Schlüssel](https://cse.google.com/cse/all) in config.txt oder den Umgebungsvariablen LINGU_GOOGLE_API_KEY und LINGU_GOOGLE_CX_KEY.
 
-**Beispiel:**
-- *"Zeige ein Bild von Salvador Dali"*
-
----
+  **Beispiel:**
+  - *"Zeige ein Bild von Salvador Dali"*
 
 ## Bilderzeugung 🎨
-´picture_generator´
+`picture_generator`
 - Funktion: Generiert ein Bild auf Grundlage einer Beschreibung und zeigt es an.
 - Hinweis: Kann bei intensiver Nutzung [gewisse Kosten](https://openai.com/pricing) verursachen.
 
-**Beispiel:**
-- *"Male ein Bild vom Eiffelturm im Stil von Salvador Dali"*
-
----
+  **Beispiel:**
+  - *"Male ein Bild vom Eiffelturm im Stil von Salvador Dali"*
 
 ## Emailzugriff  📧
-´email_imap´
+`email_imap`
 - Funktion: Ruft E-Mails mit dem IMAP-Protokoll ab.
 
-**Beispiel:**
-- *"Habe ich neue EMails?"*
-
----
+  **Beispiel:**
+  - *"Habe ich neue EMails?"*
 
 ## Investmentdaten 📊  
-´stocks_portfolio´
+`stocks_portfolio`
 - Funktion: Ruft Daten des Anlageportfolios ab und fasst diese zusammen.
 - Hinweis: Portfolio links werden in die config.txt als "comdirect Musterportfolio" geschrieben.
 
-**Beispiel:**
-- *"Wie geht es meinen Aktien"*
+  **Beispiel:**
+  - *"Wie geht es meinen Aktien"*
