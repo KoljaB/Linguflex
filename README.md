@@ -82,117 +82,96 @@ The modules for Azure and Elevenlabs can be operated in parallel and need API ke
 - Function: Switches to the specified personality.
 - Note: The starting personality can be specified in the configuration under "character". Available personalities are managed in the personality_switch.de/en.json file in modules/basic.
 
-**Examples:**
-- *"Transform into Bruce Willis"*
-- *"Be Mickey Mouse"*
-- *"Change character to Assistant"*
-
----
+  **Examples:**
+  - *"Transform into Bruce Willis"*
+  - *"Be Mickey Mouse"*
+  - *"Change character to Assistant"*
 
 ## Notebook 📔
 ´notebook´
 - Function: Can be used as a clipboard for information.
 
-**Examples:**
-- *"Write the URL of the current song into the notebook"*
-- *"Create a notebook Animals and write Cat, Mouse and Elephant into it"*
-
----
+  **Examples:**
+  - *"Write the URL of the current song into the notebook"*
+  - *"Create a notebook Animals and write Cat, Mouse and Elephant into it"*
 
 ## Media Playout 🎵
 ´media_playout´
 - Function: Allows search and playback of music tracks and music playlists. In playlists, a song can be skipped forward and backward.
 - Note: Requires a [Google Cloud API key](https://console.cloud.google.com/) with access to the YouTube Data API v3 in config.txt or environment variable LINGU_GOOGLE_API_KEY. 
 
-**Examples:**
-- *"Play a playlist by Robbie Williams"*
-- *"Next song"*
-- *"Quieter", "Stop", "Pause", "Continue"*
-
----
+  **Examples:**
+  - *"Play a playlist by Robbie Williams"*
+  - *"Next song"*
+  - *"Quieter", "Stop", "Pause", "Continue"*
 
 ## Internet Search Text 🔍 
 ´google_information´
 - Function: Retrieves real-time information from the Internet.
 - Note: Requires a [SerpAPI Key](https://serpapi.com/) in config.txt or environment variable LINGU_SERP_API_KEY. 
 
-**Example:**
-- *"Google, who was the 2023 football champion?"*
-
----
+  **Example:**
+  - *"Google, who was the 2023 football champion?"*
 
 ## Auto Action ✨
+´auto_action´
 - Function: Allows the assistant to access the abilities of all modules for difficult questions.
 
-**Example:**
-- *"Who was the 2023 football champion?"*
-
----
+  **Example:**
+  - *"Who was the 2023 football champion?"*
 
 ## Manage Appointments 📆
 ´google_calendar´
 - Function: Integrates the Google Calendar to retrieve and add events.
 - Note: Requires the [credentials.json](https://developers.google.com/calendar/api/quickstart/python?hl=de#authorize_credentials_for_a_desktop_application) file.
 
-**Examples:**
-- *"What appointments do I have?"*
-- *"New appointment the day after tomorrow at 9 am dentist"*
-- *"Postpone the dinner appointment by one hour"*
-
----
+  **Examples:**
+  - *"What appointments do I have?"*
+  - *"New appointment the day after tomorrow at 9 am dentist"*
+  - *"Postpone the dinner appointment by one hour"*
 
 ## Weather ☀️🌦️
 ´weather_forecast´
 - Function: Retrieves current weather data.
 - Note: Requires an [OpenWeatherMap API Key](https://openweathermap.org/api) in config.txt or environment variable LINGU_OPENWEATHERMAP_API_KEY. 
 
-**Example:**
-- *"What's the weather like tomorrow morning?"*
-
----
+  **Example:**
+  - *"What's the weather like tomorrow morning?"*
 
 ## News 📰
 ´news_summary´
 - Function: Summarizes the current news of Tagesschau.
 
-**Example:**
-- *"What's the tech news?"*
-
----
+  **Example:**
+  - *"What's the tech news?"*
 
 ## Picture Search 🔍🖼️
 ´picture_search´
 - Function: Searches the Internet for a picture and displays it.
 - Note: Requires a [Google API Key](https://console.cloud.google.com) with clearance for the Custom Search API and a [CX Key](https://cse.google.com/cse/all) in config.txt or environment variables LINGU_GOOGLE_API_KEY and LINGU_GOOGLE_CX_KEY. 
 
-**Example:**
-- *"Show a picture of Salvador Dali"*
-
----
+  **Example:**
+  - *"Show a picture of Salvador Dali"*
 
 ## Image Generation 🎨
 ´picture_generator´
 - Function: Generates an image based on a description and displays it.
 - Note: Intense use can [incur costs](https://openai.com/pricing).
 
-**Example:**
-- *"Paint a picture of the Eiffel Tower in the style of Salvador Dali"*
-
----
+  **Example:**
+  - *"Paint a picture of the Eiffel Tower in the style of Salvador Dali"*
 
 ## Email Access  📧
 ´email_imap´
 - Function: Retrieves emails using the IMAP protocol.
 
-**Example:**
-- *"Do I have new emails?"*
-
----
+  **Example:**
+  - *"Do I have new emails?"*
 
 ## Investment Data 📊  
 ´stocks_portfolio´
 - Function: Retrieves investment portfolio data and summarizes it.
 - Note: Portfolio links are written in config.txt as "comdirect Musterportfolio".
 
-**Example:**
-- *"How are my stocks doing"*
+  **Example:**
+  - *"How are my stocks doing"*
