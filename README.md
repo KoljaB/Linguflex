@@ -29,7 +29,7 @@ or for a minimal configuration ("Vanilla"): `pip install -r requirements_minimal
 
 Enter OpenAI API key either:
 - into the file `config.txt` in the section [openai_generator] into the key "api_key"
-- or into the environment variable LINGU_OPENAI_API_KEY
+- or into the environment variable OPENAI_API_KEY
 
 Note: For faster speech recognition with GPU support, the [NVIDIA® CUDA® Toolkit](https://developer.nvidia.com/cuda-toolkit) should be installed before the (pytorch-)installation.
 
@@ -70,8 +70,8 @@ These modules provide enhanced speech output and replace the existing `system_te
 The modules for Azure and Elevenlabs can be operated in parallel and need API keys, which are stored in the respective section in the configuration file or defined as an environment variable. Localized voices are managed for these two modules in their respective voice configuration file.
 
   - `edge_texttospeech` uses the Edge browser window for speech output, provides free, high-quality speech synthesis, but with slightly reduced stability and comfort due to the use of the browser window.
-  - `azure_texttospeech` provides high-quality, stable and comfortable speech synthesis and however requires a [Microsoft Azure API Key](https://portal.azure.com/), environment variable for the API Key: LINGU_AZURE_SPEECH_KEY, voice configuration file: azure_texttospeech.voices.de/en.json
-  - `elevenlabs_texttospeech` also offers high-quality, stable and comfortable speech synthesis with emotional output and requires an [Elevenlabs API Key](https://beta.elevenlabs.io/Elevenlabs), environment variable for the API Key: LINGU_ELEVENLABS_SPEECH, voice configuration file: elevenlabs_texttospeech.voices.de/en.json
+  - `azure_texttospeech` provides high-quality, stable and comfortable speech synthesis and however requires a [Microsoft Azure API Key](https://portal.azure.com/), environment variable for the API Key: AZURE_SPEECH_KEY, voice configuration file: azure_texttospeech.voices.de/en.json
+  - `elevenlabs_texttospeech` also offers high-quality, stable and comfortable speech synthesis with emotional output and requires an [Elevenlabs API Key](https://beta.elevenlabs.io/Elevenlabs), environment variable for the API Key: ELEVENLABS_SPEECH, voice configuration file: elevenlabs_texttospeech.voices.de/en.json
 
 ---
 
@@ -98,7 +98,7 @@ The modules for Azure and Elevenlabs can be operated in parallel and need API ke
 ## Media Playout 🎵
 `media_playout`
 - Function: Allows search and playback of music tracks and music playlists. In playlists, a song can be skipped forward and backward.
-- Note: Requires a [Google Cloud API key](https://console.cloud.google.com/) with access to the YouTube Data API v3 in config.txt or environment variable LINGU_GOOGLE_API_KEY. 
+- Note: Requires a [Google Cloud API key](https://console.cloud.google.com/) with access to the YouTube Data API v3 in config.txt or environment variable GOOGLE_API_KEY. 
 
   **Examples:**
   - *"Play a playlist by Robbie Williams"*
@@ -108,7 +108,7 @@ The modules for Azure and Elevenlabs can be operated in parallel and need API ke
 ## Internet Search Text 🔍 
 `google_information`
 - Function: Retrieves real-time information from the Internet.
-- Note: Requires a [SerpAPI Key](https://serpapi.com/) in config.txt or environment variable LINGU_SERP_API_KEY. 
+- Note: Requires a [SerpAPI Key](https://serpapi.com/) in config.txt or environment variable SERP_API_KEY. 
 
   **Example:**
   - *"Google, who was the 2023 football champion?"*
@@ -133,7 +133,7 @@ The modules for Azure and Elevenlabs can be operated in parallel and need API ke
 ## Weather ☀️🌦️
 `weather_forecast`
 - Function: Retrieves current weather data.
-- Note: Requires an [OpenWeatherMap API Key](https://openweathermap.org/api) in config.txt or environment variable LINGU_OPENWEATHERMAP_API_KEY. 
+- Note: Requires an [OpenWeatherMap API Key](https://openweathermap.org/api) in config.txt or environment variable OPENWEATHERMAP_API_KEY. 
 
   **Example:**
   - *"What's the weather like tomorrow morning?"*
@@ -148,7 +148,7 @@ The modules for Azure and Elevenlabs can be operated in parallel and need API ke
 ## Picture Search 🔍🖼️
 `picture_search`
 - Function: Searches the Internet for a picture and displays it.
-- Note: Requires a [Google API Key](https://console.cloud.google.com) with clearance for the Custom Search API and a [CX Key](https://cse.google.com/cse/all) in config.txt or environment variables LINGU_GOOGLE_API_KEY and LINGU_GOOGLE_CX_KEY. 
+- Note: Requires a [Google API Key](https://console.cloud.google.com) with clearance for the Custom Search API and a [CX Key](https://cse.google.com/cse/all) in config.txt or environment variables GOOGLE_API_KEY and GOOGLE_CX_KEY. 
 
   **Example:**
   - *"Show a picture of Salvador Dali"*
