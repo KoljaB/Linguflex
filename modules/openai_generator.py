@@ -10,7 +10,7 @@ import tiktoken
 import traceback
 
 
-openai.api_key = cfg("api_key", "LINGU_OPENAI_API_KEY")
+openai.api_key = cfg("api_key", "OPENAI_API_KEY")
 model = cfg("gpt_model")
 llm_temperature = float(cfg("default_temperature"))
 max_history_entries  = int(cfg("max_history_entries"))
