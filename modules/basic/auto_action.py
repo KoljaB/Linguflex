@@ -7,7 +7,7 @@ auto_action_function = 'hard_to_answer'
 
 @linguflex_function
 def hard_to_answer():
-    "Call whenever providing a 100% satisfactory response to the request is not easy"
+    " Call when you need real time information or whenever providing a 100% satisfactory response to the request is not easy."
     return None
 
 prompt = """"You are an expert in calling functions to answer difficult requests. \

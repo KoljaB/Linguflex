@@ -1,6 +1,6 @@
 import json
 import os
-from core import TextToSpeechModule, Request, cfg, log, DEBUG_LEVEL_MAX, DEBUG_LEVEL_ERR
+from core import TextToSpeechModule, Request, cfg, log, DEBUG_LEVEL_MAX, DEBUG_LEVEL_MIN, DEBUG_LEVEL_ERR
 from elevenlabs import voices, set_api_key, generate, play
 from elevenlabs.api import Voice, VoiceSettings
 from elevenlabs_texttospeech_helper import ConvertNumbersToText
@@ -19,7 +19,7 @@ class TextToSpeech_ElevenLabs(TextToSpeechModule):
         self.voice = cfg('voice')
         self.language = cfg('language')
         self.log_voices = cfg('log_voices').lower() == 'true'
-        self.api_key = cfg('api_key', 'LINGU_ELEVENLABS_SPEECH_KEY')
+        self.api_key = cfg('api_key', 'ELEVENLABS_SPEECH_KEY')
 
         # Set API key for the ElevenLabs service
         set_api_key(self.api_key)
@@ -43,7 +43,7 @@ class TextToSpeech_ElevenLabs(TextToSpeechModule):
         # Log voices if configured to do so
         if self.log_voices:
             installed_voices = voices()
-            log(DEBUG_LEVEL_MAX, f"  [tts_eleven] installed voices: {installed_voices}")
+            log(DEBUG_LEVEL_MIN, f"  [tts_eleven] installed voices: {installed_voices}")
         log(DEBUG_LEVEL_MAX, f"  [tts_eleven] available voices: {self.available_voices}")
 
     def is_voice_available(self, request: Request) -> bool:

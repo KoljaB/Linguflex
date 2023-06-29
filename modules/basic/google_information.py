@@ -4,7 +4,7 @@ from pydantic import Field
 from google_information_helper import GoogleSearchAPI
 from datetime import datetime, timedelta
 
-api_key = cfg('api_key', 'LINGU_SERP_API_KEY')
+api_key = cfg('api_key', 'SERP_API_KEY')
 google = GoogleSearchAPI(api_key)
 
 class search_world_wide_web(LinguFlexBase):

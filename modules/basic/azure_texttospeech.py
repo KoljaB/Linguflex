@@ -18,7 +18,7 @@ class TextToSpeech_Azure(TextToSpeechModule):
         self.language = cfg('language')
         self.language_tag = cfg('language_tag')
         self.log_output = cfg('log_output').lower() == 'true'
-        self.api_key = cfg('api_key', 'LINGU_AZURE_SPEECH_KEY')
+        self.api_key = cfg('api_key', 'AZURE_SPEECH_KEY')
 
         # Load available voices
         current_directory = os.path.dirname(os.path.abspath(__file__))
