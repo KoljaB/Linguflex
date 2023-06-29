@@ -29,7 +29,7 @@ oder für eine Minimalkonfiguration ("Vanilla"): `pip install -r requirements_mi
 
 OpenAI API-Schlüssel entweder:
 - in die Datei `config.txt` im Bereich [openai_generator] in den Schlüssel "api_key" eintragen
-- oder in die Umgebungsvariable LINGU_OPENAI_API_KEY eintragen
+- oder in die Umgebungsvariable OPENAI_API_KEY eintragen
 
 Hinweis: für schnellere Spracherkennung mit GPU-Unterstützung sollte vor der (pytorch-)Installation das [NVIDIA® CUDA® Toolkit](https://developer.nvidia.com/cuda-toolkit) installiert werden.
 
@@ -72,8 +72,8 @@ Diese beiden Module besitzen zur Konfiguration jeweils eigenen
 
 
   - `edge_texttospeech` nutzt das Fenster des Edge-Browsers für die Sprachausgabe, bietet eine kostenlose, qualitativ hochwertige Sprachsynthese, aufgrund der Verwendung des Browserfenstersaber mit etwas herabgesetzter Stabilität und Komfort 
-  - `azure_texttospeech` bietet eine qualitativ hochwertige, stabile und komfortable Sprachsynthese und benötigt jedoch einen [Microsoft Azure API-Schlüssel](https://portal.azure.com/), Umgebungsvariable für den API-Key: LINGU_AZURE_SPEECH_KEY, Stimm-Konfigurationsdatei: azure_texttospeech.voices.de/en.json
-  - `elevenlabs_texttospeech` bietet ebenfalls qualitativ hochwertige, stabile und komfortable Sprachsynthese mit emotionaler Ausgabe und benötigt einen [Elevenlabs API-Schlüssel](https://beta.elevenlabs.io/Elevenlabs), Umgebungsvariable für den API-Key: LINGU_ELEVENLABS_SPEECH_KEY, Stimm-Konfigurationsdatei: elevenlabs_texttospeech.voices.de/en.json
+  - `azure_texttospeech` bietet eine qualitativ hochwertige, stabile und komfortable Sprachsynthese und benötigt jedoch einen [Microsoft Azure API-Schlüssel](https://portal.azure.com/), Umgebungsvariable für den API-Key: AZURE_SPEECH_KEY, Stimm-Konfigurationsdatei: azure_texttospeech.voices.de/en.json
+  - `elevenlabs_texttospeech` bietet ebenfalls qualitativ hochwertige, stabile und komfortable Sprachsynthese mit emotionaler Ausgabe und benötigt einen [Elevenlabs API-Schlüssel](https://beta.elevenlabs.io/Elevenlabs), Umgebungsvariable für den API-Key: ELEVENLABS_SPEECH_KEY, Stimm-Konfigurationsdatei: elevenlabs_texttospeech.voices.de/en.json
 
 ---
 
@@ -100,7 +100,7 @@ Diese beiden Module besitzen zur Konfiguration jeweils eigenen
 ## Media Playout 🎵
 `media_playout`
 - Funktion: Ermöglicht Suche und Abspiel von Musikstücken und Musikplaylists. In Playlists kann ein Lied vor und zurück gesprungen werden.
-- Hinweis: Benötigt einen [Google Cloud API key](https://console.cloud.google.com/) mit Zugriff auf die YouTube Data API v3 in config.txt oder Umgebungsvariable LINGU_GOOGLE_API_KEY.
+- Hinweis: Benötigt einen [Google Cloud API key](https://console.cloud.google.com/) mit Zugriff auf die YouTube Data API v3 in config.txt oder Umgebungsvariable GOOGLE_API_KEY.
 
   **Beispiele:**
   - *"Spiele eine Playlist von Robbie Williams"*
@@ -110,7 +110,7 @@ Diese beiden Module besitzen zur Konfiguration jeweils eigenen
 ## Internetsuche Text 🔍 
 `google_information`
 - Funktion: Ruft Echtzeitinformationen aus dem Internet ab.
-- Hinweis: Benötigt einen [SerpAPI-Schlüssel](https://serpapi.com/) in config.txt oder Umgebungsvariable LINGU_SERP_API_KEY.
+- Hinweis: Benötigt einen [SerpAPI-Schlüssel](https://serpapi.com/) in config.txt oder Umgebungsvariable SERP_API_KEY.
 
   **Beispiel:**
   - *"Google, wer wurde 2023 Fußballmeister?"*
@@ -135,7 +135,7 @@ Diese beiden Module besitzen zur Konfiguration jeweils eigenen
 ## Wetter ☀️🌦️
 `weather_forecast`
 - Funktion: Ruft aktuelle Wetterdaten ab.
-- Hinweis: Benötigt einen [OpenWeatherMap-API-Schlüssel](https://openweathermap.org/api) in config.txt oder Umgebungsvariable LINGU_OPENWEATHERMAP_API_KEY.
+- Hinweis: Benötigt einen [OpenWeatherMap-API-Schlüssel](https://openweathermap.org/api) in config.txt oder Umgebungsvariable OPENWEATHERMAP_API_KEY.
 
   **Beispiel:**
   - *"Wie wird das Wetter morgen früh?"*
@@ -150,7 +150,7 @@ Diese beiden Module besitzen zur Konfiguration jeweils eigenen
 ## Bildsuche 🔍🖼️
 `picture_search`
 - Funktion: Sucht im Internet nach einem Bild und zeigt es an.
-- Hinweis: Benötigt einen [Google API-Schlüssel](https://console.cloud.google.com) mit Freigabe für die Custom Search API und einen [CX-Schlüssel](https://cse.google.com/cse/all) in config.txt oder den Umgebungsvariablen LINGU_GOOGLE_API_KEY und LINGU_GOOGLE_CX_KEY.
+- Hinweis: Benötigt einen [Google API-Schlüssel](https://console.cloud.google.com) mit Freigabe für die Custom Search API und einen [CX-Schlüssel](https://cse.google.com/cse/all) in config.txt oder den Umgebungsvariablen GOOGLE_API_KEY und GOOGLE_CX_KEY.
 
   **Beispiel:**
   - *"Zeige ein Bild von Salvador Dali"*
