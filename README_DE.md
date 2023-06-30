@@ -17,7 +17,7 @@ Linguflex kann:
   
 Linguflex ist auf englisch und deutsch verfügbar.
 
-Vorstellung einiger Features: 
+Hier sind ein paar der Funktionen live zu sehen: 
 
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/BzAOBQUVMK0/0.jpg)](https://www.youtube.com/watch?v=BzAOBQUVMK0)
 
