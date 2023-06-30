@@ -27,7 +27,7 @@ picture_generator
 email_imap
 stocks_portfolio
 emoji_game
-lights_control
+#lights_control
 
 #system_texttospeech
 #edge_texttospeech
