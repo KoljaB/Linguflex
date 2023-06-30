@@ -84,38 +84,9 @@ class ActionHandler:
     def __init__(self, special_modules):
         self.special_modules = special_modules
 
-    def perform_module_action(self, request: Request, module_name: str, action_json: str) -> None:
-        json_obj = json.loads(action_json)        
-        if module_name in request.ignore_actions:
-            log(DEBUG_LEVEL_MID,f'  {module_name} ignoring module action')
-            return
-        for action_provider_module_name, module_instance in self.special_modules[ActionModule].items():
-            if module_name == action_provider_module_name:
-                for action in module_instance.actions:
-                    if 'keys' in action and not action['keys'] is None and len(action['keys']) > 0:
-                        if name_in_json(json_obj, action['keys'], True):
-                            log(DEBUG_LEVEL_MAX, f'  [{module_name}] found key {action["keys"]} in json {action_json}')
-                            module_instance.perform_action(request, json_obj)
-                            return
-                    else:
-                        log(DEBUG_LEVEL_MAX, f'  no action keys defined in [{module_name}]')
-
-    def perform_actions(self, request: Request) -> None:
-        for module_name, module_instance in self.special_modules[ActionModule].items():
-            for json_obj in request.json_objects:
-                for action in module_instance.actions:
-                    if 'keys' in action and not action['keys'] is None and len(action['keys']) > 0:
-                        if name_in_json(json_obj, action['keys'], True):
-                            log(DEBUG_LEVEL_MAX, f'keys match')
-                            action_json_string = request.json_strings[request.json_objects.index(json_obj)]
-                            self.perform_module_action(request, module_name, action_json_string)
-                    else:
-                        log(DEBUG_LEVEL_MAX, f'  no action keys defined in [{module_name}]')
-
     def report_function_execution(self, request: Request, name: str, type: str, return_value) -> None:
         for module_name, module_instance in self.special_modules[ActionModule].items():
             module_instance.on_function_executed(request, name, type, return_value)
-         
 
     def execute_function(self, request: Request) -> None:
         global functions
@@ -174,6 +145,13 @@ class ActionHandler:
                 else:
                     request_fail = request.answer(lingu_class["name"], error)                    
                     request_fail.prompt = lingu_class['fail_prompt']
+
+        # remove last called function from the offered request.functions list so we never get in infinite call loops
+        if request.function_content is not None and request.function_name_answer is not None:
+            for function in request.functions:
+                if function["name"] == request.function_name_answer:                    
+                    request.functions.remove(function)
+                    break  # exit the loop once the function is removed
 
 
 class OutputHandler:
@@ -245,7 +223,7 @@ class RequestHandler:
 
     def process_request(self, request: Request) -> Request:
         self.input_handler.create_input(request)
-        if not request.no_input_processing: self.process_input(request)
+        if not request.no_function_adding: self.handle_function_adding(request)
         request.prompt += request.prompt_end
         self.output_handler.create_output(request)
         self.output_handler.process_output(request)
@@ -276,14 +254,14 @@ class RequestHandler:
         request.prompt += lingu_class['init_prompt']
         self.report_add(request, lingu_class['name'], 'class', reason)
 
-    def process_input(self, request: Request) -> None:
+    def handle_function_adding(self, request: Request) -> None:
         global functions
         global classes
         global function_calls
         global class_calls
 
-        if request.include_all_actions:
-            print (f'include_all_actions: {request.include_all_actions}')
+        # if request.include_all_actions:
+        #     print (f'include_all_actions: {request.include_all_actions}')
 
         if request.input and len(request.input) > 0:
             input_lower = request.input.lower()
@@ -410,7 +388,7 @@ class LinguFlexServer:
     def __init__(self, openai_function_call_module, all_modules, special_modules) -> None:
         global functions
         global classes
-        # print("alle module drin, starte server")
+
         functions = openai_function_call_module.functions 
         classes = openai_function_call_module.classes 
 		

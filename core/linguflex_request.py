@@ -16,7 +16,7 @@ class Request():
         self.exclude_actions = ''
         self.input = None # input text
         self.original_input = None # needed to smuggle through user input in chained messages by modules
-        self.no_input_processing = False # request from module to not process next input (LinguFlexMessages raised by modules would not want this)
+        self.no_function_adding = False # request from module to not add functions to the request
         self.skip_input = False 
         self.user_id = DEFAULT_USER # user identification for client-individual history etc
         self.prompt = '' # system prompt to instruct llm
@@ -81,6 +81,6 @@ class Request():
         request.ignore_actions = ''
         request = self.create(prompt, input)
         request.no_output_to_history = True
-        request.no_input_processing = True
+        request.no_function_adding = True
         return request
 
