@@ -15,7 +15,11 @@ Linguflex can:
 - **Control lamps** 💡
 - Keep an eye on your stock portfolio 📊
 
-Linguflex is available in English and German ([zur deutschen Readme-Datei](https://github.com/KoljaB/Linguflex/blob/main/README_DE.md)).
+Linguflex is available in English and German ([zur deutschen Readme-Datei](https://github.com/KoljaB/Linguflex/blob/main/README_DE.md)).  
+
+See it in action: 
+
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/BzAOBQUVMK0/0.jpg)](https://www.youtube.com/watch?v=BzAOBQUVMK0)
 
 ## Prerequisites
 - [Python 3.9.9](https://www.python.org/downloads/release/python-399/)
