@@ -85,6 +85,27 @@ class UIWindow:
         threading.Thread(target=self.launch_ui).start()
 
     def add_chat_bubble(self, label):
+        # bubble_widget = QWidget()
+        # bubble_widget.setStyleSheet("margin: 0px; padding: 0px;")
+        # bubble_layout = QVBoxLayout()
+        # bubble_layout.setSpacing(0)  # Add this line
+
+        # bubble = ClickableLabel(self.linkify(label["text"]))
+        # bubble.setWordWrap(True)
+        # bubble.setStyleSheet(
+        #     "QLabel { background-color: %s; margin: 0px; color: %s; border-radius: 4px; padding: 2px; font-size: %dpx; }"  # Adjust font size here
+        #     % (label["text_backgroundcolor"], label["text_color"], label["font_size"])  # Adjust colors here
+        # )
+        # bubble.setAlignment(Qt.AlignRight if label["align_right"] else Qt.AlignLeft)
+        # bubble.setTextInteractionFlags(Qt.TextSelectableByMouse)
+        # bubble.setTextInteractionFlags(Qt.TextBrowserInteraction)
+        # bubble.setOpenExternalLinks(True)
+        # bubble_layout.setContentsMargins(0, 0, 0, 0)
+
+        # bubble_layout.addWidget(bubble)
+        # bubble_widget.setLayout(bubble_layout)
+        # bubble_widget.setMaximumWidth(WINDOW_STARTUP_WIDTH - 46)
+        # self.chat_layout.addWidget(bubble_widget)        
         bubble = ClickableLabel(self.linkify(label["text"]))
         bubble.setWordWrap(True)
         bubble.setStyleSheet(
@@ -153,6 +174,7 @@ class UIWindow:
         self.layout.addWidget(self.scroll_area)
 
         self.chat_area = QWidget()
+        self.chat_area.setMaximumWidth(WINDOW_STARTUP_WIDTH - 42)
         self.chat_layout = QVBoxLayout()
         self.chat_layout.addItem(QSpacerItem(2, 2, QSizePolicy.Minimum, QSizePolicy.Expanding))  # Add spacer to layout
         self.chat_area.setLayout(self.chat_layout)
