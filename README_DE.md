@@ -17,6 +17,10 @@ Linguflex kann:
   
 Linguflex ist auf englisch und deutsch verfügbar.
 
+Vorstellung einiger Features: 
+
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/BzAOBQUVMK0/0.jpg)](https://www.youtube.com/watch?v=BzAOBQUVMK0)
+
 ## Voraussetzungen
 - [Python 3.9.9](https://www.python.org/downloads/release/python-399/)
 - [OpenAI API Schlüssel](https://platform.openai.com/) 
@@ -40,7 +44,7 @@ python linguflex
 
 ## Konfiguration
 Die `config.txt` beinhaltet:
-- Systemeinstellungen wie zB die verwendeten Sprache
+- Systemeinstellungen wie zB die verwendete Sprache
 - die zu ladenden Module im Abschnitt [modules] (Module werden in der hier angegebenen Reihenfolge geladen und gestartet)
 - die Einstellungsparameter der Module
 
