@@ -11,6 +11,7 @@ import psutil
 import win32con
 import win32gui
 import win32process
+import re
 
 minimize_window = cfg('minimize_window').lower() == "true"
 launch_wait_time_before_tts_init = float(cfg('launch_wait_time_before_tts_init'))
@@ -25,10 +26,24 @@ class TextToSpeech_Edge(TextToSpeechModule):
         self.path = os.path.join(temp_file_path, EDGE_FILENAME_READ_ALOUD)
         self.edge_path = os.path.join("C:\\", "Program Files (x86)", "Microsoft", "Edge", "Application", "msedge.exe")        
 
+    def remove_links(self, text):
+        """
+        Removes all links from a text, we don't want them to be spoken out
+        """
+
+        # This pattern matches most common URL formats
+        pattern = r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\\(\\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
+        # Use re.sub() to replace any matched patterns with an empty string
+        no_links = re.sub(pattern, '', text)
+        return no_links    
+
     def perform_text_to_speech(self, 
             request: Request) -> None: 
+        
+        spoken_text = self.remove_links(request.output_user)
+
         with open(self.path, 'w', encoding='utf-8') as file:
-            file.write(request.output_user)
+            file.write(spoken_text)
         # Search and kill running edge instances
         self.close_all_edge_windows()       
         # Start edge and wait for idle

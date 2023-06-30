@@ -46,5 +46,29 @@
         "category": "generated",
         "stability": "0.85",
         "similarity": "0.85"
+    },
+    {
+        "voice": "DaenerysTargaryen",
+        "name": "Daenerys",
+        "id": "KxxcBAo2bl0H2mM7PPRw",
+        "category": "generated",
+        "stability": "0.85",
+        "similarity": "0.85"
+    },
+    {
+        "voice": "HermioneGranger",
+        "name": "Myriam",
+        "id": "QetzJmqseYAw9xVn0xbp",
+        "category": "generated",
+        "stability": "0.85",
+        "similarity": "0.85"
+    },
+    {
+        "voice": "Trinity",
+        "name": "Valley Girl",
+        "id": "hRtVkP7q5EkobdjrnPxq",
+        "category": "generated",
+        "stability": "0.85",
+        "similarity": "0.85"
     }
 ]

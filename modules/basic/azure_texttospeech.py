@@ -88,7 +88,7 @@ class TextToSpeech_Azure(TextToSpeechModule):
         """
 
         if self.log_output:
-            log(DEBUG_LEVEL_MAX, f"  [tts_azure] SSML request: {ssml_string}")
+            log(DEBUG_LEVEL_MAX, f'  [tts_azure] synthesizing speech for ssml [{spoken_text}]')
 
         # Setup Azure speech configuration
         speech_config = speechsdk.SpeechConfig(subscription=self.api_key, region=self.region)

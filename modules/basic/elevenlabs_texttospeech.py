@@ -1,5 +1,6 @@
 import json
 import os
+import re
 from core import TextToSpeechModule, Request, cfg, log, DEBUG_LEVEL_MAX, DEBUG_LEVEL_MIN, DEBUG_LEVEL_ERR
 from elevenlabs import voices, set_api_key, generate, play
 from elevenlabs.api import Voice, VoiceSettings
@@ -56,6 +57,17 @@ class TextToSpeech_ElevenLabs(TextToSpeechModule):
 
         # Check if any voice in available voices matches the requested one
         return any(voice["voice"] == request.character for voice in self.available_voices)
+        
+    def remove_links(self, text):
+        """
+        Removes all links from a text, we don't want them to be spoken out
+        """
+
+        # This pattern matches most common URL formats
+        pattern = r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\\(\\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
+        # Use re.sub() to replace any matched patterns with an empty string
+        no_links = re.sub(pattern, '', text)
+        return no_links      
 
     def perform_text_to_speech(self, request: Request) -> None:
         """
@@ -67,10 +79,12 @@ class TextToSpeech_ElevenLabs(TextToSpeechModule):
 
         # Log start of TTS process and output
         log(DEBUG_LEVEL_MAX, f"  [tts_eleven] tts started, favoured voice {request.character}")
-        log(DEBUG_LEVEL_MAX, '  [tts_eleven] output [{}]'.format(output_optimized))
 
         # Select requested voice if available, fallback to first available or "Bella" if none
         selected_voice = next((voice for voice in self.available_voices if voice["voice"] == request.character), self.available_voices[0] if self.available_voices else "Bella")
+
+        spoken_text = self.remove_links(output_optimized)
+        log(DEBUG_LEVEL_MAX, '  [tts_eleven] synthesizing speech for text [{}]'.format(spoken_text))
 
         # If selected voice is a dict, create Voice object
         if isinstance(selected_voice, dict):
@@ -81,10 +95,10 @@ class TextToSpeech_ElevenLabs(TextToSpeechModule):
                 settings=VoiceSettings(stability=float(selected_voice["stability"]), similarity_boost=float(selected_voice["similarity"]))
             )
             # Generate audio using the selected voice
-            audio = generate(text=output_optimized, voice=voice_object, model="eleven_multilingual_v1")        
+            audio = generate(text=spoken_text, voice=voice_object, model="eleven_multilingual_v1")        
         else:
             # Generate audio using the fallback voice
-            audio = generate(text=output_optimized, voice=selected_voice, model="eleven_multilingual_v1")
+            audio = generate(text=spoken_text, voice=selected_voice, model="eleven_multilingual_v1")
         
         # Play the generated audio
         play(audio)
