@@ -17,7 +17,7 @@ Linguflex can:
 
 Linguflex is available in English and German ([zur deutschen Readme-Datei](https://github.com/KoljaB/Linguflex/blob/main/README_DE.md)).  
 
-See it in action: 
+Watch some of the features: 
 
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/BzAOBQUVMK0/0.jpg)](https://www.youtube.com/watch?v=BzAOBQUVMK0)
 
