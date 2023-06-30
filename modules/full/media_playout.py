@@ -12,9 +12,7 @@ class start_music_playback(LinguFlexBase):
     only_playlists: bool = Field(default=False, description='Set to True if you only want to look for playlists')
 
     def execute(self):
-        songname_played = player.load_and_play(self.search_terms, self.only_playlists)  
-        return {'result': 'playback started', 'name': songname_played}
-
+        return player.load_and_play(self.search_terms, self.only_playlists)  
 
 @linguflex_function
 def stop_music_playback():
@@ -72,6 +70,6 @@ class PlayoutHandler(BaseModule):
             player.next_audio()
         if not player.song_information is None:
             player.update_song_info()
-            request.prompt += f'The song currently playing is named "{player.song_information["name"]}", url is "{player.song_information["url"]}. '
+            request.prompt += f'The song currently playing is named "{player.song_information["song_playing"]}", url is "{player.song_information["url"]}. '
     def shutdown(self) -> None:
         player.shutdown()

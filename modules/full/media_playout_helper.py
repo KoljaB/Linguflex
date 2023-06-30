@@ -89,18 +89,35 @@ class YoutubePlayer:
         # Start playing audio
         time.sleep(0.3) # safety wait to let audio cache and not DDOS the video libraries und any circumstances
         self.song_information = {
-            "name" : audio_title, 
+            "song_playing" : audio_title, 
             "url" : url
         }
+        if len(self.current_playlist) > 0:
+            self.song_information["playlist_pos"] = f"{self.audio_index+1}/{len(self.current_playlist)}"
+            
         self.player.play() 
-        return audio_title 
-
+        return self.song_information 
 
     def play_playlist(self, url):
         p = Playlist(url)
         self.current_playlist = p.video_urls  # Save the playlist URLs
         self.audio_index = 0  # Update the playlist index
-        return self.play_audio(self.current_playlist[self.audio_index])
+        self.play_audio(self.current_playlist[self.audio_index])
+
+        # New playlist_info list
+        playlist_info = []
+
+        # Add position and URL to playlist_info
+        for i, song_url in enumerate(self.current_playlist):
+            playlist_info.append({
+                "pos": i+1, 
+                "url": song_url,
+            })
+            if i > 10: break # huge playlists will flood our context window
+
+        self.song_information["from_playlist"] = playlist_info
+
+        return self.song_information
 
 
     def get_audio_title(self, url):
@@ -123,6 +140,7 @@ class YoutubePlayer:
             
             if audios and not only_playlists:
                 self.is_playlist = False
+                current_playlist = []
                 return self.play_audio(audios[0])
             elif playlists:
                 p = Playlist(playlists[0])

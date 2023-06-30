@@ -3,7 +3,7 @@
 	{
 		"keywords": ["emoji", "spiel", "rate"],
 		"init_prompt": "",
-		"success_prompt": "Gebe die Emojis aus, ABER NICHT den Namen des Werks.",
+		"success_prompt": "Gebe NUR die Emojis aus, NICHT den Namen des Werks.",
 		"fail_prompt": ""
 	}
 }
