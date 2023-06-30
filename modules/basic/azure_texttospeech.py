@@ -1,6 +1,7 @@
 import azure.cognitiveservices.speech as speechsdk
 import json
 import os
+import re
 from core import TextToSpeechModule, Request, cfg, log, DEBUG_LEVEL_MAX, DEBUG_LEVEL_MID, DEBUG_LEVEL_ERR
 
 class TextToSpeech_Azure(TextToSpeechModule):
@@ -41,6 +42,17 @@ class TextToSpeech_Azure(TextToSpeechModule):
             A boolean indicating if the voice is available.
         """
         return any(voice["voice"] == request.character for voice in self.available_voices)
+    
+    def remove_links(self, text):
+        """
+        Removes all links from a text, we don't want them to be spoken out
+        """
+
+        # This pattern matches most common URL formats
+        pattern = r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\\(\\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
+        # Use re.sub() to replace any matched patterns with an empty string
+        no_links = re.sub(pattern, '', text)
+        return no_links    
 
     def perform_text_to_speech(self, request: Request) -> None: 
         """
@@ -62,12 +74,14 @@ class TextToSpeech_Azure(TextToSpeechModule):
                 selected_voice = voice
                 log(DEBUG_LEVEL_MAX, f"  [tts_azure] favoured voice {request.character} found: {selected_voice['name']}")
 
+        spoken_text = self.remove_links(request.output_user)
+
         # Create SSML string for speech synthesis
         ssml_string = f"""
         <speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="{self.language_tag}">
             <voice name="{selected_voice["name"]}">
                 <prosody rate="{selected_voice["rate"]}%" pitch="{selected_voice["pitch"]}%">
-                    {request.output_user}
+                    {spoken_text}
                 </prosody>
             </voice>
         </speak>        
