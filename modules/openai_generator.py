@@ -99,10 +99,10 @@ class OpenAIModule(TextGeneratorModule):
 
 
         try:
-            if request.function_content is not None and request.return_value_success:
-                model_response_dict = reliable_completion_request(input_messages, None, llm_model)
-            else:
-                model_response_dict = reliable_completion_request(input_messages, request.functions, llm_model)
+            # if request.function_content is not None and request.return_value_success:
+            #     model_response_dict = reliable_completion_request(input_messages, None, llm_model)
+            # else:
+            model_response_dict = reliable_completion_request(input_messages, request.functions, llm_model)
             
             log(DEBUG_LEVEL_MAX, '  <-{}'.format(str(model_response_dict)))
 

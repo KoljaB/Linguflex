@@ -1,6 +1,7 @@
 from core import TextToSpeechModule, Request, cfg, log, DEBUG_LEVEL_OFF, DEBUG_LEVEL_MIN, DEBUG_LEVEL_MID, DEBUG_LEVEL_MAX
 from distutils.command import clean
 import pyttsx3
+import re
 
 voice = cfg('voice')
 
@@ -15,8 +16,22 @@ class TextToSpeech_System(TextToSpeechModule):
             log(DEBUG_LEVEL_MAX, f'  [pyttsx] voice set to {voice}')
             self.engine.setProperty('voice', voice)
 
+    def remove_links(self, text):
+        """
+        Removes all links from a text, we don't want them to be spoken out
+        """
+
+        # This pattern matches most common URL formats
+        pattern = r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\\(\\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
+        # Use re.sub() to replace any matched patterns with an empty string
+        no_links = re.sub(pattern, '', text)
+        return no_links    
+
     def perform_text_to_speech(self, 
             request: Request) -> None: 
-        log(DEBUG_LEVEL_MAX, f'  [pyttsx] speech synthesized for text [{request.output_user}]')
-        self.engine.say(request.output_user)
+        
+        spoken_text = self.remove_links(request.output_user)
+
+        log(DEBUG_LEVEL_MAX, f'  [pyttsx] synthesizing speech for text [{spoken_text}]')
+        self.engine.say(spoken_text)
         self.engine.runAndWait()
