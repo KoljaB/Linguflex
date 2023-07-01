@@ -26,6 +26,9 @@ Watch some of the features:
 - [OpenAI API Key](https://platform.openai.com/) 
 
 ## Installation
+
+[Comprehensive Installation Guide](https://github.com/KoljaB/Linguflex/blob/main/INSTALL.md)
+
 ```
 pip install -r requirements.txt
 ```
