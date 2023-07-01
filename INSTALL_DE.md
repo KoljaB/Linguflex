@@ -1,49 +1,54 @@
-# Installation
+# Linguflex Installationsanleitung
 
-## 1. OpenAI API Key anlegen
+Bitte folgen Sie diesen Schritten, um eine erfolgreiche Installation von Linguflex zu gewährleisten.
 
-- Account anlegen auf https://platform.openai.com/signup
-- einloggen, dann rechts oben auf den Namen und auf "View API keys" klicken
-- auf "Create new secret key" klicken und neuen API Key erstellen
+## Schritt 1: OpenAI API-Schlüssel erstellen
 
-## 2. Python installieren
+1. Erstellen Sie einen Account auf der [OpenAI Anmeldeseite](https://platform.openai.com/signup).
+2. Nach dem Einloggen klicken Sie oben rechts auf Ihren Namen und wählen "View API keys".
+3. Klicken Sie auf "Create new secret key" und generieren Sie einen neuen API-Schlüssel.
 
-- [Installationsseite für Python 3.9.9](https://www.python.org/downloads/release/python-399/) aufrufen
-- ganz unten "Windows installer (64-bit)" auswählen (in den in den meisten Fällen zumindest) 
- 
-## 3. Linguflex herunterladen
+## Schritt 2: Python installieren
 
-- [Linguflex](https://github.com/KoljaB/Linguflex/archive/refs/heads/main.zip) herunterladen
-- das ZIP File in den gewünschten Ordner entpacken
-  
-## 4. [Optional] PyTorch mit CUDA-Support installieren
-- schnellere Spracherkennung durch Nutzung der Grafikkarte (nicht unbedingt benötigt)
-- funktioniert nur mit [bestimmten Nvidia-Grafikkarten](https://developer.nvidia.com/cuda-gpus)
-- [Nvidia CUDA Toolkit 11.8](https://developer.nvidia.com/cuda-11-8-0-download-archive) installieren
-- Eingabeaufforderung öffnen und ausführen:
-```
-pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
-```
+1. Besuchen Sie die [Python 3.9.9 Installationsseite](https://www.python.org/downloads/release/python-399/).
+2. Scrollen Sie nach unten und wählen Sie "Windows installer (64-bit)". Dies gilt für die meisten Systeme.
 
-## 5. Linguflex installieren
-- Eingabeaufforderung öffnen
-- zum Ordner wechseln, der unter #3 angelegt wurde
-- folgenden Befehl ausführen:
-```
-pip install -r requirements.txt
-```
+## Schritt 3: Linguflex herunterladen
 
-## 6. Linguflex starten
-```
+1. Laden Sie [Linguflex](https://github.com/KoljaB/Linguflex/archive/refs/heads/main.zip) herunter.
+2. Entpacken Sie die ZIP-Datei an Ihrem gewünschten Ort.
+
+## Schritt 4: [Optional] PyTorch mit CUDA-Unterstützung installieren
+
+> Hinweis: Dieser Schritt ist optional, ermöglicht jedoch eine schnellere Spracherkennung durch die Nutzung Ihrer Grafikkarte. Funktioniert nur mit [bestimmten Nvidia-Grafikkarten](https://developer.nvidia.com/cuda-gpus).
+
+1. Installieren Sie [Nvidia CUDA Toolkit 11.8](https://developer.nvidia.com/cuda-11-8-0-download-archive).
+2. Öffnen Sie die Eingabeaufforderung und führen Sie den folgenden Befehl aus:
+   ```bash
+   pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+   ```
+
+## Schritt 5: Linguflex installieren
+
+1. Öffnen Sie die Eingabeaufforderung.
+2. Navigieren Sie zu dem Ordner, den Sie in Schritt 3 erstellt haben.
+3. Führen Sie den folgenden Befehl aus:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+## Schritt 6: Linguflex starten
+
+Führen Sie den folgenden Befehl in Ihrer Eingabeaufforderung aus:
+
+```bash
 python linguflex
 ```
 
----
+## Nach der Installation: Mikrofonkalibrierung
 
-Damit läuft das Grundsystem.  
-Sinnvoll als erster Schritt nach dem Start-Test:
+Nach dem erfolgreichen Start von Linguflex wäre es hilfreich, Ihr Mikrofon zu kalibrieren:
 
-## Mikrophon-Kalibrierung
-- debug_show_volume = True setzen in der config.txt unter [microphone_recorder]
-- Linguflex starten und Pegelwerte in der Ausgabe beobachten
-- geeignete Werte für `volume_start_recording` und `volume_stop_recording` in die config.txt schreiben
+1. Setzen Sie `debug_show_volume = True` in der `config.txt` Datei unter der Sektion `[microphone_recorder]`.
+2. Starten Sie Linguflex und beobachten Sie die Lautstärkepegel in der Ausgabe.
+3. Schreiben Sie geeignete Werte für `volume_start_recording` und `volume_stop_recording` in die `config.txt` Datei.
