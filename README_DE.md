@@ -15,7 +15,7 @@ Linguflex kann:
 - **Lampen steuern** 💡
 - und hat euer Aktienportfolio im Auge 📊
   
-Linguflex ist auf englisch und deutsch verfügbar.
+Linguflex ist auf [englisch](https://github.com/KoljaB/Linguflex/blob/main/README.md) und deutsch verfügbar.
 
 Hier sind ein paar der Funktionen zu sehen: 
 
@@ -26,7 +26,7 @@ Hier sind ein paar der Funktionen zu sehen:
 - [OpenAI API Schlüssel](https://platform.openai.com/) 
 
 ## Installation
-[Ausführlichere Installationsanleitung](https://github.com/KoljaB/Linguflex/blob/main/INSTALL_DE.md)
+[Ausführliche Installationsanleitung](https://github.com/KoljaB/Linguflex/blob/main/INSTALL_DE.md)
 
 ```
 pip install -r requirements.txt
