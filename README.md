@@ -122,13 +122,6 @@ The modules for Azure and Elevenlabs can be operated in parallel and need API ke
   **Example:**
   - *"Google, who was the 2023 football champion?"*
 
-## Auto Action ✨
-`auto_action`
-- Function: Allows the assistant to access the abilities of all modules for difficult questions.
-
-  **Example:**
-  - *"Who was the 2023 football champion?"*
-
 ## Manage Appointments 📆
 `google_calendar`
 - Function: Integrates the Google Calendar to retrieve and add events.
