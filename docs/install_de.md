@@ -20,7 +20,7 @@ Folgend Schritte sollten eine erfolgreiche Installation gewährleisten:
 
 ## Schritt 4: [Optional] PyTorch mit CUDA-Unterstützung installieren
 
-> Hinweis: Dieser Schritt ist optional, ermöglicht jedoch eine schnellere Spracherkennung durch die Nutzung der Grafikkarte. Funktioniert nur mit [bestimmten Nvidia-Grafikkarten](https://developer.nvidia.com/cuda-gpus).
+> Hinweis: Dieser Schritt ist optional und ermöglicht eine schnellere Spracherkennung durch die Nutzung der Grafikkarte. Wenn eine Grafikkarte aus [dieser Liste](https://developer.nvidia.com/cuda-gpus) vorliegt, empfehle ich diesen Extraschritt.
 
 1. [Nvidia CUDA Toolkit 11.8](https://developer.nvidia.com/cuda-11-8-0-download-archive) installieren.
 2. Eingabeaufforderung öffnen und folgenden Befehl ausführen:
@@ -30,10 +30,15 @@ Folgend Schritte sollten eine erfolgreiche Installation gewährleisten:
 
 ## Schritt 5: Linguflex installieren
 
-1. Eingabeaufforderung öffnen und zum Ordner aus Schritt 3 navigieren
-2. Folgenden Befehl ausführen:
+1. Eingabeaufforderung öffnen 
+2. Zum Ordner aus Schritt 3 navigieren
+3. Folgenden Befehl ausführen:
    ```bash
    pip install -r requirements.txt
+   ```
+4. (optional) tiktoken upgraden
+   ```bash
+   pip install --upgrade tiktoken
    ```
 
 ## Schritt 6: Linguflex starten
