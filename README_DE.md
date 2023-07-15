@@ -26,7 +26,7 @@ Hier sind ein paar der Funktionen zu sehen:
 - [OpenAI API Schlüssel](https://platform.openai.com/) 
 
 ## Installation
-[Ausführliche Installationsanleitung](https://github.com/KoljaB/Linguflex/blob/main/INSTALL_DE.md)
+[Ausführliche Installationsanleitung](https://github.com/KoljaB/Linguflex/blob/main/docs/install_de.md)
 
 ```
 pip install -r requirements.txt
