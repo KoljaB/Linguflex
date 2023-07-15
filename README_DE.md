@@ -156,7 +156,7 @@ Diese beiden Module besitzen zur Konfiguration jeweils eigenen
 ## Bildsuche 🔍🖼️
 `picture_search`
 - Funktion: Sucht im Internet nach einem Bild und zeigt es an.
-- Hinweis: Benötigt einen [Google API-Schlüssel](https://console.cloud.google.com) mit Freigabe für die Custom Search API und einen [CX-Schlüssel](https://cse.google.com/cse/all) in config.txt oder den Umgebungsvariablen GOOGLE_API_KEY und GOOGLE_CX_KEY.
+- Hinweis: Benötigt einen [Google API-Schlüssel](https://console.cloud.google.com) mit Freigabe für die Custom Search API und eine [CSE Id](https://cse.google.com/cse/all) in config.txt oder den Umgebungsvariablen GOOGLE_API_KEY und GOOGLE_CSE_ID.
 
   **Beispiel:**
   - *"Zeige ein Bild von Salvador Dali"*
