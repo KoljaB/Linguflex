@@ -25,8 +25,8 @@ Please follow these steps carefully to ensure a successful installation of Lingu
 1. Install [Nvidia CUDA Toolkit 11.8](https://developer.nvidia.com/cuda-11-8-0-download-archive).
 2. Open the command prompt and run the following command:
    ```bash
-   pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
-   ```
+   pip3 install --upgrade torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+   ```    
 
 ## Step 5: Install Linguflex
 
@@ -36,7 +36,11 @@ Please follow these steps carefully to ensure a successful installation of Lingu
    ```bash
    pip install -r requirements.txt
    ```
-
+4. (optional) Update tiktoken
+   ```bash
+   pip install --upgrade tiktoken
+   ```
+   
 ## Step 6: Launch Linguflex
 
 Run the following command in your command prompt:
