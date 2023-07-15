@@ -38,7 +38,7 @@ Enter OpenAI API key either:
 - into the file `config.txt` in the section [openai_generator] into the key "api_key"
 - or into the environment variable OPENAI_API_KEY
 
-Note: For faster speech recognition with GPU support, the [NVIDIA® CUDA® Toolkit](https://developer.nvidia.com/cuda-toolkit) should be installed before the (pytorch-)installation.
+Note: For faster speech recognition with GPU support, the [NVIDIA® CUDA® Toolkit 11.8](https://developer.nvidia.com/cuda-11-8-0-download-archive) should be installed before the (pytorch-)installation.
 
 ## Start
 ```
