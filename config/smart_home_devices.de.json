@@ -1,0 +1,30 @@
+{
+    "set_bulb_light_color": 
+	{
+		"keywords": ["lamp*", "licht*", "farb*", "stimmung*", "leucht*", "wechsel*", "ambient*", "atmosphär*", "hell*", "dunk*", "dimm*", "stell*", "regulier*", "regel*", "ton*", "*zimmer*", "*raum*", "*rot*", "*blau*", "*grün*", "*gelb*", "*violett*", "*orange*", "*pink*", "schwarz*", "*weiß*", "*grau*", "*türkis*", "*gold*", "*silber*", "*beige*", "*braun*", "*flieder*", "*purpur*", "tür", "wintergarten", "couch", "pc", "altar"],
+    "init_prompt": "",
+		"success_prompt": "Lampenfarben wurden erfolgreich geändert. Verwende kreative Beschreibungen, Vergleiche, alltägliche Begriffen oder Assoziationen, um Farben zu vermitteln. SCHREIBE KEINESFALLS HEXADEZIMALCODES # ODER FARBCODES IN DIE AUSGABE!",
+		"fail_prompt": ""
+	},
+    "get_bulb_light_colors": 
+	{
+		"keywords": ["lamp*", "licht*", "farb*", "stimmung*", "leucht*", "wechsel*", "ambient*", "atmosphär*", "hell*", "dunk*", "dimm*", "stell*", "regulier*", "regel*", "ton*", "*zimmer*", "*raum*"],
+		"init_prompt": "",
+		"success_prompt": "Verwende kreative Beschreibungen, Vergleiche, alltägliche Begriffen oder Assoziationen, um Farben zu vermitteln. SCHREIBE KEINESFALLS HEXADEZIMALCODES # ODER FARBCODES IN DIE AUSGABE!",
+		"fail_prompt": ""
+	},
+    "set_smart_device_on_off": 
+    {
+        "keywords": ["steckdose*", "stecker*", "gerät*", "anschluss*", "smartplug*", "ein*", "an*", "aus*", "schalt*", "aktivier*", "deaktivier*", "mach*", "kanns*", "sorgen", "warm", "kalt", "kaffee*"],
+        "init_prompt": "",
+        "success_prompt": "Der Zustand des Smart Device wurde erfolgreich geändert. Erinnerung: Das Gerät ist jetzt entweder eingeschaltet oder ausgeschaltet.",
+        "fail_prompt": ""
+    },
+    "get_smart_plug_get_smart_device_on_off_statestate": 
+    {
+        "keywords": ["steckdose*", "stecker*", "gerät*", "anschluss*", "smartplug*", "zustand*", "ist*", "schalt*", "ein*", "an*", "aus*", "aktiv*", "deaktiv*", "laufen*", "arbeitet*", "funktioniert*", "betrieb*", "status*"],
+        "init_prompt": "",
+        "success_prompt": "Der aktuelle Zustand des Smart Device wurde erfolgreich abgerufen. Erinnerung: Das Gerät ist entweder eingeschaltet oder ausgeschaltet.",
+        "fail_prompt": ""
+    }
+}

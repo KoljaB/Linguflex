@@ -1,0 +1,9 @@
+{
+    "retrieve_weather_forecast": 
+    {
+        "keywords": ["wetter*", "vorhersage*", "prognose*", "klima*", "bericht*", "meteorol*", "temperatur*", "niederschlag*", "sonn*", "regen*", "regne*", "schnee", "hagel", "blitz*", "donner", "sturm*", "nebel*", "kalt*", "warm*", "hitze*", "kühl*", "eis*", "frost*", "spazier*", "draussen", "draußen", "natur", "wolken", "gewitter", "schnei*", "herbst", "frühling", "sommer", "winter", "luft", "feucht*", "*feuchtigke*", "niederschlag", "jahreszeit*", "bewölkt*", "schwül*", "wind*", "tropisch*", "trocken*"],
+        "init_prompt": "",
+        "success_prompt": "Fasse Wetterdaten im Stil eines Wettermoderators stark zusammen, antworte knapp, auf deutsch und nur mit den absolut notwendigen Informationen, ohne Ausschmückungen, Erklärungen, Klarstellungen oder Ratschläge. Nur bei Nachweis extremer Wetterbedingungen in den Daten, bitte darauf hinweisen.",
+        "fail_prompt": ""
+    }
+}

@@ -1,0 +1,51 @@
+{
+	"store_information_to_memory": 
+	{
+		"keywords": ["erinner*", "ruf*", "merk*", "speicher*", "gedächtni*", "informati*", "notiz*", "halt*", "bewahr*", "aufzeichn*", "archivier*"],
+		"init_prompt": "",
+		"success_prompt": "",
+		"fail_prompt": ""
+	},
+	"fetch_information_from_memory": 
+	{
+		"keywords": ["erinner*", "ruf*", "merk*", "speicher*", "gedächtni*", "informati*", "abruf*", "auskunft*", "nachschlag*", "wiederhol*", "zeig*", "such*", "find*"],
+		"init_prompt": "",
+		"success_prompt": "",
+		"fail_prompt": ""
+	},
+	"change_memory_category": 
+	{
+		"keywords": ["erinner*", "ruf*", "merk*", "speicher*", "gedächtni*", "informati*", "kategor*", "list*", "änder*", "wechsel*", "verschieb*", "umbenenn*", "ersetze*"],
+		"init_prompt": "",
+		"success_prompt": "",
+		"fail_prompt": ""
+	},
+	"list_all_memory_categories": 
+	{
+		"keywords": ["erinner*", "ruf*", "merk*", "speicher*", "gedächtni*", "informati*", "kategor*", "list*", "verfügba*", "zeig*", "aufzähl*", "überblick*", "darstell*", "anzeigen"],
+		"init_prompt": "",
+		"success_prompt": "",
+		"fail_prompt": ""
+	},
+	"delete_memory_information": 
+	{
+		"keywords": ["erinner*", "ruf*", "merk*", "speicher*", "gedächtni*", "informati*", "eintrag*", "lösch*", "entfer*", "raus", "weg", "vernicht*", "lösche", "streiche"],
+		"init_prompt": "",
+		"success_prompt": "",
+		"fail_prompt": ""
+	},
+	"delete_memory_category": 
+	{
+		"keywords": ["erinner*", "ruf*", "merk*", "speicher*", "gedächtni*", "informati*", "kategor*", "list*", "lösch*", "entfer*", "raus", "weg", "vernicht*", "lösche", "streiche"],
+		"init_prompt": "",
+		"success_prompt": "",
+		"fail_prompt": ""
+	},
+	"move_information_to_category": 
+	{
+		"keywords": ["erinner*", "ruf*", "merk*", "speicher*", "gedächtni*", "informati*", "kategor*", "list*", "schieb*", "schubs*", "versetz*", "übertrage*", "wechsel*"],
+		"init_prompt": "",
+		"success_prompt": "",
+		"fail_prompt": ""
+	}	
+}

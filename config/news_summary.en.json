@@ -1,0 +1,9 @@
+{
+    "retrieve_current_news": 
+    {
+        "keywords": ["news*", "update*", "headlin*", "report*", "story*", "event*", "inform*", "today*", "happen*", "breaking*", "topic*", "daily news", "going on", "politi*", "journal*", "bulletin*", "announc*", "newspaper*", "press*"],
+        "init_prompt": "",
+        "success_prompt": "Summarize the key information from today's news without introductions or pointers.",
+        "fail_prompt": ""
+    }
+}

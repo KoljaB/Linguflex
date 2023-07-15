@@ -1,0 +1,34 @@
+[
+   {
+      "type":"Bulb",
+      "name":"Lamp_at_the_table",
+      "id":"b59cdf9e847d9a7085aam7",
+      "ip":"192.168.178.1",
+      "key":"bdf440dfa1f1aa63",
+      "version":"3.4"
+   },
+   {
+      "type":"Bulb",
+      "name":"Lamp_at_the_couch",
+      "id":"bfxawdd043cd9078f3848if",
+      "ip":"192.168.178.2",
+      "key":"79b84c161e1f6859",
+      "version":"3.4"
+   },
+   {
+      "type":"Outlet",
+      "name":"Ventilator",
+      "id":"bf984637d5fd554996c4xi",
+      "ip":"192.168.178.64",
+      "key":"fg`MPsS+$`{o<Nw(",
+      "version":"3.3"
+   },
+   {
+      "type":"Outlet",
+      "name":"Coffee machine",
+      "id":"bf2c3a0b448e78fc7fgyae",
+      "ip":"192.168.178.62",
+      "key":"$`{4U^a^`MPe%o=c",
+      "version":"3.3"
+   }
+]

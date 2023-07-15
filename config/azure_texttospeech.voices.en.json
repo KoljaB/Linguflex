@@ -1,0 +1,20 @@
+[
+    {
+        "voice": "Butler",
+        "name": "en-US-ChristopherNeural",
+        "rate": "15",
+        "pitch": "0"
+    },
+    {
+        "voice": "Assistant",
+        "name": "en-US-ChristopherNeural",
+        "rate": "15",
+        "pitch": "0"
+    },
+    {
+        "voice": "MickyMaus",
+        "name": "en-US-ChristopherNeural",
+        "rate": "15",
+        "pitch": "50"
+    }
+]

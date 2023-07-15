@@ -1,0 +1,30 @@
+{
+    "retrieve_calendar_events": 
+		{
+			"keywords": ["heut*", "schieb*", "änder*", "trag*", "lösch*", "entfern*", "kalender", "termin*", "ereignis*", "steht an", "zu tun", "*plan*", "pläne", "verabred*", "treffen", "zeitplan", "tagesordnung", "besprechung", "veranstaltung", "datum", "tag", "woche", "monat", "jahr", "demnächst", "beschäftigt", "freizeit", "verfügbar", "belegt", "ausgebucht", "verschieben", "stornieren", "bestätigen", "erinnerung", "alarm", "fällig", "deadline", "frist", "zeitfenster"],
+			"init_prompt": "",
+			"success_prompt": "Fasse Termine zusammen und gib sie vereinfacht ohne IDs wieder.",
+			"fail_prompt": ""
+		},
+	"add_calendar_event": 
+		{
+			"keywords": ["neue*", "trag*", "merk*", "kalender", "termin*", "ereignis*", "treffen", "veranstaltung", "erinner*"],
+			"init_prompt": "Termine dürfen nur hinzugefügt werden, wenn in dem angefragten Zeitraum kein anderer Termin existiert.",
+			"success_prompt": "Bestätige das erfolgreiche hinzufügen des Termins.",
+			"fail_prompt": ""
+		},
+	"move_calendar_event": 
+		{
+			"keywords": ["schieb*", "änder*", "trag*", "kalender", "termin*", "ereignis*", "treffen", "veranstaltung", "erinner*"],
+			"init_prompt": "Termine dürfen nur verschoben werden, wenn am Ziel-Zeitraum kein anderer Termin existiert.",
+			"success_prompt": "Bestätige das erfolgreiche verschieben des Termins.",
+			"fail_prompt": ""
+		},
+	"delete_calendar_event": 
+		{
+			"keywords": ["lösch*", "entfern*", "kalender", "termin*", "ereignis*", "treffen", "veranstaltung"],
+			"init_prompt": "Lösche nur Termine, wenn dies in der Anfrage eindeutig erbeten wird.",
+			"success_prompt": "Bestätige das erfolgreiche löschen des Termins.",
+			"fail_prompt": ""
+		}
+}

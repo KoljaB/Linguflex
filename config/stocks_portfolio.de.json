@@ -1,0 +1,9 @@
+{
+    "retrieve_stock_portfolio": 
+	{
+		"keywords": ["aktie*", "*depot*", "stock*", "etf*", "*börse*", "*markt*", "*invest*", "*portfol*", "*dividen*", "*rendite*", "*kapita*", "*kurs*", "handel*", "auszahl*", "wachst*", "wächst*", "bewert*", "verlust*", "gewinn*", "fond*", "anlage*", "anteil*", "performance*", "finanz*", "bilanz*", "ausblick*", "beteilig*", "kauf*", "trend*", "prognos*", "ertrag*", "*risik*", "entwick*", "*zins*", "*vermögen*", "*verdienst*", "*spekul*", "traden", "*trading", "arm*", "reich*", "leisten*", "*geld*", "verloren", "gewonnen", "arm", "reich"],
+		"init_prompt": "",
+		"success_prompt": "Antworte auf deutsch. Fasse die wichtigsten heutigen Entwicklungen des Depots grob in ein, zwei Sätzen zusammen, lass Beträge und Prozentzahlen aus, lass Einleitungen und Hinweise weg. Keine Details, gib nur eine knappes Fazit.",
+		"fail_prompt": ""
+	}
+}

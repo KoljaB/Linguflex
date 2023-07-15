@@ -1,0 +1,9 @@
+{
+    "retrieve_current_news": 
+	{
+		"keywords": ["neuigk*", "meldung*", "nachricht*", "news", "update*", "aktu*", "artikel", "bericht*", "ereignis*", "informati*", "heut*", "gescheh*", "schlagzeil*", "them*", "tagesschau", "los", "politi*", "journal*", "bulletin*", "meld*", "zeitung*", "presse*"],
+		"init_prompt": "",
+		"success_prompt": "Fasse die wichtigsten Informationen zu den heutigen Nachrichten zusammen ohne Einleitungen, Hinweise.",
+		"fail_prompt": ""
+	}
+}

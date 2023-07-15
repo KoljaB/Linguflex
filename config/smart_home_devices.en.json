@@ -1,0 +1,16 @@
+{
+    "set_bulb_light_color": 
+	{
+		"keywords": ["lamp*", "light*", "color*", "mood*", "illuminate*", "change*", "ambient*", "atmospher*", "bright*", "dark*", "dim*", "adjust*", "regulate*", "control*", "*room*"],
+		"init_prompt": "",
+		"success_prompt": "Lamp colors have been successfully changed. Use creative descriptions, comparisons, everyday terms, or associations to convey colors. DO NOT WRITE HEX CODES # OR COLOR CODES INTO THE OUTPUT!",
+		"fail_prompt": ""
+	},
+    "get_bulb_light_colors": 
+	{
+		"keywords": ["lamp*", "light*", "color*", "mood*", "illuminate*", "change*", "ambient*", "atmospher*", "bright*", "dark*", "dim*", "adjust*", "regulate*", "control*", "*room*"],
+		"init_prompt": "",
+		"success_prompt": "Use creative descriptions, comparisons, everyday terms, or associations to convey colors. DO NOT WRITE HEX CODES # OR COLOR CODES INTO THE OUTPUT!",
+		"fail_prompt": ""
+	}
+}

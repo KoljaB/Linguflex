@@ -1,0 +1,51 @@
+{
+	"start_music_playback": 
+	{
+		"keywords": ["spiel*", "lied*", "song*", "album*", "alben", "musik*", "clip*", "film*", "stream*", "audio*", "sound*", "*list*", "titel*", "track*", "medien*", "künstler*", "interpret*", "band*", "youtube*", "hörb*", "podcast*", "play*", "hören*", "start*", "anfang*", "beginn*", "jams*", "beats*", "komposition*"],
+		"init_prompt": "",
+		"success_prompt": "Du bist ein Radiomoderator. Kündige die Musik in einem kurzen Satz an, der perfekt für die Ausstrahlung im Radio wäre (der Satz sollte also KEINE URLS ODER LINKS enthalten), indem du aus den Daten maximal den Künstler und überarbeiteten Songtitel (entferne überflüssige Zusätze wie zB \"remastered\") nennst und dabei Spannung aufbaust, Begeisterung weckst und neugierig auf das Stück machst.",
+		"fail_prompt": ""
+	},
+	"play_audio_at_index":
+	{
+		"keywords": ["spiel*", "lied*", "song*", "album*", "alben*", "musik*", "clip*", "film*", "stream*", "audio*", "sound*", "list*", "titel*", "track*", "pos*", "nummer*", "play*", "index*", "platz*"],
+		"init_prompt": "",
+		"success_prompt": "Audio wird ausgespielt. Erwähne keine URLs.",
+		"fail_prompt": ""
+	},
+	"skip_audio":
+	{
+		"keywords": ["*spring*", "skip*", "weit*", "wechsel*", "nächst*", "sprung*", "durchgeh*", "vorwärts*", "*vor", "rückwär*", "zurück", "vorig*", "spul*", "hüpf*", "letzt*"],
+		"init_prompt": "",
+		"success_prompt": "Audio wird ausgespielt. Erwähne keine URLs.",
+		"fail_prompt": ""
+	},
+	"get_playlist_information": 
+	{
+		"keywords": ["info*", "detail*", "daten*", "auskunft*", "erkund*", "information*", "wissen*", "playlist*", "liste*"],
+		"init_prompt": "",
+		"success_prompt": "",
+		"fail_prompt": ""
+	},
+	"stop_music_playback": 
+	{
+		"keywords": ["*stop*", "*end*", "*halt*", "schluss*", "schluß*", "abschalt*", "ausschalt*", "anhalt*", "ruhe*", "pause*", "stopp*", "*brech*", "*brich*"],
+		"init_prompt": "",
+		"success_prompt": "Bestätige das erfolgreiche Beenden des Musikausspiels in ein oder zwei Worten.",
+		"fail_prompt": ""
+	},
+	"change_music_volume": 
+	{
+		"keywords": ["leise*", "laut*", "volume*", "*stärke*", "ton*", "geräusch*", "pegel*", "sound*", "audio*", "db*", "dezibel*", "stärke*", "intensität*", "amplitude*", "kräft*", "energie*", "taub", "hör*", "gehör"],
+		"init_prompt": "",
+		"success_prompt": "Bestätige das erfolgreiche Ändern der Lautstärke in ein oder zwei Worten.",
+		"fail_prompt": ""
+	},
+	"pause_or_continue_music": 
+	{
+		"keywords": ["pause*", "weiter*", "*halt*", "stopp*", "fortsetz*", "setz", "fort", "fortfahr*", "resume*", "wieder*", "beginn*"],
+		"init_prompt": "",
+		"success_prompt": "Bestätige das erfolgreiche Ändern des Pausemodus in ein oder zwei Worten.",
+		"fail_prompt": ""
+	}
+}

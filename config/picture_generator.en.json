@@ -1,0 +1,9 @@
+{
+    "create_picture_with_dalle": 
+	{
+		"keywords": ["pictur*", "painting", "generat*", "creat*", "design*", "craft*", "illustrat*", "graphic*", "draw*", "photo*", "photograph*", "concept*", "depict*", "image*", "pattern*", "motif*", "composition", "compose*", "visual*", "sketch*", "collage", "concept*", "display*", "represen*", "model*", "theme*", "design*", "shape*", "art*", "visualiz*"],
+		"init_prompt": "",
+		"success_prompt": "Confirm the successful creation of the picture.",
+		"fail_prompt": ""
+	}
+}

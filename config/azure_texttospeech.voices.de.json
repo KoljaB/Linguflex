@@ -1,0 +1,20 @@
+[
+    {
+        "voice": "Butler",
+        "name": "de-DE-KillianNeural",
+        "rate": "10",
+        "pitch": "0"
+    },
+    {
+        "voice": "Assistant",
+        "name": "de-DE-KillianNeural",
+        "rate": "10",
+        "pitch": "7"
+    },   
+    {
+        "voice": "MickyMaus",
+        "name": "de-DE-KillianNeural",
+        "rate": "15",
+        "pitch": "50"
+    }
+]

@@ -1,0 +1,51 @@
+{
+	"store_information_to_memory": 
+	{
+		"keywords": ["remind*", "call*", "note*", "store*", "memory*", "inform*", "note*", "keep*", "preserve*", "record*", "archive*"],
+		"init_prompt": "",
+		"success_prompt": "",
+		"fail_prompt": ""
+	},
+	"fetch_information_from_memory": 
+	{
+		"keywords": ["remind*", "call*", "note*", "store*", "memory*", "inform*", "retrieve*", "information*", "look*", "repeat*", "show*", "search*", "find*"],
+		"init_prompt": "",
+		"success_prompt": "",
+		"fail_prompt": ""
+	},
+	"change_memory_category": 
+	{
+		"keywords": ["remind*", "call*", "note*", "store*", "memory*", "inform*", "category*", "list*", "change*", "switch*", "move*", "rename*", "replace*"],
+		"init_prompt": "",
+		"success_prompt": "",
+		"fail_prompt": ""
+	},
+	"list_all_memory_categories": 
+	{
+		"keywords": ["remind*", "call*", "note*", "store*", "memory*", "inform*", "category*", "list*", "available*", "show*", "enumerate*", "overview*", "represent*", "display"],
+		"init_prompt": "",
+		"success_prompt": "",
+		"fail_prompt": ""
+	},
+	"delete_memory_information": 
+	{
+		"keywords": ["remind*", "call*", "note*", "store*", "memory*", "inform*", "entry*", "delete*", "remove*", "out", "away", "destroy*", "erase", "strike"],
+		"init_prompt": "",
+		"success_prompt": "",
+		"fail_prompt": ""
+	},
+	"delete_memory_category": 
+	{
+		"keywords": ["remind*", "call*", "note*", "store*", "memory*", "inform*", "category*", "list*", "delete*", "remove*", "out", "away", "destroy*", "erase", "strike"],
+		"init_prompt": "",
+		"success_prompt": "",
+		"fail_prompt": ""
+	},
+	"move_information_to_category": 
+	{
+		"keywords": ["remind*", "call*", "note*", "store*", "memory*", "inform*", "category*", "list*", "move*", "push*", "shift*", "transfer*", "switch*"],
+		"init_prompt": "",
+		"success_prompt": "",
+		"fail_prompt": ""
+	}	
+}

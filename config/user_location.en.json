@@ -1,0 +1,9 @@
+{
+    "get_user_location": 
+	{
+		"keywords": ["wher*", "here", "area*", "near*", "locat*", "position", "address", "region*", "place", "places", "surround*", "zone", "situation", "standpoint", "coordinat*", "home", "locality*", "location", "residenc*", "territor*", "radius", "distance", "local", "proximal", "district", "quarter", "sector", "geographi*", "territori*", "point"],
+		"init_prompt": "",
+		"success_prompt": "",
+		"fail_prompt": ""
+	}
+}
