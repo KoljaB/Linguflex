@@ -27,7 +27,7 @@ Watch some of the features:
 
 ## Installation
 
-[Comprehensive Installation Guide](https://github.com/KoljaB/Linguflex/blob/main/INSTALL.md)
+[Detailled installation Guide](https://github.com/KoljaB/Linguflex/blob/main/docs/install.md)
 
 ```
 pip install -r requirements.txt
