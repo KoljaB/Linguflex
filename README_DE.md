@@ -124,13 +124,6 @@ Diese beiden Module besitzen zur Konfiguration jeweils eigenen
   **Beispiel:**
   - *"Google, wer wurde 2023 Fußballmeister?"*
 
-## Auto Action ✨
-`auto_action`
-- Funktion: Ermöglicht dem Assistenten bei schwierigen Fragen den Zugriff auf die Fähigkeiten aller Module.
-
-  **Beispiel:**
-  - *"Wer wurde 2023 Fußballmeister?"*
-
 ## Termine managen 📆
 `google_calendar`
 - Funktion: Integriert den Google Kalender, um Ereignisse abzurufen und hinzuzufügen.
