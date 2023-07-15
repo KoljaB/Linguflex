@@ -26,6 +26,11 @@ class TextToSpeech_Edge(TextToSpeechModule):
         self.path = os.path.join(temp_file_path, EDGE_FILENAME_READ_ALOUD)
         self.edge_path = os.path.join("C:\\", "Program Files (x86)", "Microsoft", "Edge", "Application", "msedge.exe")        
 
+    def init(self) -> None: 
+        def microphone_recording_changed(is_recording):
+            if is_recording: self.close_edge_windows()
+        self.server.register_event("microphone_recording_changed", microphone_recording_changed)
+
     def remove_links(self, text):
         """
         Removes all links from a text, we don't want them to be spoken out
