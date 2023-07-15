@@ -5,7 +5,7 @@ import torch
 language = cfg('language')
 model_size = cfg('model_size')
 
-class WhisperASRModule(SpeechRecognitionModule):
+class SpeechToText_Whisper(SpeechRecognitionModule):
     def __init__(self):
         global model_size
         log(DEBUG_LEVEL_MAX, f'  [whisper] language: {language}')
