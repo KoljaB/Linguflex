@@ -70,7 +70,4 @@ def extract_json(request: Request) -> None:
                 request.json_strings.append(json_str)
                 request.output_user = request.output_user[:start] + request.output_user[i+1:]
 
-    request.output_user = trim(request.output_user)    
-
-
-
+    request.output_user = trim(request.output_user)

@@ -38,7 +38,7 @@ class Config(metaclass=SingletonMeta):
         if not hasattr(self, "config_parser"):
 
             # If sys.argv has at least two arguments, use the second one as the config file path
-            self.config_file_path = config_file_path if len(sys.argv) >= 2 else DEFAULT_CONFIG_FILE_NAME
+            self.config_file_path = sys.argv[1] if len(sys.argv) >= 2 else DEFAULT_CONFIG_FILE_NAME
 
             # Create a configparser object with allow_no_value set to True
             self.config_parser = configparser.ConfigParser(allow_no_value=True)
@@ -84,14 +84,14 @@ class Config(metaclass=SingletonMeta):
         file_name_without_extension, _ = os.path.splitext(file_name)
         return file_name_without_extension    
 
-    def get(self, parameter_name: str, registry_name: str = '', default: str = None, section: str = None) -> str:
+    def get(self, parameter_name: str, default: str = None, env_key: str = '', section: str = None) -> str:
         """
         Returns the value of the requested parameter.
         """
 
         # First, check in the environment variables
-        if registry_name and (param := os.environ.get(registry_name)):
-            return param
+        if env_key and (env_var_value := os.environ.get(env_key)):
+            return env_var_value
         
         # If the section is not provided, get the file name of the caller
         if not section:

@@ -1,28 +1,18 @@
 import sys
 import json
-from datetime import datetime
 import os
 import importlib
 import traceback
 import pytz
-
-from .linguflex_log import (
-    log,
-    DEBUG_LEVEL_OFF,
-    DEBUG_LEVEL_MIN,
-    DEBUG_LEVEL_MID,
-    DEBUG_LEVEL_MAX,
-    DEBUG_LEVEL_ERR
-)
-from .linguflex_texthelper import (
-    trim,
-    name_in_json,
-    extract_json
-)
+import re
+from .linguflex_log import log, DEBUG_LEVEL_OFF, DEBUG_LEVEL_MIN, DEBUG_LEVEL_MID, DEBUG_LEVEL_MAX, DEBUG_LEVEL_ERR
+from .linguflex_texthelper import trim, name_in_json, extract_json 
 from .linguflex_interfaces import BaseModule, InputModule, SpeechRecognitionModule, TextToSpeechModule, TextGeneratorModule, ActionModule
 from .linguflex_request import Request
-from typing import List, Tuple, Dict
 from .linguflex_config import parser
+from .linguflex_sound import play_sound
+from typing import List, Tuple, Dict
+from datetime import datetime
 
 # if an action is offered to the llm, whe llm will have access to it for a while
 # the number of following request after the llm loses access is defined in ACTION_REQUEST_DECAY
@@ -88,63 +78,53 @@ class ActionHandler:
         for module_name, module_instance in self.special_modules[ActionModule].items():
             module_instance.on_function_executed(request, name, type, return_value)
 
+    def execute_entity(self, request: Request, entity, entity_type):
+        execution_failed = False
+        try:
+            log(DEBUG_LEVEL_MIN, f'Executing {entity_type} {entity["name"]}')
+
+            play_sound("function_executing")
+            if entity_type == 'function':
+                entity_return_value = entity["execution"].from_function_call(request.function_call)
+            else:
+                class_reference = entity["obj"]
+                class_instance = class_reference.from_function_call(request.function_call)
+                entity_return_value = class_instance.execute()
+
+            log(DEBUG_LEVEL_MAX, f'  {entity["name"]} returned {str(entity_return_value)}')
+        except Exception as e:
+            error = str(e)
+            log(DEBUG_LEVEL_ERR, f'  error occurred executing {entity_type} {entity["name"]}: {error}')
+            traceback.print_exc()
+            execution_failed = True
+
+        if not execution_failed:
+            if entity_return_value is not None:
+                play_sound("function_success")
+                request_success = request.function_answer(entity["name"], entity_return_value)
+            else:
+                log(DEBUG_LEVEL_MAX, f'  {entity_type} {entity["name"]} returned None')
+                play_sound("function_success")
+                request_success = request.function_answer(entity["name"], "success")
+            request_success.add_prompt(entity['success_prompt'])
+            self.report_function_execution(request, entity["name"], entity_type, entity_return_value)
+        else:
+            play_sound("function_fail")
+            request_fail = request.function_answer(entity["name"], error)                    
+            request_fail.add_prompt(entity['fail_prompt'])
+
+
     def execute_function(self, request: Request) -> None:
         global functions
         global classes
 
         for function in functions:
             if function["name"] == request.function_name_execute:
-                execution_failed = False
-                try:
-                    log(DEBUG_LEVEL_MIN, f'Executing function {function["name"]}')
-                    function_return_value = function["execution"].from_function_call(request.function_call)
-                    log(DEBUG_LEVEL_MAX, f'  {function["name"]} returned {str(function_return_value)}')
-                except Exception as e:
-                    error = str(e)
-                    log(DEBUG_LEVEL_ERR, f'  error occurred executing function {function["name"]}: {error}')
-                    traceback.print_exc()                    
-                    execution_failed = True
-
-                if not execution_failed:
-                    if not function_return_value is None:
-                        request_success = request.success(function["name"], function_return_value)
-                        request_success.prompt = function['success_prompt']
-                    else:
-                        log(DEBUG_LEVEL_MAX, f'  function {function["name"]} returned None')
-                        request_success = request.success(function["name"], "success")
-                        request_success.prompt = function['success_prompt']
-                    self.report_function_execution(request, function["name"], 'function', function_return_value)
-                else:
-                    request_fail = request.answer(function["name"], error)                    
-                    request_fail.prompt = function['fail_prompt']
+                self.execute_entity(request, function, 'function')
 
         for lingu_class in classes:
             if lingu_class["name"] == request.function_name_execute:
-                execution_failed = False
-                try:
-                    log(DEBUG_LEVEL_MIN, f'Executing class {lingu_class["name"]}')
-                    class_reference = lingu_class["obj"]
-                    class_instance = class_reference.from_function_call(request.function_call)
-                    lingu_class_return_value = class_instance.execute()
-                    log(DEBUG_LEVEL_MAX, f'  {lingu_class["name"]} returned {str(lingu_class_return_value)}')
-                except Exception as e:
-                    error = str(e)
-                    log(DEBUG_LEVEL_ERR, f'  error occurred executing class {lingu_class["name"]}: {error}')
-                    traceback.print_exc()                    
-                    execution_failed = True
-
-                if not execution_failed:
-                    if not lingu_class_return_value is None:
-                        request_success = request.success(lingu_class["name"], lingu_class_return_value)
-                        request_success.prompt = lingu_class['success_prompt']
-                    else:
-                        log(DEBUG_LEVEL_MAX, f'  class {lingu_class["name"]} returned None')
-                        request_success = request.success(lingu_class["name"], "success")
-                        request_success.prompt = lingu_class['success_prompt']
-                    self.report_function_execution(request, lingu_class["name"], 'class', lingu_class_return_value)
-                else:
-                    request_fail = request.answer(lingu_class["name"], error)                    
-                    request_fail.prompt = lingu_class['fail_prompt']
+                self.execute_entity(request, lingu_class, 'class')
 
         # remove last called function from the offered request.functions list so we never get in infinite call loops
         if request.function_content is not None and request.function_name_answer is not None:
@@ -152,7 +132,6 @@ class ActionHandler:
                 if function["name"] == request.function_name_answer:                    
                     request.functions.remove(function)
                     break  # exit the loop once the function is removed
-
 
 class OutputHandler:
     def __init__(self, all_modules, special_modules):
@@ -163,6 +142,12 @@ class OutputHandler:
     def create_output(self, request: Request) -> None:
         if request.input and len(request.input) > 0:
             log(DEBUG_LEVEL_MID, f'=>{request.input}')
+
+            if request.function_content is not None:
+                play_sound("creating_output")
+            else:
+                play_sound("creating_output_short")
+
             for module_instance in self.special_modules[TextGeneratorModule].values():
                 module_instance.create_output(request)
                 if request.output is not None:
@@ -175,20 +160,23 @@ class OutputHandler:
         if request.function_name_execute and len(request.function_name_execute) > 0:
             self.action_handler.execute_function(request)
 
+        for module_name, module_instance in self.all_modules.items():
+            module_instance.function_execution_completed(request)
+            
         if request.output and len(request.output) > 0:
             self.output_reaction(request)
             self.handle_output(request)
 
-            if not request.skip_output:
-                self.text_to_speech(request)
+            play_sound("before_answer")                
+            self.text_to_speech(request)
 
     def output_reaction(self, request: Request) -> None:
-        request.output_user = trim(request.output_user)
+        #request.output_user = trim(request.output_user)
         for module_instance in self.all_modules.values():
             module_instance.output_reaction(request)
 
     def handle_output(self, request: Request) -> None:
-        request.output_user = trim(request.output_user)
+        #request.output_user = trim(request.output_user)
         for module_instance in self.all_modules.values():
             module_instance.handle_output(request)
 
@@ -198,14 +186,14 @@ class OutputHandler:
         text_to_speech_performed = False
         for text_to_speech_module_name, module_instance in self.special_modules[TextToSpeechModule].items():
             if module_instance.is_voice_available(request):
-                module_instance.perform_text_to_speech(request)
                 text_to_speech_performed = True
+                module_instance.perform_text_to_speech(request)
                 break
 
         # found no voice? use first found text to speech module 
         if not text_to_speech_performed:
             for text_to_speech_module_name, module_instance in self.special_modules[TextToSpeechModule].items():
-                if request.tts and request.tts != 'default':
+                if hasattr(request, 'tts') and request.tts and request.tts != 'default':
                     if text_to_speech_module_name == request.tts:
                         module_instance.perform_text_to_speech(request)
                         break
@@ -213,7 +201,6 @@ class OutputHandler:
                     module_instance.perform_text_to_speech(request)
                     break
         
-
 class RequestHandler:
     def __init__(self, all_modules, special_modules):
         self.all_modules = all_modules
@@ -223,8 +210,9 @@ class RequestHandler:
 
     def process_request(self, request: Request) -> Request:
         self.input_handler.create_input(request)
-        if not request.no_function_adding: self.handle_function_adding(request)
-        request.prompt += request.prompt_end
+        #if not request.no_function_adding: self.handle_function_adding(request)
+        self.handle_function_adding(request)
+        #request.add_prompt(request.prompt_end)
         self.output_handler.create_output(request)
         self.output_handler.process_output(request)
         self.finish_request(request)
@@ -236,80 +224,57 @@ class RequestHandler:
         else:
             return Request()
 
-    def report_add(self, request: Request, name: str, type: str, reason: str) -> None:
+    def report_add(self, request: Request, name: str, caller_filename: str, type: str, reason: str) -> None:
         log(DEBUG_LEVEL_MAX, f'  {type} {name} added ({reason})')
 
         for module_name, module_instance in self.special_modules[ActionModule].items():
-            module_instance.on_function_added(request, name, type)
+            module_instance.on_function_added(request, name, caller_filename, type)
             
     def add_function(self, request: Request, function, reason: str) -> None:
-        if function['name'] in request.exclude_actions: return
+        #if function['name'] in request.exclude_actions: return
         request.functions.append(function['schema'])
-        request.prompt += function['init_prompt']
-        self.report_add(request, function['name'], 'function', reason)
+        request.add_prompt(function['init_prompt'])
+        self.report_add(request, function['name'], function['caller_filename'], 'function', reason)
 
     def add_class(self, request: Request, lingu_class, reason: str) -> None:
-        if lingu_class['name'] in request.exclude_actions: return
+        #if lingu_class['name'] in request.exclude_actions: return
         request.functions.append(lingu_class['schema'])
-        request.prompt += lingu_class['init_prompt']
-        self.report_add(request, lingu_class['name'], 'class', reason)
+        request.add_prompt(lingu_class['init_prompt'])
+        self.report_add(request, lingu_class['name'], lingu_class['caller_filename'], 'class', reason)
+
+    def handle_entity_adding(self, request: Request, entities, entity_calls, add_entity_method, entity_type) -> None:
+        input_lower = request.input.lower()
+        for entity in entities:
+            keywords_in_input = False
+            if 'keywords' in entity and entity['keywords'] and len(entity['keywords']) > 0:
+                keywords_in_input = [keyword for keyword in entity['keywords'] 
+                                    if re.search(r'\b' + keyword.lower().replace('*', '.*') + r'\b', input_lower)]
+            else:
+                add_entity_method(request, entity, f'always include, no keywords set for {entity_type}')
+                continue
+
+            include_all_actions = hasattr(request, 'include_all_actions') and request.include_all_actions
+            if keywords_in_input or include_all_actions:
+                if include_all_actions:
+                    add_entity_method(request, entity, f'forced include of {entity_type}')
+                else:
+                    add_entity_method(request, entity, f'keywords detected {str(keywords_in_input)} for {entity_type}')
+                    entity_calls[entity["name"]] = ACTION_REQUEST_DECAY
+
+            elif entity["name"] in entity_calls and entity_calls[entity["name"]] > 0:
+                calls_left = entity_calls[entity["name"]] = entity_calls[entity["name"]] - 1
+                add_entity_method(request, entity, f'{calls_left} follow requests for {entity_type}')
+
 
     def handle_function_adding(self, request: Request) -> None:
-        global functions
-        global classes
-        global function_calls
-        global class_calls
-
-        # if request.include_all_actions:
-        #     print (f'include_all_actions: {request.include_all_actions}')
-
         if request.input and len(request.input) > 0:
             input_lower = request.input.lower()
 
-            # let every module react on input and enrichen both prompt and input
             for module_name, module_instance in self.all_modules.items():
                 module_instance.handle_input(request)
 
-
-            for function in functions:
-                reacted_to_keywords = False
-                if 'keywords' in function and function['keywords'] and len(function['keywords']) > 0:
-                    reacted_to_keywords = [keyword for keyword in function['keywords'] if keyword in input_lower]
-                else:
-                    self.add_function(request, function, 'always include, no keywords set')
-                    continue
-
-                if reacted_to_keywords or request.include_all_actions:
-                    if request.include_all_actions:
-                        self.add_function(request, function, 'forced include')
-                    else:
-                        self.add_function(request, function, f'keywords detected {str(reacted_to_keywords)}')
-                        function_calls[function["name"]] = ACTION_REQUEST_DECAY
-
-                elif function["name"] in function_calls and function_calls[function["name"]] > 0:
-                    calls_left = function_calls[function["name"]] = function_calls[function["name"]] - 1
-                    self.add_function(request, function, f'{calls_left} follow requests')
-
-            for lingu_class in classes:
-                reacted_to_keywords = False
-                if 'keywords' in lingu_class and lingu_class['keywords'] and len(lingu_class['keywords']) > 0:
-                    reacted_to_keywords = [keyword for keyword in lingu_class['keywords'] if keyword in input_lower]
-                else:
-                    self.add_class(request, lingu_class, 'always include, no keywords set')
-                    continue
-
-                if reacted_to_keywords or request.include_all_actions:
-                    if request.include_all_actions:
-                        self.add_class(request, lingu_class, 'forced include')
-                        log(DEBUG_LEVEL_MAX, f'  Class {lingu_class["name"]} added (include all actions)')
-                    else:
-                        self.add_class(request, lingu_class, f'keywords detected {str(reacted_to_keywords)}')
-                        class_calls[lingu_class["name"]] = ACTION_REQUEST_DECAY
-
-                elif lingu_class["name"] in class_calls and class_calls[lingu_class["name"]] > 0:
-                    calls_left = class_calls[lingu_class["name"]] = class_calls[lingu_class["name"]] - 1
-                    self.add_class(request, lingu_class, f'{calls_left} follow requests')
-
+            self.handle_entity_adding(request, functions, function_calls, self.add_function, 'function')
+            self.handle_entity_adding(request, classes, class_calls, self.add_class, 'class')
 
     def finish_request(self, request: Request) -> None:
         for module_instance in self.all_modules.values():
@@ -328,7 +293,7 @@ class AllModulesHandler:
 
     def shutdown_request(self) -> bool:
         shutdown = False
-        for module_name, module_instance in self.all_modules.items():
+        for module_name, module_instance in reversed(self.all_modules.items()):
             module_shutdown = module_instance.shutdown_request()
             if module_shutdown is not None:
                 if module_shutdown:
@@ -338,7 +303,7 @@ class AllModulesHandler:
     
     def shutdown(self) -> None:
         log(DEBUG_LEVEL_MIN, '---Server shutdown---')
-        for module_name, module_instance in self.all_modules.items():
+        for module_name, module_instance in reversed(self.all_modules.items()):
             log(DEBUG_LEVEL_MAX, f'  shutting down {module_name}')
             module_instance.shutdown()
             log(DEBUG_LEVEL_MIN, f'{module_name} down')
@@ -382,8 +347,6 @@ def log_element_details(elements, element_type, log_details):
             log(DEBUG_LEVEL_MID, f"  {element['name']}")
             log(DEBUG_LEVEL_MAX, f"    {element['description']}")
             
-
-
 class LinguFlexServer:
     def __init__(self, openai_function_call_module, all_modules, special_modules) -> None:
         global functions
@@ -395,6 +358,7 @@ class LinguFlexServer:
         self.special_modules = special_modules
         self.request_handler = RequestHandler(all_modules, special_modules)
         self.all_modules_handler = AllModulesHandler(all_modules)
+        self.events = {}
 
         log_details = debugfunctions >= DEBUG_LEVEL_MIN
 
@@ -411,6 +375,11 @@ class LinguFlexServer:
             log_element_details(classes, "class", log_details)
             log_element_details(functions, "function", log_details)            
 
+        for module_instance in special_modules[TextGeneratorModule].values():
+            module_instance.functions = functions
+            module_instance.classes = classes
+
+
     def cycle(self, request: Request) -> None:
         self.all_modules_handler.cycle(request)
 
@@ -426,13 +395,34 @@ class LinguFlexServer:
     def add_time(self, request: Request) -> None:
         if not hasattr(request, 'local_time_added_to_prompt') or not request.local_time_added_to_prompt:
             local_time = datetime.now(time_zone)
-            request.prompt += f"\nLocal time: {local_time.isoformat()}"
+            #request.add_prompt(f"\nLocal time: {local_time.isoformat()}")
+            formatted_time = local_time.strftime("%d.%m.%Y %H:%M Uhr")
+
+            if "de" in language:
+                request.add_prompt(f"Das aktuelle Datum und die Uhrzeit: {formatted_time}.")
+            else:
+                request.add_prompt(f"The current date and time: {formatted_time}.")
+
             request.local_time_added_to_prompt = True        
 
     def get_time_string(self) -> str:
         cur_date = datetime.now().strftime("%d.%m.%Y")
         cur_time = datetime.now().strftime("%H:%M")
         return f'Das heutige Datum ist {cur_date}, es ist {cur_time} Uhr. '
+
+    def register_event(self, name, function):
+        # Registers a function that should be called whenever set_event is called.
+        if name not in self.events:
+            self.events[name] = []
+        self.events[name].append(function)
+
+    def set_event(self, name, data=None):
+        if name in self.events:
+            for function in self.events[name]:
+                if data is None:
+                    function()  # Call the function without any arguments
+                else:
+                    function(data)  # Call the function with provided data
 
     def get_full_action_string(self, request: Request) -> str:
         json_action_row = ''

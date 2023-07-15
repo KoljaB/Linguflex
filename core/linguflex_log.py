@@ -1,9 +1,11 @@
 import datetime
 import shutil
 import colorama
+import emoji
 
 from colorama import Fore, Back, Style
 from typing import List
+from linguflex_sound import play_sound
 
 colorama.init()
 DEBUG_LEVEL_OFF = 0
@@ -89,8 +91,10 @@ def log(dbg_lvl: int,
     timestamp_to_print = get_elapsed_time()
     len_timestamp_to_print = len(timestamp_to_print)
 
+    text = emoji.demojize(text)
 
     if dbg_lvl == DEBUG_LEVEL_ERR:
+        play_sound("error")
         timestamp_to_print = colorize(DEBUG_LEVEL_ERR, timestamp_to_print)
         colored_text = colorize(DEBUG_LEVEL_MIN, text)
         chars_left = cols - len_timestamp_to_print - 1
@@ -113,7 +117,6 @@ def log(dbg_lvl: int,
         if lf:
             chars_left = cols - len_timestamp_to_print - 1
             if len(text) > chars_left or '\n' in text:
-                chars_left_with_leading_spaces = chars_left - leading_spaces
                 chunks = chunk_text(text, chars_left - leading_spaces)
                 first_line = True
                 for chunk in chunks:

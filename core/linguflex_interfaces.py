@@ -8,43 +8,44 @@ class BaseModule:
         self.name = 'Unknown module'
         self.server = None
 
+    def init(self) -> None: 
+        pass    
+
     def cycle(self, 
             request: Request) -> None: 
-         pass    
+        pass    
     
     def handle_input(self, 
             request: Request) -> None: 
-         pass    
+        pass    
     
     def output_reaction(self, 
             request: Request) -> None: 
-         pass    
+        pass    
     
     def handle_output(self, 
             request: Request) -> None: 
-         pass
-   
+        pass
+    
+    def function_execution_completed(self, 
+            request: Request) -> None: 
+        pass
+ 
     def finish_request(self, 
             request: Request) -> None: 
-         pass
-    
+        pass
+
     def shutdown(self) -> None: 
-         pass
+        pass
     
     def shutdown_request(self) -> None: 
-         pass
+        pass
 
 class ActionModule(BaseModule):
     def __init__(self): 
         super().__init__()
         self.actions = []
 
-    def on_function_added(self, 
-            request: Request,
-            name: str,
-            type: str) -> None: 
-         pass    
-    
     def on_function_executed(self, 
             request: Request,
             name: str,
@@ -52,6 +53,13 @@ class ActionModule(BaseModule):
             arguments) -> None: 
          pass    
 
+    def on_function_added(self, 
+            request: Request,
+            function_name: str,
+            caller_name: str,
+            type: str) -> None: 
+         pass    
+    
     def on_keywords_in_input(self, 
             request: Request,
             keywords_in_input: str) -> None: 
@@ -94,3 +102,9 @@ class TextGeneratorModule(BaseModule):
     def create_output(self,
             request: Request) -> None: 
          pass
+    
+    def request_token_window(self,
+            request: Request,
+            entity: List,
+            entity_type: str) -> int: 
+         return 0
