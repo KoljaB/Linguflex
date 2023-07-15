@@ -155,7 +155,7 @@ The modules for Azure and Elevenlabs can be operated in parallel and need API ke
 ## Picture Search 🔍🖼️
 `picture_search`
 - Function: Searches the Internet for a picture and displays it.
-- Note: Requires a [Google API Key](https://console.cloud.google.com) (section picture_search, key api_key) with clearance for the Custom Search API and a [CX Key](https://cse.google.com/cse/all) in config.txt (section picture_search, key cx_key) or environment variables GOOGLE_API_KEY and GOOGLE_CX_KEY. 
+- Note: Requires a [Google API Key](https://console.cloud.google.com) (section picture_search, key api_key) with clearance for the Custom Search API and a [CSE Id](https://cse.google.com/cse/all) in config.txt (section picture_search, key cx_key) or environment variables GOOGLE_API_KEY and GOOGLE_CSE_ID. 
 
   **Example:**
   - *"Show a picture of Salvador Dali"*
