@@ -28,16 +28,19 @@ Hier sind ein paar der Funktionen zu sehen:
 ## Installation
 [Ausführliche Installationsanleitung](https://github.com/KoljaB/Linguflex/blob/main/docs/install_de.md)
 
+Für schnellere Spracherkennung mit GPU-Unterstützung ist es empfehlenswert, zunächst das [NVIDIA® CUDA® Toolkit 11.8](https://developer.nvidia.com/cuda-11-8-0-download-archive) und anschließend torch zu installieren mit: 
+```bash
+pip3 install --upgrade torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+```  
+Linguflex Installation:
 ```
 pip install -r requirements.txt
 ```
-oder für eine Minimalkonfiguration ("Vanilla"): `pip install -r requirements_minimal.txt`
 
 OpenAI API-Schlüssel entweder:
 - in die Datei `config.txt` im Bereich [openai_generator] in den Schlüssel "api_key" eintragen
 - oder in die Umgebungsvariable OPENAI_API_KEY eintragen
 
-Hinweis: für schnellere Spracherkennung mit GPU-Unterstützung sollte vor der (pytorch-)Installation das [NVIDIA® CUDA® Toolkit 11.8](https://developer.nvidia.com/cuda-11-8-0-download-archive) installiert werden.
 
 ## Start
 ```
