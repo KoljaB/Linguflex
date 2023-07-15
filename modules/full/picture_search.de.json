@@ -1,9 +1,0 @@
-{
-    "search_for_picture": 
-	{
-		"keywords": ["bild", "zeig", "such", "foto", "photo", "stell", "darstell", "präsenti", "abbild", "grafi", "fotogra", "illustr", "visu", "image", "pic", "aufnahme"],
-		"init_prompt": "",
-		"success_prompt": "Bestätige das erfolgreiche finden und anzeigen des Bildes.",
-		"fail_prompt": ""
-	}
-}

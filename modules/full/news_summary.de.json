@@ -1,9 +1,0 @@
-{
-    "retrieve_current_news": 
-	{
-		"keywords": ["neu", "nachricht", "news", "update", "aktu", "artikel", "bericht", "ereignis", "information", "heut", "gescheh", "schlagzeil", "them", "tagesschau", "los"],
-		"init_prompt": "",
-		"success_prompt": "Fasse die wichtigsten Informationen zu den heutigen Nachrichten zusammen. Lass Einleitungen und Hinweise weg, gib nur eine knappes Fazit. ",
-		"fail_prompt": ""
-	}
-}

@@ -1,9 +1,0 @@
-{
-    "set_bulb_light_color": 
-	{
-		"keywords": ["lamp", "light", "color", "mood", "illum", "light", "change", "ambiance", "atmosphere", "bright", "dimm", "set", "regul", "control", "tone"],
-		"init_prompt": "Always provide lamp colors as a hex string (e.g., #FF00A0).",
-		"success_prompt": "Lamp colors have been successfully changed.",
-		"fail_prompt": ""
-	}
-}

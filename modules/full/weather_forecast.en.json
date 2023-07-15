@@ -1,9 +1,0 @@
-{
-    "retrieve_weather_forecast": 
-	{
-		"keywords": ["weather", "sunny", "sun", "rain", "raining", "walk", "outside", "nature", "clouds", "thunderstorm", "snowing", "snow", "hail", "lightning", "thunder", "storm", "fog", "cold", "warm", "heat", "cool", "ice", "frost", "autumn", "spring", "summer", "winter", "cloudy", "clear", "air", "humid", "muggy", "wind", "tropical", "dry", "precipitation", "temperature"],
-		"init_prompt": "",
-		"success_prompt": "Concisely recap weather data in the manner of a weather presenter, respond briefly, in English, and only with the absolutely necessary information without embellishments, further explanations, clarifications, or advice.",
-		"fail_prompt": ""
-	}
-}
