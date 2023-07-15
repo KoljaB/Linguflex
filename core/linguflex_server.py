@@ -423,12 +423,3 @@ class LinguFlexServer:
                     function()  # Call the function without any arguments
                 else:
                     function(data)  # Call the function with provided data
-
-    def get_full_action_string(self, request: Request) -> str:
-        json_action_row = ''
-        for module_name, module_instance in self.special_modules[ActionModule].items():
-            for action in module_instance.actions:
-                if not action['react_to'] is None and len(action['react_to']) > 0 and 'keys' in action and 'description' in action and 'key_description' in action and 'value_description' in action and 'instructions' in action:
-                    json_action_row += ' - {}: Schlüssel {}, Wert {}. {} Beispiel User: \'{}\'. Assistant: \'{}\'\n'.format(action['description'], action['key_description'], action['value_description'], action['instructions'], action['example_user'], action['example_assistant'])
-        if not json_action_row is None and len(json_action_row) > 0:
-            return json_action_row
