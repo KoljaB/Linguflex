@@ -1,10 +1,10 @@
 [system]
-language=de
+language=en
 # TZ identifier, visit https://en.wikipedia.org/wiki/List_of_tz_database_time_zones or print a list with pytz.all_timezones 
-timezone=Europe/Berlin
+timezone=America/New_York
 debuglevel=3
 debugfunctions=3
-
+city=New York
 
 #------------------------------------------------
 # loaded modules list
@@ -14,73 +14,72 @@ user_interface
 openai_generator
 microphone_recorder
 whisper_speechtotext
-personality_switch
-notebook
-media_playout
-auto_action
-google_information
-google_calendar
-weather_forecast
-news_summary
-picture_search
-picture_generator
-email_imap
-stocks_portfolio
-emoji_game
-#lights_control
+#memory
+#user_location
+#personality_switch
+#play_sound
+#media_playout
+#email_imap
+#weather_forecast
+#google_information
+#google_calendar
+#picture_search
+#picture_generator
+#news_summary
+#stocks_portfolio
+#smart_home_devices
+#wled
+#emoji_game
 
-#system_texttospeech
+system_texttospeech
 #edge_texttospeech
-elevenlabs_texttospeech
-azure_texttospeech
+#azure_texttospeech
+#elevenlabs_texttospeech
 
 
 #------------------------------------------------
 # configuration of basic modules
 
 [user_interface]
-window_width=450
-window_height=650
+window_width=650
+window_height=800
 
 [openai_generator]
 api_key=ENTER YOUR OPENAI API-KEY HERE
 default_temperature=0.5
 init_prompt=
 gpt_model=gpt-3.5-turbo-0613
+gpt_max_model=gpt-3.5-turbo-0613
 # gpt-3.5-turbo-0613
 # gpt-3.5-turbo-16k-0613
-# gpt-3.5-turbo
-# gpt-3.5-turbo-16k
 # gpt-4-0613
 # gpt-4-32k-0613
-# gpt-4
-# gpt-4-32k
 max_history_entries = 4
-max_tokens_per_function = 200
-max_tokens_per_msg = 600
-max_total_tokens = 2500
+max_tokens_per_function = 1200
+max_tokens_per_msg = 1200
+max_total_tokens = 3200
 
 [microphone_recorder]
 debug_show_volume=False	
 volume_start_recording=5
 volume_stop_recording=5
-sampling_rate=44100
+wake_words_sensitivity=0.55
 
 [whisper_speechtotext]
-# Size	Parameters	English-only    Multilingual 	Required VRAM	Relative speed
-# tiny	39 M	    tiny.en	        tiny	        ~1 GB	        ~32x
-# base	74 M	    base.en     	base	        ~1 GB	        ~16x
-# small	244 M	    small.en	    small	        ~2 GB	        ~6x
-# medium769 M	    medium.en	    medium	        ~5 GB	        ~2x
-# large	1550 M	    N/A	            large	        ~10 GB          1x
-model_size=small
+# Size		Parameters	English-only    Multilingual 	Required VRAM	Relative speed
+# tiny		39 M	    tiny.en	        tiny	        ~1 GB	        ~32x
+# base		74 M	    base.en     	base	        ~1 GB	        ~16x
+# small		244 M	    small.en	    small	        ~2 GB	        ~6x
+# medium	769 M	    medium.en	    medium	        ~5 GB	        ~2x
+# large		1550 M	    N/A	            large	        ~10 GB          1x
+model_size=medium
 
 
 #------------------------------------------------
 # text-to-speech modules
 
 [system_texttospeech]
-voice=Microsoft Stefan - German (Germany)
+voice=Microsoft David Desktop - English (United States)
 
 [edge_texttospeech]
 launch_wait_time_before_tts_init=0.75
@@ -90,8 +89,8 @@ max_wait_time_for_close_windows=1
 
 [azure_texttospeech]
 api_key=ENTER YOUR AZURE SPEECH API-KEY HERE
-language_tag=de-DE
-region=germanywestcentral
+language_tag=en-US
+region=eastus
 # standardized IETF BCP 47 language tag => https://learn.microsoft.com/en-us/azure/cognitive-services/speech-service/language-support
 log_output=true
 
@@ -116,19 +115,25 @@ api_key=ENTER YOUR GOOGLE CLOUD API-KEY HERE
 
 [weather_forecast]
 api_key=ENTER YOUR OPENWEATHERMAP API-KEY HERE
-city=Berlin
 
 [stocks_portfolio]
-summary_url=ENTER YOUR COMDIRECT MUSTERPORTFOLIO LINK HERE
-depot_names=ENTER COMMA-SEPARATED LIST OF NAMES OF PORTFOLIOS HERE
-depot_urls=ENTER COMMA-SEPARATED LIST OF COMDIRECT MUSTERPORTFOLIO LINKS HERE
+summary_url=http://www.comdirect.de/inf/musterdepot/pmd/freunde.html?portfolio_key=2292222040208171207217514212856016747845524741807122040879782074100435982669295295
+depot_names=LinguflexDemoDepot
+depot_urls=http://www.comdirect.de/inf/musterdepot/pmd/freunde.html?portfolio_key=2292222040208171207217514212856016747845524741807122040879782074100435982669295295
 
 [email_imap]
-server=ENTER YOUR IMAP MAIL SERVER HERE, for example: imap.web.de
-username=ENTER YOUR MAIL ADRESS OR LOGIN USERNAME HERE
+server=ENTER YOUR IMAP EMAIL SERVER HERE (for example: imap.web.de)
+username=ENTER YOUR MAIL LOGIN USERNAME HERE
 password=ENTER YOUR MAIL PASSWORD HERE
 history_days=3
 
 [picture_search]
 api_key=ENTER YOUR GOOGLE API-KEY HERE
-cx_key=ENTER YOUR GOOGLE SEARCH ENGINE (CX)-KEY HERE
+cse_id=ENTER YOUR GOOGLE SEARCH ENGINE CSE ID HERE
+
+[play_sound]
+notice_message_seconds = 300
+
+[wled]
+wled_url=http://192.168.178.1/json/state
+max_bulbs=300
