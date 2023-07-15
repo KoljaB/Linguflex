@@ -36,7 +36,7 @@ Please follow these steps carefully to ensure a successful installation of Lingu
    ```bash
    pip install -r requirements.txt
    ```
-4. (optional) Update tiktoken
+4. (Optional) upgrade tiktoken
    ```bash
    pip install --upgrade tiktoken
    ```
