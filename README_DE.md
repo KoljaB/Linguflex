@@ -37,7 +37,7 @@ OpenAI API-Schlüssel entweder:
 - in die Datei `config.txt` im Bereich [openai_generator] in den Schlüssel "api_key" eintragen
 - oder in die Umgebungsvariable OPENAI_API_KEY eintragen
 
-Hinweis: für schnellere Spracherkennung mit GPU-Unterstützung sollte vor der (pytorch-)Installation das [NVIDIA® CUDA® Toolkit](https://developer.nvidia.com/cuda-toolkit) installiert werden.
+Hinweis: für schnellere Spracherkennung mit GPU-Unterstützung sollte vor der (pytorch-)Installation das [NVIDIA® CUDA® Toolkit 11.8](https://developer.nvidia.com/cuda-11-8-0-download-archive) installiert werden.
 
 ## Start
 ```
