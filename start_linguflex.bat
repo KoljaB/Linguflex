@@ -26,7 +26,7 @@ set GOOGLE_API_KEY=
 
 ::  Search engine ID / Suchmaschinen-ID  https://cse.google.com/cse/all
 :: - optional [picture_search]
-set GOOGLE_CX_KEY=
+set GOOGLE_CSE_ID=
 
 ::  Serp API key  https://serpapi.com/
 :: - optional [google_information]
