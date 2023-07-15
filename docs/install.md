@@ -20,7 +20,7 @@ Please follow these steps carefully to ensure a successful installation of Lingu
 
 ## Step 4: [Optional] Install PyTorch with CUDA Support
 
-> Note: This step is optional, but it enables faster language recognition by using your graphics card. It only works with [specific Nvidia graphics cards](https://developer.nvidia.com/cuda-gpus).
+> Note: This step is optional. It enables fast speech recognition by using the graphics card. If you have a graphics card from [this list](https://developer.nvidia.com/cuda-gpus), I recommend taking this extra step.
 
 1. Install [Nvidia CUDA Toolkit 11.8](https://developer.nvidia.com/cuda-11-8-0-download-archive).
 2. Open the command prompt and run the following command:
