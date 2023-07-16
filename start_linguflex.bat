@@ -39,7 +39,7 @@ set OPENWEATHERMAP_API_KEY=
 :: Check if OPENAI_API_KEY is set
 if not defined OPENAI_API_KEY (
     echo OPENAI_API_KEY environment variable is not set. 
-    echo OpenAI API Key expected in config.txt[openai_generator][api_key].
+    echo OpenAI API Key therefore expected in config.txt[openai_generator][api_key].
 )
 
 :: start linguflex
