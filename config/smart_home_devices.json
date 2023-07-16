@@ -19,7 +19,7 @@
       "type":"Outlet",
       "name":"Ventilator",
       "id":"bf984637d5fd554996c4xi",
-      "ip":"192.168.178.64",
+      "ip":"192.168.178.3",
       "key":"fg`MPsS+$`{o<Nw(",
       "version":"3.3"
    },
@@ -27,7 +27,7 @@
       "type":"Outlet",
       "name":"Coffee machine",
       "id":"bf2c3a0b448e78fc7fgyae",
-      "ip":"192.168.178.62",
+      "ip":"192.168.178.4",
       "key":"$`{4U^a^`MPe%o=c",
       "version":"3.3"
    }
