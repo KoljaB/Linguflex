@@ -2,7 +2,7 @@
 
 This guide provides instructions for configuring Linguflex through its `config.txt` file.
 
-There is also a `config` directory with preconfigured JSON files, mainly serving to define the reactions of modules to specific keywords. However, you may want to edit json files pertaining to *text-to-speech definitions* or your *smart home setup*. 
+There is also a `config` directory with preconfigured JSON files, mainly serving to define the reactions of modules to specific keywords. You may want to edit the json files there pertaining to *text-to-speech definitions* or your *smart home setup*. 
 
 ## config.txt
 
@@ -154,3 +154,52 @@ The Elevenlabs module also uses the `language` parameter of the [system] section
 | api_key     | [Google Cloud API key](https://console.cloud.google.com/) with clearance for the Custom Search API<br>Only needed here if not already defined in environment variable GOOGLE_API_KEY |
 | cse_id      | [Google search engine ID}(https://cse.google.com/cse/all) (cx id) if not already defined in GOOGLE_CSE_ID |
 
+### [media_playout]
+
+| Parameter   | Description  |
+|:------------|:-------------|
+| api_key     | [Google Cloud API key](https://console.cloud.google.com/) with clearance for the YouTube Data API (v3)<br>Only needed here if not already defined in environment variable GOOGLE_API_KEY |
+
+### [weather_forecast]
+
+| Parameter   | Description  |
+|:------------|:-------------|
+| api_key     | [OpenWeatherMap API Key](https://openweathermap.org/api) |
+
+### [email_imap]
+
+| Parameter    | Description  |
+|:-------------|:-------------|
+| server       | Your IMAP email server (e.g., imap.web.de) |
+| username     | Your email login username |
+| password     | Your email password |
+| history_days | Number of days to look into email history |
+
+### [picture_search]
+
+| Parameter   | Description  |
+|:------------|:-------------|
+| api_key     | [Google Cloud API key](https://console.cloud.google.com/) with clearance for the Custom Search API<br>Only needed here if not already defined in environment variable GOOGLE_API_KEY |
+| cse_id      | [Google search engine ID}(https://cse.google.com/cse/all) (cx id) if not already defined in GOOGLE_CSE_ID |
+
+### [play_sound]
+
+| Parameter   | Description  |
+|:------------|:-------------|
+| notice_message_seconds | Time in seconds after which a notice sound is played out (set to 0 to disable) |
+
+### [wled]
+
+| Parameter   | Description  |
+|:------------|:-------------|
+| wled_url | Url to connect to wled digital RGB LEDs with an ESP8266 or ESP32 |
+
+### [stocks_portfolio]
+
+| Parameter   | Description  |
+|:------------|:-------------|
+| summary_url | Single url to a comdirect "Musterdepot" which will get parsed in as the depot summary |
+| depot_names | List of comma-separated names for the following depot urls |
+| depot_urls  | List of comma-separated depot urls containing comdirect Musterdepots to retrieve detailled information from |
+
+Currently stock portfolio module relies on a comdirect Musterportfolio to parse in investment data. I am aware of this very specific solution and that only few people can use it in the way it's implemented currently. A more general solution is in work. 
