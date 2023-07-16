@@ -1,10 +1,10 @@
 [system]
 language=en
+city=New York
 # TZ identifier, visit https://en.wikipedia.org/wiki/List_of_tz_database_time_zones or print a list with pytz.all_timezones 
 timezone=America/New_York
 debuglevel=3
 debugfunctions=3
-city=New York
 
 #------------------------------------------------
 # loaded modules list
@@ -14,10 +14,10 @@ user_interface
 openai_generator
 microphone_recorder
 whisper_speechtotext
-#memory
+memory
+personality_switch
+play_sound
 #user_location
-#personality_switch
-#play_sound
 #media_playout
 #email_imap
 #weather_forecast
@@ -38,7 +38,7 @@ system_texttospeech
 
 
 #------------------------------------------------
-# configuration of basic modules
+# Core modules configuration
 
 [user_interface]
 window_width=650
@@ -50,20 +50,32 @@ default_temperature=0.5
 init_prompt=
 gpt_model=gpt-3.5-turbo-0613
 gpt_max_model=gpt-3.5-turbo-0613
-# gpt-3.5-turbo-0613
-# gpt-3.5-turbo-16k-0613
-# gpt-4-0613
-# gpt-4-32k-0613
+# available models are:  gpt-3.5-turbo-0613 / gpt-3.5-turbo-16k-0613 / gpt-4-0613 / gpt-4-32k-0613
 max_history_entries = 4
 max_tokens_per_function = 1200
 max_tokens_per_msg = 1200
 max_total_tokens = 3200
+#retry_attempts = 5
+#min_timeout = 4
+#timeout_increase = 4
+#estimated_processing_time_per_token = 0.005
+#output_message_token_reserve = 1500
+#security_window_for_miscalculating_tokens = 200
+#minimum_token_window = 200
+#completion_token_reserve = 1000
+#message_in_history_max_size_percent = 0.25
+#function_in_history_max_size_percent = 0.25
 
 [microphone_recorder]
-debug_show_volume=False	
+debug_show_volume=False
 volume_start_recording=5
 volume_stop_recording=5
 wake_words_sensitivity=0.55
+#tts=default
+#wake_words=jarvis
+#ema_ambient_noise_level=0.995
+#ema_current_noise_level=0.9
+#end_of_sentence_silence_length=1.2
 
 [whisper_speechtotext]
 # Size		Parameters	English-only    Multilingual 	Required VRAM	Relative speed
@@ -76,7 +88,7 @@ model_size=medium
 
 
 #------------------------------------------------
-# text-to-speech modules
+# Text-to-speech modules configuration
 
 [system_texttospeech]
 voice=Microsoft David Desktop - English (United States)
@@ -97,17 +109,18 @@ log_output=true
 [elevenlabs_texttospeech]
 api_key=ENTER YOUR ELEVENLABS API-KEY HERE
 voice=Adam
-log_voices=false
+log_voices=true
 
 
 #------------------------------------------------
-# extended functionality
+# Additional modules configuration
 
 [personality_switch]
 character=Assistant
 
 [google_information]
-api_key=ENTER YOUR SERP API-KEY HERE
+api_key=ENTER YOUR GOOGLE API-KEY HERE
+cse_id=ENTER YOUR GOOGLE SEARCH ENGINE CSE ID HERE
 
 [media_playout]
 # Google Cloud API key for accessing the YouTube Data API (v3)
@@ -115,11 +128,6 @@ api_key=ENTER YOUR GOOGLE CLOUD API-KEY HERE
 
 [weather_forecast]
 api_key=ENTER YOUR OPENWEATHERMAP API-KEY HERE
-
-[stocks_portfolio]
-summary_url=http://www.comdirect.de/inf/musterdepot/pmd/freunde.html?portfolio_key=2292222040208171207217514212856016747845524741807122040879782074100435982669295295
-depot_names=LinguflexDemoDepot
-depot_urls=http://www.comdirect.de/inf/musterdepot/pmd/freunde.html?portfolio_key=2292222040208171207217514212856016747845524741807122040879782074100435982669295295
 
 [email_imap]
 server=ENTER YOUR IMAP EMAIL SERVER HERE (for example: imap.web.de)
@@ -132,8 +140,13 @@ api_key=ENTER YOUR GOOGLE API-KEY HERE
 cse_id=ENTER YOUR GOOGLE SEARCH ENGINE CSE ID HERE
 
 [play_sound]
-notice_message_seconds = 300
+notice_message_seconds = 0
 
 [wled]
 wled_url=http://192.168.178.1/json/state
 max_bulbs=300
+
+[stocks_portfolio]
+summary_url=http://www.comdirect.de/inf/musterdepot/pmd/freunde.html?portfolio_key=2292222040208171207217514212856016747845524741807122040879782074100435982669295295
+depot_names=LinguflexDemoDepot
+depot_urls=http://www.comdirect.de/inf/musterdepot/pmd/freunde.html?portfolio_key=2292222040208171207217514212856016747845524741807122040879782074100435982669295295
