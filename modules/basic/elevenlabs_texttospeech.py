@@ -15,10 +15,13 @@ SYNTHESIS_FILE = 'elevenlabs_speech_synthesis.mp3'
 class TextToSpeech_ElevenLabs(TextToSpeechModule):
 
     def __init__(self):
-        self.voice = cfg('voice')
         self.language = cfg('language')
         self.log_voices = cfg('log_voices').lower() == 'true'
         self.api_key = cfg('api_key', env_key='ELEVENLABS_SPEECH_KEY')
+
+        if self.log_voices:
+            voices_elevenlabs = voices()
+            log(DEBUG_LEVEL_MAX, f"  [tts_eleven] Available voices: {voices_elevenlabs}")
 
         # Set API key for the ElevenLabs service
         set_api_key(self.api_key)
@@ -27,8 +30,9 @@ class TextToSpeech_ElevenLabs(TextToSpeechModule):
         self.text_converter = ConvertNumbersToText()
 
         # Load available voices
-        current_directory = os.path.dirname(os.path.abspath(__file__))
-        file_path = os.path.join(current_directory, f"elevenlabs_texttospeech.voices.{self.language}.json")
+        # current_directory = os.path.dirname(os.path.abspath(__file__))
+        # file_path = os.path.join(current_directory, f"elevenlabs_texttospeech.voices.{self.language}.json")
+        file_path =  f"config/elevenlabs_texttospeech.voices.{self.language}.json"
 
         try:
             # Load voices from file
@@ -36,7 +40,7 @@ class TextToSpeech_ElevenLabs(TextToSpeechModule):
                 self.available_voices = json.load(file)
         except (FileNotFoundError, json.JSONDecodeError) as e:
             # Log error and use empty list as fallback
-            log(DEBUG_LEVEL_ERR, f"Error loading voices file: {e}")
+            log(DEBUG_LEVEL_ERR, f"  [tts_eleven] Error loading voices file: {e}")
             self.available_voices = []
 
     def init(self):

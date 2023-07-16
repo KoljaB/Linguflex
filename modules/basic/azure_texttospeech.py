@@ -27,8 +27,9 @@ class TextToSpeech_Azure(TextToSpeechModule):
         self.api_key = cfg('api_key', env_key='AZURE_SPEECH_KEY')
 
         # Load available voices
-        current_directory = os.path.dirname(os.path.abspath(__file__))
-        file_path = os.path.join(current_directory, f"azure_texttospeech.voices.{self.language}.json")
+        # current_directory = os.path.dirname(os.path.abspath(__file__))
+        # file_path = os.path.join(current_directory, f"azure_texttospeech.voices.{self.language}.json")
+        file_path =  f"config/azure_texttospeech.voices.{self.language}.json"
 
         try:
             with open(file_path, "r", encoding='utf-8') as file:
