@@ -51,7 +51,7 @@ python linguflex
 
 ## Post-Installation: Configuration
 
-[Configuration Guide](https://github.com/KoljaB/Linguflex/edit/main/docs/config.md)
+[Configuration Guide](https://github.com/KoljaB/Linguflex/blob/main/docs/config.md)
 
 After successfully launching Linguflex, it would be beneficial to calibrate your microphone:
 
