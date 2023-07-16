@@ -49,10 +49,16 @@ Run the following command in your command prompt:
 python linguflex
 ```
 
-## Post-Installation: Microphone Calibration
+## Post-Installation: Configuration
+
+[Configuration Guide](https://github.com/KoljaB/Linguflex/edit/main/docs/config.md)
 
 After successfully launching Linguflex, it would be beneficial to calibrate your microphone:
 
 1. Set `debug_show_volume = True` in the `config.txt` file under the `[microphone_recorder]` section.
 2. Start Linguflex and observe the volume levels in the output.
 3. Write appropriate values for `volume_start_recording` and `volume_stop_recording` in the `config.txt` file.
+
+Now you are ready to go to use linguflex. You may want to include more modules in your config-File to extend the functionality linguflex offers. 
+
+Pick a module from the list in the [modules] section of the config-File and uncomment it. Follow the description in the Configuration Guide to set up the module.
