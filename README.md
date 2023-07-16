@@ -48,6 +48,9 @@ python linguflex
 ```
 
 ## Configuration
+
+[Configuration Guide](https://github.com/KoljaB/Linguflex/blob/main/docs/config.md)
+
 The `config.txt` includes:
 - System settings such as the languages used
 - the modules to be loaded in the [modules] section (modules are loaded and started in the order specified here)
