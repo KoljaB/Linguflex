@@ -43,13 +43,17 @@ Please follow these steps carefully to ensure a successful installation of Lingu
    
 ## Step 6: Launch Linguflex
 
-Now your system is setup for the core version of linguflex. Run the following command in your command prompt:
+Now your system is ready to start the core version of linguflex.  
+
+You can start linguflex by running the following command in your command prompt:
 
 ```bash
 python linguflex
 ```
 
-## Post-Installation: Module installation and configuration
+# Post-Installation
+
+## Module installation and configuration
 
 After installing the core version you may want to extend the core functionality of linguflex by adding modules. Please look into the following documents that get you started:
 
