@@ -170,7 +170,7 @@ The Elevenlabs module also uses the `language` parameter of the [system] section
 
 | Parameter    | Description  |
 |:-------------|:-------------|
-| server       | Your IMAP email server (e.g., imap.web.de) |
+| server       | This is the address of your email server that supports IMAP. For example, if you're using a Gmail account, this would be "imap.gmail.com" or for a Yahoo account it would be "imap.mail.yahoo.com". |
 | username     | Your email login username |
 | password     | Your email password |
 | history_days | Number of days to look into email history |
