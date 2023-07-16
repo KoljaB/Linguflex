@@ -49,7 +49,9 @@ Run the following command in your command prompt:
 python linguflex
 ```
 
-## Post-Installation: Configuration
+## Post-Installation: Module installation and configuration
+
+[Module Installation Guide](https://github.com/KoljaB/Linguflex/blob/main/docs/modules.md)
 
 [Configuration Guide](https://github.com/KoljaB/Linguflex/blob/main/docs/config.md)
 
@@ -61,4 +63,4 @@ After successfully launching Linguflex, it would be beneficial to calibrate your
 
 Now you are ready to go to use linguflex. You may want to include more modules in your config-File to extend the functionality linguflex offers. 
 
-Pick a module from the list in the [modules] section of the config-File and uncomment it. Follow the description in the Configuration Guide to set up the module.
+Pick a module from the list in the [modules] section of the config-File and uncomment it. Follow the description in the Module Installation Guide and the Configuration Guide to set up the module.
