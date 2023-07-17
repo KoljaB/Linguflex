@@ -59,7 +59,7 @@
    ```
 5. Open config.txt or start_linguflex.bat file in a text editor
    config.txt: enter your OpenAI API Key into parameter api_key of section [openai_generator] 
-   start_linguflex.bat: enter your OpenAI API Key at the line set OPENWEATHERMAP_API_KEY=
+   start_linguflex.bat: enter your OpenAI API Key at the line set OPENAI_API_KEY=
 
 ## Step 7: Launch Linguflex
 
