@@ -23,6 +23,10 @@
 4. Öffnen Sie die Eingabeaufforderung mit Administratorrechten und führen Sie den folgenden Befehl aus:
    ```bash
    setx /m PATH "C:\ffmpeg\bin;%PATH%"
+5. Starten Sie den Computer neu. Sie können die Installation überprüfen, indem Sie folgenden Befehl ausführen:
+   ```bash
+   ffmpeg -version
+   ```
 
 ## Step 4: [Optional] PyTorch mit CUDA-Unterstützung installieren
 *ermöglicht schnellere (GPU-basierte) Spracherkennung durch Whisper*
