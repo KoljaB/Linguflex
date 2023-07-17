@@ -1,17 +1,21 @@
 # Linguflex Installation Guide
 
 ## Step 1: Set Up OpenAI API Key
+Needed to enable AI.
 
 1. Create an account at [OpenAI Signup Page](https://platform.openai.com/signup).
 2. Once logged in, click on your name at the top right and select "View API keys".
 3. Click on "Create new secret key" and generate a new API Key.
 
 ## Step 2: Install Python
+Needed by linguflex.
 
-1. Visit the [Python 3.9.9 Installation Page](https://www.python.org/downloads/release/python-399/).
-2. Scroll to the bottom and select "Windows installer (64-bit)". This is applicable for most systems.
+1. Visit the [Python 3.9.9 Installation Page](https://www.python.org/downloads/release/python-399/).  
+   (we use Python 3.9.9 because Whisper was trained and tested on this version)
+3. Scroll to the bottom and select "Windows installer (64-bit)". This is applicable for most systems.
 
 ## Step 3: Install FFmpeg
+Needed by whisper speech recognition.
 
 1. Download the [zip file of the latest FFmpeg version](https://www.gyan.dev/ffmpeg/builds/ffmpeg-git-full.7z) from https://www.gyan.dev/ffmpeg/builds/.
 2. Unzip this file by using any file archiver such as 7zip or Winrar.
@@ -25,8 +29,9 @@
    ffmpeg -version
    ```    
 ## Step 4: [Optional] Install PyTorch with CUDA Support
+Needed for faster (gpu based) whisper speech recognition.
 
-> Note: This step is optional. It enables fast speech recognition by using the graphics card. If you have a graphics card from [this list](https://developer.nvidia.com/cuda-gpus), I recommend taking this extra step.
+> Note: This step is optional, although if you have a graphics card from [this list](https://developer.nvidia.com/cuda-gpus) taking this extra step is definitely worth it.
 
 1. Install [Nvidia CUDA Toolkit 11.8](https://developer.nvidia.com/cuda-11-8-0-download-archive).
 2. Open the command prompt and run the following command:
