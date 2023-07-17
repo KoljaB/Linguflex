@@ -56,6 +56,9 @@
    ```bash
    pip install --upgrade tiktoken
    ```
+5. Datei config.txt oder start_linguflex.bat mit einem Texteditor öffnen
+   config.txt: OpenAI-API-Schlüssel im Parameter api_key in der Sektion [openai_generator] eintragen.
+   start_linguflex.bat: OpenAI-API-Schlüssel in der Zeile set OPENWEATHERMAP_API_KEY= eintragen.
 
 ## Schritt 7: Linguflex starten
 
