@@ -1,7 +1,5 @@
 # Linguflex Installation Guide
 
-Please follow these steps carefully to ensure a successful installation of Linguflex.
-
 ## Step 1: Set Up OpenAI API Key
 
 1. Create an account at [OpenAI Signup Page](https://platform.openai.com/signup).
@@ -13,11 +11,19 @@ Please follow these steps carefully to ensure a successful installation of Lingu
 1. Visit the [Python 3.9.9 Installation Page](https://www.python.org/downloads/release/python-399/).
 2. Scroll to the bottom and select "Windows installer (64-bit)". This is applicable for most systems.
 
-## Step 3: Download Linguflex
+## Step 3: Install FFmpeg
 
-1. Download [Linguflex](https://github.com/KoljaB/Linguflex/archive/refs/heads/main.zip).
-2. Extract the ZIP file to your desired location.
-
+1. Download the [zip file of the latest FFmpeg version](https://www.gyan.dev/ffmpeg/builds/ffmpeg-git-full.7z) from https://www.gyan.dev/ffmpeg/builds/.
+2. Unzip this file by using any file archiver such as 7zip or Winrar.
+3. Rename the extracted folder to ffmpeg and move it into the root of C: drive.
+4. Open the command prompt with administrator rights and run the following command:
+   ```bash
+   setx /m PATH "C:\ffmpeg\bin;%PATH%"
+   ```    
+5. Restart your computer. You can verify the installation by running the command:
+   ```bash
+   ffmpeg -version
+   ```    
 ## Step 4: [Optional] Install PyTorch with CUDA Support
 
 > Note: This step is optional. It enables fast speech recognition by using the graphics card. If you have a graphics card from [this list](https://developer.nvidia.com/cuda-gpus), I recommend taking this extra step.
@@ -27,8 +33,12 @@ Please follow these steps carefully to ensure a successful installation of Lingu
    ```bash
    pip3 install --upgrade torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
    ```    
+## Step 5: Download Linguflex
 
-## Step 5: Install Linguflex
+1. Download [Linguflex](https://github.com/KoljaB/Linguflex/archive/refs/heads/main.zip).
+2. Extract the ZIP file to your desired location.
+
+## Step 6: Install Linguflex
 
 1. Open the command prompt.
 2. Navigate to the folder you created in Step 3.
@@ -41,7 +51,7 @@ Please follow these steps carefully to ensure a successful installation of Lingu
    pip install --upgrade tiktoken
    ```
    
-## Step 6: Launch Linguflex
+## Step 7: Launch Linguflex
 
 Now your system is ready to start the core version of linguflex.  
 
