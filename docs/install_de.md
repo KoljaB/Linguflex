@@ -52,7 +52,7 @@
    ```bash
    pip install -r requirements.txt
    ```
-4. (optional) tiktoken upgraden
+4. (optional, aber empfohlen) tiktoken upgraden
    ```bash
    pip install --upgrade tiktoken
    ```
