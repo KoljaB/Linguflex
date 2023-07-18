@@ -278,7 +278,8 @@ class TokenCounter:
         num_tokens = 0
         for function in functions:
             function_tokens = len(encoding.encode(function['name']))
-            function_tokens += len(encoding.encode(function['description']))
+            if 'description' in function and function['description'] is not None and len(function['description']):
+                function_tokens += len(encoding.encode(function['description']))
 
             if 'parameters' in function:
                 parameters = function['parameters']
