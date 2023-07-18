@@ -6,11 +6,11 @@
 
 Born out of a fascination for science fiction, this project aims to simulate engaging, human-like interaction within a digital framework.
 
-It offers voice-based conversation with custom AI personalities, alongside an array of practical features. Linguflex can control smart home devices, play music, conduct Internet searches, retrieve emails, present weather updates and news, assist with scheduling appointments, and perform image search and generation.
+It offers voice-based conversation with custom AI personalities, alongside an array of practical features: it can control smart home devices, play music, conduct Internet searches, retrieve emails, present weather updates and news, assist with scheduling appointments, and perform image search and generation.
 
 Currently in its early stage, each iteration brings it a step closer to the goal. As the sole developer, I'm dedicated to refining its capabilities and broadening its features.
 
-I invite you to explore the framework, whether you're a user seeking an innovative AI experience or a fellow developer interested in the project. All insights, suggestions, and contributions are appreciated. My hope is that, with the community's assistance, we can further this personal passion project towards its full potential, collectively contributing to the evolution of AI.
+I invite you to explore the framework, whether you're a user seeking an innovative AI experience or a fellow developer interested in the project. All insights, suggestions, and contributions are appreciated. My hope is that, with the community's assistance, we can bring this personal passion project towards its full potential, collectively contributing to the evolution of AI.
 
 ## Exploring Further
 
@@ -63,8 +63,6 @@ The app provides a wide range of capabilities to deliver a fully-featured digita
 - **Wake Word Activation:** Starts interaction on detecting preset wake words. Custom sensitivity tuning.
 
 - **Conversation Flow:** Maintains context over multi-turn conversations using history tracking.
-
-- **Security:** API keys stored as environment variables or in config file. Sensitive data access requires user activation.
 
 - **Diagnostics:** Detailed logging for troubleshooting. Microphone calibration visualization.
 
