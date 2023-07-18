@@ -57,6 +57,62 @@ If you want to test prompts with linguflex, the config/personalities.de.json fil
 
 The key is then stored either in the environment variable GOOGLE_API_KEY (in start_linguflex.bat) or in the config.txt file under the [media_playout] section with the parameter name "api_key".
 
+## [smart_home_devices]
+
+Controls tuya devices like smart bulbs, smart plugs or smart switches.  
+To access the smart devices over the local network (without using the cloud/internet) we need to give linguflex specific information about the devices. To get these we can follow these steps:
+
+### Connect devices to tuya cloud
+
+Connect your devices with your tuya app (smart-life app or comparable). Then follow these steps:
+
+1. Create a [Tuya Account](https://iot.tuya.com/) and log in.
+
+2. Create a cloud project, give a name and select "smart home" under industry and development method and select the data center for your region.
+
+3. Add the Device Status Notification API to the project
+
+4. After creating the project the next page should be "Overview" Tab from the "Cloud" menu. Remember Access ID/Client ID and Access Secret/Client Secret.
+
+5. From the tab bar where also "Overview" is located click on the right on "Devices"
+
+6. On the bar one line below that click "Link Tuya App Account", then click "Add App Account"
+
+7. Scan the displayed QR Code with your Tuya Application (Smart-Life App etc, there are many; the option for that is often under "profile" and sometimes a button on the top)
+
+8. Change the permissions to "Read, write and Manage"
+
+9. Now the devices will show up in the Tuya cloud.
+
+### Read device parameters from cloud
+
+1. Open a console and run
+```bash
+   python -m tinytuya
+   ```
+
+2. Copy the output of the console into a text editor. 
+
+3. Then run
+
+   ```bash
+   python -m tinytuya wizard
+   ```
+
+4. When asked "Enter API Key from tuya.com" enter the Access ID/Client ID from point 4. of the "Connect devices to tuya cloud" section
+
+5. When asked "Enter API Secret from tuya.com" enter the Access Secret/Client Secret from point 4. of the "Connect devices to tuya cloud" section 
+
+6. When asked "Enter any Device ID" enter "scan"
+
+7. Enter region of tuya cloud project
+
+8. Copy the output of the console into a text editor. 
+
+9. Search in the output for the values "id", "key", "version" and the ip adress of the devices you want to add from the output. 
+
+10. Store these values into config/smart_home_devices.json
+
 ## [email_imap] 
 
 1. Identify your email provider's IMAP server: If you don't know it, you can often find it with a quick internet search. For example, you might search "IMAP server for Gmail" or "IMAP server for Yahoo Mail".
@@ -183,59 +239,3 @@ The key is then stored either in the environment variable GOOGLE_API_KEY (for ex
 4. After that process there will be a page with a field named "Search engine ID" 
 
 This ID is then stored either in the environment variable GOOGLE_CSE_ID (for example in start_linguflex.bat) or in the config.txt file under the [picture_search] section with the parameter name "cse_id".
-
-## [smart_home_devices]
-
-Controls tuya devices like smart bulbs, smart plugs or smart switches.  
-To access the smart devices over the local network (without using the cloud/internet) we need to give linguflex specific information about the devices. To get these we can follow these steps:
-
-### Connect devices to tuya cloud
-
-Connect your devices with your tuya app (smart-life app or comparable). Then follow these steps:
-
-1. Create a [Tuya Account](https://iot.tuya.com/) and log in.
-
-2. Create a cloud project, give a name and select "smart home" under industry and development method and select the data center for your region.
-
-3. Add the Device Status Notification API to the project
-
-4. After creating the project the next page should be "Overview" Tab from the "Cloud" menu. Remember Access ID/Client ID and Access Secret/Client Secret.
-
-5. From the tab bar where also "Overview" is located click on the right on "Devices"
-
-6. On the bar one line below that click "Link Tuya App Account", then click "Add App Account"
-
-7. Scan the displayed QR Code with your Tuya Application (Smart-Life App etc, there are many; the option for that is often under "profile" and sometimes a button on the top)
-
-8. Change the permissions to "Read, write and Manage"
-
-9. Now the devices will show up in the Tuya cloud.
-
-### Read device parameters from cloud
-
-1. Open a console and run
-```bash
-   python -m tinytuya
-   ```
-
-2. Copy the output of the console into a text editor. 
-
-3. Then run
-
-   ```bash
-   python -m tinytuya wizard
-   ```
-
-4. When asked "Enter API Key from tuya.com" enter the Access ID/Client ID from point 4. of the "Connect devices to tuya cloud" section
-
-5. When asked "Enter API Secret from tuya.com" enter the Access Secret/Client Secret from point 4. of the "Connect devices to tuya cloud" section 
-
-6. When asked "Enter any Device ID" enter "scan"
-
-7. Enter region of tuya cloud project
-
-8. Copy the output of the console into a text editor. 
-
-9. Search in the output for the values "id", "key", "version" and the ip adress of the devices you want to add from the output. 
-
-10. Store these values into config/smart_home_devices.json
