@@ -1,46 +1,44 @@
 # Linguflex
 
-*A humble attempt to bring sci-fi dreams of capable Jarvis-style AI companions closer to reality, albeit in an early and imperfect state*
+*A humble attempt to bring sci-fi dreams of capable Jarvis-style AI companions closer to reality, albeit in an early and not yet mature state*
 
-## About 
+## About
 
-Born out of a fascination for science fiction, this project aims to simulate engaging, human-like interaction within a digital framework.
+Born out of my passion for science fiction, this project aims to simulate engaging, authentic, human-like interaction with AI personalities.
 
-It offers voice-based conversation with custom AI personalities, alongside an array of practical features: it can control smart home devices, play music, conduct Internet searches, retrieve emails, present weather updates and news, assist with scheduling appointments, and perform image search and generation.
+It offers voice-based conversation with custom characters, alongside an array of practical features: controlling smart home devices, playing music, searching the internet, fetching emails, displaying current weather information and news, assisting in scheduling, and searching or generating images.
 
-Currently in its early stage, each iteration brings it a step closer to the goal. As the sole developer, I'm dedicated to refining its capabilities and broadening its features.
+Still in its infancy, each iteration brings it a step closer to the goal. I invite you to explore the framework, whether you're a user seeking an innovative AI experience or a fellow developer interested in the project. All insights, suggestions, and contributions are appreciated. I want to bring this personal passion project towards its full potential, hopefully with the community's assistance, to collectively contribute to the evolution of AI.
 
-I invite you to explore the framework, whether you're a user seeking an innovative AI experience or a fellow developer interested in the project. All insights, suggestions, and contributions are appreciated. My hope is that, with the community's assistance, we can bring this personal passion project towards its full potential, collectively contributing to the evolution of AI.
+## Explore Linguflex
 
-## Exploring Further
-
-See it in action in this [short video demonstration](https://www.youtube.com/watch?v=obYUkYrcAw0&t=26s) highlighting some of its functionality.
+Experience Linguflex in action in a [short video demonstration](https://www.youtube.com/watch?v=obYUkYrcAw0&t=26s), where some features are presented.
 
 To get started, follow the steps provided in the [Installation Guide](https://github.com/KoljaB/Linguflex/blob/main/docs/install.md) for the core software.
 
-To configure your assistant to your liking, consult the [Configuration Guide](https://github.com/KoljaB/Linguflex/blob/main/docs/config.md).
+To tailor your assistant to your liking, take a look at the [Configuration Guide](https://github.com/KoljaB/Linguflex/blob/main/docs/config.md).
 
-For extending core functionality by installing modules, please get more detailed insights by referring to the [Modules Installation Guide](https://github.com/KoljaB/Linguflex/blob/main/docs/modules.md).
+Additional modules that extend the basic functions of Linguflex can be installed using the [module installation guide](https://github.com/KoljaB/Linguflex/blob/main/docs/modules.md).
 
 These resources are designed to make your journey with Linguflex as smooth as possible. Enjoy exploring and co-creating!
 
 ## Feature List
 
-The app provides a wide range of capabilities to deliver a fully-featured digital assistant experience:
+Linguflex offers a variety of features:
 
-- **Conversational AI:** Natural language conversations powered by OpenAI's GPT-3.5-Turbo model with support to scale up to GPT-4. 
+- **Conversational AI:** Natural conversations based on the OpenAI GPT-3.5-Turbo model, with the option to scale to GPT-4.
 
-- **Modular Architecture:** Operates on a modular framework which allows for the development of personalized skills through Python assistant modules.
+- **Modular Architecture:** Platform for easy development of your own add-on modules.
 
-- **Multilingual Support:** Conversations in multiple languages supported. English and german language files are included.
+- **Multilingual:** Language files for English and German included.
 
-- **Voice Interactions:** Speech recognition via Whisper, also allowing GPU utilization with CUDA.
+- **Speech Recognition:** Speech recognition via Whisper, GPU usage with CUDA possible.
 
-- **Custom Personalities:** Users have the ability to develop their own custom personalities and link them with specific text-to-speech voices.
+- **Custom Personalities:** Develop your own AI personalities and link them with text-to-speech voices.
 
 - **Text-to-Speech:** Synthesis powered by ElevenLabs, Azure, Edge Browser or System voices. Supports multiple languages.
 
-- **Smart Home Control:** Integrates with Tuya-compatible WiFi devices like lights, plugs and switches via the local API.
+- **Smart Home Control:** Enables integration of Tuya-compatible Wi-Fi devices such as lights, plugs, and switches.
 
 - **Media Playback:** Searches and plays music/playlists from YouTube. Includes playback controls and player UI.
 
@@ -54,21 +52,22 @@ The app provides a wide range of capabilities to deliver a fully-featured digita
 
 - **Scheduling Assistance:** Helps manage personal calendars and appointments. Integrates with Google Calendar.
 
-- **Weather Updates:** Provides current weather and forecasts based on the user's location via OpenWeatherMap.
+- **Weather Updates:** Delivers current weather data and forecasts based on the user's location via OpenWeatherMap.
 
-- **News Briefings:** Summarizes top news scraped from the german "Tagesschau" news site.
+- **News Briefings:** Collects current news from the german "Tagesschau" news site and presents them in compact summaries.
 
-- **Image Generation:** Creates images based on text prompts and descriptions via DALL-E API.
+- **Image Generation:** Creates images based on text prompts and descriptions using the DALL-E API.
 
-- **Wake Word Activation:** Starts interaction on detecting preset wake words. Custom sensitivity tuning.
+- **Wake Word Activation:** Starts interactions upon detection of predefined keywords. Sensitivity can be individually adjusted.
 
-- **Conversation Flow:** Maintains context over multi-turn conversations using history tracking.
+- **Conversation History:** Retains context across conversation by managing conversation history.
 
 - **Diagnostics:** Detailed logging for troubleshooting. Microphone calibration visualization.
 
-- **Token-Saving Mechanisms:** Various token-saving mechanisms, such as custom history size management and reduction, accommodating both low-budget and high-end installations.
+- **Token-Saving Mechanisms:** Various mechanisms to save tokens, such as managing the size of the conversation history and reducing it to support both cost-effective and high-quality installations.
 
 - **Context Sensitive Model Switching:** Automatically switches to a model with a larger context window size if needed, making it possible to scale up to the gpt-4-32k-0613 model when context size requires it.
 
+The goal is to gradually further develop these capabilities to make the experience with the digital assistant as performant, exciting, and individual as possible.
 
-The goal is to incrementally evolve those capabilities to deliver an engaging, personalized and helpful digital assistant experience. Remember this project is in an early development stage and lots of components are still imperfect.
+The project is still in an early development phase, and many of the components are not mature and far from perfect.
