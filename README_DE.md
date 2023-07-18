@@ -14,9 +14,9 @@ Das Projekt steckt noch in den Kinderschuhen, doch das Ziel rückt mit jedem Ent
 
 Erlebe Linguflex in Aktion in einer [kurzen Video-Demonstration](https://www.youtube.com/watch?v=obYUkYrcAw0&t=26s), in der einige Funktionen vorgestellt werden.
 
-Für den Einstieg folge einfach den Anweisungen im [Installationsleitfaden](https://github.com/KoljaB/Linguflex/blob/main/docs/install.md).
+Für den Einstieg folge einfach den Anweisungen im [Installationsleitfaden](https://github.com/KoljaB/Linguflex/blob/main/docs/install_de.md).
 
-Um deinen Assistenten nach deinen Wünschen zu gestalten, wirf einen Blick auf den [Konfigurationsleitfaden](https://github.com/KoljaB/Linguflex/blob/main/docs/config.md).
+Um den Assistenten nach deinen Wünschen zu gestalten, wirf einen Blick auf den [Konfigurationsleitfaden](https://github.com/KoljaB/Linguflex/blob/main/docs/config.md).
 
 Zusätzliche Module, die die Grundfunktionen von Linguflex erweitern, kannst du mithilfe des [Modul-Installationsleitfadens](https://github.com/KoljaB/Linguflex/blob/main/docs/modules.md) installieren.
 
