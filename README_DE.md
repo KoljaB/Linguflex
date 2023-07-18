@@ -4,7 +4,7 @@
 
 ## Über das Projekt
 
-Aus meiner Leidenschaft für Science-Fiction entstanden ist dieses Projekts mit dem Ziel, authentische, menschenähnliche Gespräche mit KI-Persönlichkeiten ermöglichen.
+Aus meiner Leidenschaft für Science-Fiction entstanden ist dieses Projekt mit dem Ziel, authentische, menschenähnliche Gespräche mit KI-Persönlichkeiten ermöglichen.
 
 Die Idee ist, auf natürliche Weise mit künstlichen Intelligenzen zu kommunizieren und sie nach persönlichen Vorstellungen anzupassen zu können. Zusätzlich zur Unterhaltung stehen praktische Anwendungen im Vordergrund: Smart-Home-Geräte steuern, Musik abspielen, im Internet suchen, E-Mails abrufen, aktuelle Wetterinformationen und Nachrichten anzeigen, bei der Terminplanung unterstützen und Bilder suchen oder generieren.
 
