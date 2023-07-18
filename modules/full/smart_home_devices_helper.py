@@ -58,9 +58,10 @@ class SmartBulbThread(threading.Thread):
         if 'dps' in data:
             self.state = 'on'
             dps = data['dps']
-            color = dps['24']
-            self.color = self.hsv_string_to_rgb(color)
-            log(DEBUG_LEVEL_MAX, f'  [lights] {name} color: {self.color}')
+            if '24' in dps:
+                color = dps['24']
+                self.color = self.hsv_string_to_rgb(color)
+                log(DEBUG_LEVEL_MAX, f'  [lights] {name} color: {self.color}')
         self.status_event.set()
         # Enter worker cycle
         while self.is_running:
