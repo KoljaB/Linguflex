@@ -19,12 +19,13 @@ class TextToSpeech_ElevenLabs(TextToSpeechModule):
         self.log_voices = cfg('log_voices').lower() == 'true'
         self.api_key = cfg('api_key', env_key='ELEVENLABS_SPEECH_KEY')
 
+        # Set API key for the ElevenLabs service
+        set_api_key(self.api_key)
+
+        # Print available voices into logging of desired
         if self.log_voices:
             voices_elevenlabs = voices()
             log(DEBUG_LEVEL_MAX, f"  [tts_eleven] Available voices: {voices_elevenlabs}")
-
-        # Set API key for the ElevenLabs service
-        set_api_key(self.api_key)
 
         # Initialize text converter
         self.text_converter = ConvertNumbersToText()
