@@ -1,181 +1,69 @@
 # Linguflex
-Linguflex ist ein **persönlicher KI-Assistent** ("Jarvis"), der **auf gesprochenes Wort reagiert**.
 
-## Key Features
-Linguflex kann:
+*ein ambitionierter Versuch, Sci-Fi-Träume von leistungsfähigen Jarvis-Assistenten wahr werden zu lassen – wenngleich in einer frühen und noch nicht ausgereiften Form*
 
-- **Persönlichkeiten** nachahmen 🎭
-- **Musik** abspielen 🎵
-- **Termine** managen 📆
-- **E-Mails** abrufen 📧
-- das **Wetter** ansagen ☀️🌦️
-- **Nachrichten** präsentieren 📰
-- im **Internet suchen** (Texte oder Bilder) 🔍
-- **Bilder erzeugen** 🎨
-- **Lampen steuern** 💡
-- und hat euer Aktienportfolio im Auge 📊
-  
-Linguflex ist auf [englisch](https://github.com/KoljaB/Linguflex/blob/main/README.md) und deutsch verfügbar.
+## Über das Projekt
 
-Hier sind ein paar der Funktionen zu sehen: 
+Aus meiner Leidenschaft für Science-Fiction entstanden ist dieses Projekts mit dem Ziel, authentische, menschenähnliche Gespräche mit KI-Persönlichkeiten ermöglichen.
 
-[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/BzAOBQUVMK0/0.jpg)](https://www.youtube.com/watch?v=BzAOBQUVMK0)
+Die Idee ist, auf natürliche Weise mit künstlichen Intelligenzen zu kommunizieren und sie nach persönlichen Vorstellungen anzupassen zu können. Zusätzlich zur Unterhaltung stehen praktische Anwendungen im Vordergrund: Smart-Home-Geräte steuern, Musik abspielen, im Internet suchen, E-Mails abrufen, aktuelle Wetterinformationen und Nachrichten anzeigen, bei der Terminplanung unterstützen und Bilder suchen oder generieren.
 
-## Voraussetzungen
-- [Python 3.9.9](https://www.python.org/downloads/release/python-399/)
-- [OpenAI API Schlüssel](https://platform.openai.com/) 
+Das Projekt steckt noch in den Kinderschuhen, doch das Ziel rückt mit jedem Entwicklungsschritt näher. Ich lade euch ein, euch in diesem digitalen Umfeld umzusehen und mitzuwirken – ganz gleich, ob ihr einfach nur eine innovative KI-Erfahrung sucht oder selbst Entwickler seid und das Projekt weiter voranbringen möchtet. Alle Anregungen, Ideen und Beiträge sind herzlich willkommen. Ich hoffe auf die Unterstützung der Community, um dieses Herzensprojekt vollends zur Entfaltung bringen und so einen Beitrag zur Entwicklung der KI leisten zu können.
 
-## Installation
-[Ausführliche Installationsanleitung](https://github.com/KoljaB/Linguflex/blob/main/docs/install_de.md)
+## Erkunde Linguflex
 
-Für schnellere Spracherkennung mit GPU-Unterstützung ist es empfehlenswert, zunächst das [NVIDIA® CUDA® Toolkit 11.8](https://developer.nvidia.com/cuda-11-8-0-download-archive) und anschließend torch zu installieren mit: 
-```bash
-pip3 install --upgrade torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
-```  
-Linguflex Installation:
-```
-pip install -r requirements.txt
-```
+Erlebe Linguflex in Aktion in einer [kurzen Video-Demonstration](https://www.youtube.com/watch?v=obYUkYrcAw0&t=26s), in der einige Funktionen vorgestellt werden.
 
-OpenAI API-Schlüssel entweder:
-- in die Datei `config.txt` im Bereich [openai_generator] in den Schlüssel "api_key" eintragen
-- oder in die Umgebungsvariable OPENAI_API_KEY eintragen
+Für den Einstieg folge einfach den Anweisungen im [Installationsleitfaden](https://github.com/KoljaB/Linguflex/blob/main/docs/install.md).
 
+Um deinen Assistenten nach deinen Wünschen zu gestalten, wirf einen Blick auf den [Konfigurationsleitfaden](https://github.com/KoljaB/Linguflex/blob/main/docs/config.md).
 
-## Start
-```
-python linguflex
-```
+Zusätzliche Module, die die Grundfunktionen von Linguflex erweitern, kannst du mithilfe des [Modul-Installationsleitfadens](https://github.com/KoljaB/Linguflex/blob/main/docs/modules.md) installieren.
 
-## Konfiguration
-Die `config.txt` beinhaltet:
-- Systemeinstellungen wie zB die verwendete Sprache
-- die zu ladenden Module im Abschnitt [modules] (Module werden in der hier angegebenen Reihenfolge geladen und gestartet)
-- die Einstellungsparameter der Module
+Mit diesen Anleitungen steht deinem Abenteuer mit Linguflex nichts mehr im Wege. Viel Spaß beim Entdecken und Mitgestalten!
 
----
+## Was kann Linguflex?
 
-# Basismodule
+Linguflex bietet eine Vielzahl an Funktionen:
 
-```
-user_interface
-openai_generator
-microphone_recorder
-whisper_speechtotext
-system_texttospeech
-```
+- **Konversations-KI:** Natürliche Gespräche basierend auf dem OpenAI GPT-3.5-Turbo-Modell, mit der Möglichkeit, auf GPT-4 zu skalieren.
 
-Ermöglichen grundlegende Sprachkommunikation mit dem Assistenten.  
+- **Modulare Architektur:** Modulare Plattform, ermöglicht die einfache Entwicklung individueller Zusatzfähigkeiten mit Python-Erweiterungsmodulen.
 
-## Mikrophon-Kalibrierung
-Zunächst sollte das Mikrophons in der Sektion [microphone_recorder] der Konfigurationsdatei config.txt eingestellt werden. Die Aufzeichnung beginnt, wenn der Pegel den Wert in `volume_start_recording` übersteigt und stoppt, wenn der Pegel unter den Wert in `volume_stop_recording` fällt. Um diese Werte zu ermitteln, wird debug_show_volume = True gesetzt und Linguflex gestartet, die exakten Pegelwerte werden dann in das Consolefenster geschrieben.
+- **Mehrsprachigkeit:** Englische und deutsche Sprachdateien sind enthalten.
 
----
+- **Spracherkennung:** Spracherkennung über Whisper, Nutzung der GPU mit CUDA möglich.
 
-#  Text-zu-Sprache-Module
+- **Individuelle Persönlichkeiten:** Eigene KI-Persönlichkeiten entwickeln und sie mit Text-zu-Sprache-Stimmen verknüpfen.
 
-Diese Module ermöglichen eine verbesserte Sprachausgabe und ersetzen das vorhandene Modul `system_texttospeech` im Abschnitt `[modules]` der Konfigurationsdatei.  
+- **Text-zu-Sprache:** Sprachsynthese erfolgt mithilfe von ElevenLabs, Azure, Edge Browser oder Systemstimmen.
 
-Die Module für Azure und Elevenlabs können parallel betrieben werden und benötigen API Keys, die in der jeweiligen Sektion in der Konfigurationsdatei hinterlegt oder als Umgebungsvariable definiert werden. Lokalisierte Stimmen werden für diese beiden Module in ihrer jeweiligen Stimm-Konfigurationsdatei verwaltet.
-Diese beiden Module besitzen zur Konfiguration jeweils eigenen 
+- **Smart-Home-Steuerung:** Ermöglicht Integration Tuya-kompatibler WLAN-Geräte wie Lichtern, Steckern und Schaltern.
 
+- **Medienwiedergabe:** Sucht und spielt Musik/Playlists von YouTube. Beinhaltet Wiedergabekontrolle und Player-Benutzeroberfläche.
 
-  - `edge_texttospeech` nutzt das Fenster des Edge-Browsers für die Sprachausgabe, bietet eine kostenlose, qualitativ hochwertige Sprachsynthese, aufgrund der Verwendung des Browserfenstersaber mit etwas herabgesetzter Stabilität und Komfort 
-  - `azure_texttospeech` bietet eine qualitativ hochwertige, stabile und komfortable Sprachsynthese und benötigt jedoch einen [Microsoft Azure API-Schlüssel](https://portal.azure.com/), Umgebungsvariable für den API-Key: AZURE_SPEECH_KEY, Stimm-Konfigurationsdatei: azure_texttospeech.voices.de/en.json
-  - `elevenlabs_texttospeech` bietet ebenfalls qualitativ hochwertige, stabile und komfortable Sprachsynthese mit emotionaler Ausgabe und benötigt einen [Elevenlabs API-Schlüssel](https://beta.elevenlabs.io/Elevenlabs), Umgebungsvariable für den API-Key: ELEVENLABS_SPEECH_KEY, Stimm-Konfigurationsdatei: elevenlabs_texttospeech.voices.de/en.json
+- **Visuelle Benutzeroberfläche:** Intuitive grafische Oberfläche mit subtilem akustischem Feedback zu Assistentenaktionen.
 
----
+- **Internetrecherche:** Führt Text- und Bilder-Recherchen durch.
 
-# Erweiterungsmodule
+- **Terminplanung:** Erinnert an Termine mit Google Calendar
 
-## Persönlichkeiten nachahmen 🎭
-`personality_switch`
-- Funktion: Wechselt zur angegebenen Persönlichkeit.
-- Hinweis: Die Startpersönlichkeit kann in der Konfiguration unter "character" angegeben werden. Verfügbare Persönlichkeiten werden in der personality_switch.de/en.json-Datei in modules/basic verwaltet.
+- **E-Mail-Verwaltung:** Holt E-Mails ab.
 
-  **Beispiele:**
-  - *"Verwandle dich in Bruce Willis"*
-  - *"Sei Micky Maus"*
-  - *"Wechsle den Charakter zum Assistenten"*
+- **Wetterberichte:** Liefert aktuelle Wetterdaten und -prognosen.
 
-## Notizbuch 📔
-`notebook`
-- Funktion: Kann als Zwischenablage für Informationen genutzt werden
+- **Nachrichtenzusammenfassung:** Sammelt aktuelle Nachrichten und präsentiert sie in kompakten Zusammenfassungen.
 
-  **Beispiele:**
-  - *"Schreib die URL vom laufenden Song ins Notizbuch"*
-  - *"Erzeuge ein Notizbuch Tiere und schreibe Katze, Maus und Elefant hinein"*
+- **Bildgenerierung:** Erzeugt Bilder auf Grundlage von Textaufforderungen und Beschreibungen mittels der DALL-E API.
 
-## Media Playout 🎵
-`media_playout`
-- Funktion: Ermöglicht Suche und Abspiel von Musikstücken und Musikplaylists. In Playlists kann ein Lied vor und zurück gesprungen werden.
-- Hinweis: Benötigt einen [Google Cloud API key](https://console.cloud.google.com/) mit Zugriff auf die YouTube Data API v3 in config.txt oder Umgebungsvariable GOOGLE_API_KEY.
+- **Aktivierung durch Schlüsselwort:** Startet Interaktionen bei Erkennung vordefinierter Schlüsselwörter. Die Empfindlichkeit lässt sich individuell einstellen.
 
-  **Beispiele:**
-  - *"Spiele eine Playlist von Robbie Williams"*
-  - *"Ein Lied weiter"*
-  - *"Leiser", "Stop", "Pause", "Weiter"*
+- **Gesprächsverlauf:** Behält den Kontext über die Gesprächsrunde hinweg bei, indem es den Gesprächsverlauf verwaltet.
 
-## Internetsuche Text 🔍 
-`google_information`
-- Funktion: Ruft Echtzeitinformationen aus dem Internet ab.
-- Hinweis: Benötigt einen [SerpAPI-Schlüssel](https://serpapi.com/) in config.txt oder Umgebungsvariable SERP_API_KEY.
+- **Diagnose:** Detailliertes Logging zur Fehlerbehebung. Visualisierung der Mikrofonkalibrierung.
 
-  **Beispiel:**
-  - *"Google, wer wurde 2023 Fußballmeister?"*
+- **Token-Sparmechanismen:** Verschiedene Mechanismen zum Einsparen von Tokens, wie etwa die Verwaltung der Gesprächsverlauf-Größe und deren Reduzierung, um sowohl kostengünstige als auch hochwertige Installationen zu unterstützen.
 
-## Termine managen 📆
-`google_calendar`
-- Funktion: Integriert den Google Kalender, um Ereignisse abzurufen und hinzuzufügen.
-- Hinweis: Benötigt die Datei [credentials.json](https://developers.google.com/calendar/api/quickstart/python?hl=de#authorize_credentials_for_a_desktop_application).
+- **Kontextsensitiver Modellwechsel:** Wechselt automatisch zu einem Modell mit größerem Kontextfenster, wenn dies erforderlich ist. So kann bei Bedarf auf das gpt-4-32k-0613 Modell skaliert werden.
 
-  **Beispiele:**
-  - *"Was habe ich für Termine?"*
-  - *"Neuer Termin übermorgen 9 Uhr Zahnarzt"*
-  - *"Verschiebe den Termin mit dem Abendessen um eine Stunde"*
-
-## Wetter ☀️🌦️
-`weather_forecast`
-- Funktion: Ruft aktuelle Wetterdaten ab.
-- Hinweis: Benötigt einen [OpenWeatherMap-API-Schlüssel](https://openweathermap.org/api) in config.txt oder Umgebungsvariable OPENWEATHERMAP_API_KEY.
-
-  **Beispiel:**
-  - *"Wie wird das Wetter morgen früh?"*
-
-## Nachrichten 📰
-`news_summary`
-- Funktion: Fasst die aktuelle Nachrichten der Tagesschau zusammen.
-
-  **Beispiel:**
-  - *"Wie sind die Technik-Nachrichten?"*
-
-## Bildsuche 🔍🖼️
-`picture_search`
-- Funktion: Sucht im Internet nach einem Bild und zeigt es an.
-- Hinweis: Benötigt einen [Google API-Schlüssel](https://console.cloud.google.com) mit Freigabe für die Custom Search API und eine [CSE Id](https://cse.google.com/cse/all) in config.txt oder den Umgebungsvariablen GOOGLE_API_KEY und GOOGLE_CSE_ID.
-
-  **Beispiel:**
-  - *"Zeige ein Bild von Salvador Dali"*
-
-## Bilderzeugung 🎨
-`picture_generator`
-- Funktion: Generiert ein Bild auf Grundlage einer Beschreibung und zeigt es an.
-- Hinweis: Kann bei intensiver Nutzung [gewisse Kosten](https://openai.com/pricing) verursachen.
-
-  **Beispiel:**
-  - *"Male ein Bild vom Eiffelturm im Stil von Salvador Dali"*
-
-## Emailzugriff  📧
-`email_imap`
-- Funktion: Ruft E-Mails mit dem IMAP-Protokoll ab.
-
-  **Beispiel:**
-  - *"Habe ich neue EMails?"*
-
-## Investmentdaten 📊  
-`stocks_portfolio`
-- Funktion: Ruft Daten des Anlageportfolios ab und fasst diese zusammen.
-- Hinweis: Portfolio links werden in die config.txt als "comdirect Musterportfolio" geschrieben.
-
-  **Beispiel:**
-  - *"Wie geht es meinen Aktien"*
+Das Ziel ist es, diese Fähigkeiten schrittweise weiterzuentwickeln, um ein aufregendes und individuelles Erlebnis mit dem digitalen Assistenten zu ermöglichen. Dass Projekt befindet sich noch in einer frühen Entwicklungsphase und viele sind Komponenten noch nicht perfekt.
