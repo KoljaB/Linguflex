@@ -2,7 +2,7 @@
 
 *A humble attempt to bring sci-fi dreams of capable Jarvis-style AI companions closer to reality, albeit in an early and not yet mature state*
 
-## About
+## About the project
 
 Born out of my passion for science fiction, this project aims to simulate engaging, authentic, human-like interaction with AI personalities.
 
