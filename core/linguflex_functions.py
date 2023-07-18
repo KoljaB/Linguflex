@@ -120,7 +120,7 @@ class linguflex_function:
 
         self.openai_schema = {
             "name": self.func.__name__,
-            "description": self.func.__doc__,
+            "description": self.func.__doc__ if self.func.__doc__ else '',
             "parameters": parameters,
         }
 
