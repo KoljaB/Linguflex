@@ -28,9 +28,9 @@ Linguflex bietet eine Vielzahl an Funktionen:
 
 - **Konversations-KI:** Natürliche Gespräche basierend auf dem OpenAI GPT-3.5-Turbo-Modell, mit der Möglichkeit, auf GPT-4 zu skalieren.
 
-- **Modulare Architektur:** Modulare Plattform, ermöglicht die einfache Entwicklung individueller Zusatzfähigkeiten mit Python-Erweiterungsmodulen.
+- **Modulare Architektur:** Plattform zur einfachen Entwicklung eigener Zusatzmodule.
 
-- **Mehrsprachigkeit:** Englische und deutsche Sprachdateien sind enthalten.
+- **Mehrsprachigkeit:** Sprachdateien für deutsch und englisch enthalten.
 
 - **Spracherkennung:** Spracherkennung über Whisper, Nutzung der GPU mit CUDA möglich.
 
@@ -66,4 +66,6 @@ Linguflex bietet eine Vielzahl an Funktionen:
 
 - **Kontextsensitiver Modellwechsel:** Wechselt automatisch zu einem Modell mit größerem Kontextfenster, wenn dies erforderlich ist. So kann bei Bedarf auf das gpt-4-32k-0613 Modell skaliert werden.
 
-Das Ziel ist es, diese Fähigkeiten schrittweise weiterzuentwickeln, um ein aufregendes und individuelles Erlebnis mit dem digitalen Assistenten zu ermöglichen. Dass Projekt befindet sich noch in einer frühen Entwicklungsphase und viele sind Komponenten noch nicht perfekt.
+Das Ziel ist es, diese Fähigkeiten schrittweise weiterzuentwickeln, um das Erlebnis mit dem digitalen Assistenten so performant, aufregend und individuell wie möglich zu gestalten.  
+
+Das Projekt ist noch in einer frühen Entwicklungsphase und viele der Komponenten nicht ausgereift und weit entfernt von perfekt.
