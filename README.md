@@ -56,7 +56,7 @@ The app provides a wide range of capabilities to deliver a fully-featured digita
 
 - **Weather Updates:** Provides current weather and forecasts based on the user's location via OpenWeatherMap.
 
-- **News Briefings:** Summarizes top news scraped from the german "Tagesschau" new site.
+- **News Briefings:** Summarizes top news scraped from the german "Tagesschau" news site.
 
 - **Image Generation:** Creates images based on text prompts and descriptions via DALL-E API.
 
@@ -71,4 +71,4 @@ The app provides a wide range of capabilities to deliver a fully-featured digita
 - **Context Sensitive Model Switching:** Automatically switches to a model with a larger context window size if needed, making it possible to scale up to the gpt-4-32k-0613 model when context size requires it.
 
 
-The goal is to incrementally evolve those capabilities to deliver an engaging, personalized and helpful digital assistant experience.
+The goal is to incrementally evolve those capabilities to deliver an engaging, personalized and helpful digital assistant experience. Remember this project is in an early development stage and lots of components are still imperfect.
