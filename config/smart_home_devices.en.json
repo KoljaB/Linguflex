@@ -1,7 +1,7 @@
 {
     "set_bulb_light_color": 
 	{
-		"keywords": ["lamp*", "light*", "color*", "mood*", "illuminate*", "change*", "ambient*", "atmospher*", "bright*", "dark*", "dim*", "adjust*", "regulate*", "control*", "*room*"],
+		"keywords": ["lamp*", "light*", "color*", "mood*", "illuminate*", "change*", "ambient*", "atmospher*", "bright*", "dark*", "dim*", "adjust*", "regulate*", "control*", "*room*", "turn*"],
 		"init_prompt": "",
 		"success_prompt": "Lamp colors have been successfully changed. Use creative descriptions, comparisons, everyday terms, or associations to convey colors. DO NOT WRITE HEX CODES # OR COLOR CODES INTO THE OUTPUT!",
 		"fail_prompt": ""
@@ -12,5 +12,19 @@
 		"init_prompt": "",
 		"success_prompt": "Use creative descriptions, comparisons, everyday terms, or associations to convey colors. DO NOT WRITE HEX CODES # OR COLOR CODES INTO THE OUTPUT!",
 		"fail_prompt": ""
-	}
+	},
+	"set_smart_device_on_off": 
+    {
+        "keywords": ["socket*", "plug*", "device*", "connection*", "smartplug*", "on*", "switch*", "off*", "toggle*", "activat*", "deactivat*", "make*", "can*", "worry", "warm", "cold", "coffee*", "turn*"],
+        "init_prompt": "",
+        "success_prompt": "The state of the Smart Device has been successfully changed. Reminder: The device is now either switched on or switched off.",
+        "fail_prompt": ""
+    },
+    "get_smart_device_on_off_state": 
+    {
+        "keywords": ["socket*", "plug*", "device*", "connection*", "smartplug*", "state*", "is*", "toggle*", "on*", "switch*", "off*", "activ*", "deactiv*", "run*", "work*", "function*", "operation*", "status*"],
+        "init_prompt": "",
+        "success_prompt": "The current state of the Smart Device has been successfully retrieved. Reminder: The device is either switched on or switched off.",
+        "fail_prompt": ""
+    }	
 }
