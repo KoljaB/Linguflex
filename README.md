@@ -26,7 +26,7 @@ These resources are designed to make your journey with Linguflex as smooth as po
 
 Linguflex offers a variety of features:
 
-- **Conversational AI:** Natural conversations based on the OpenAI GPT-3.5-Turbo model, with the option to scale to GPT-4.
+- **Conversational AI:** Natural conversations and assistant actions optimized for the OpenAI GPT-3.5-Turbo model with the option to scale to GPT-4.
 
 - **Modular Architecture:** Platform for easy development of your own add-on modules.
 
@@ -36,7 +36,7 @@ Linguflex offers a variety of features:
 
 - **Custom Personalities:** Develop your own AI personalities and link them with text-to-speech voices.
 
-- **Text-to-Speech:** Synthesis powered by ElevenLabs, Azure, Edge Browser or System voices. Supports multiple languages.
+- **Text-to-Speech:** Synthesis powered by ElevenLabs, Azure, Edge Browser or System voices.
 
 - **Smart Home Control:** Enables integration of Tuya-compatible Wi-Fi devices such as lights, plugs, and switches.
 
