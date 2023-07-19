@@ -69,7 +69,7 @@ class TextToSpeech_ElevenLabs(TextToSpeechModule):
 
     def perform_text_to_speech(self, request: Request):
 
-        output_optimized = self.text_converter.optimiere(request.output) if self.language == "de" else request.output_user
+        output_optimized = self.text_converter.optimiere(request.output) if self.language == "de" else request.output
 
         # If 'character' attribute is present in the request, find the corresponding voice
         if hasattr(request, 'character'):
