@@ -35,6 +35,7 @@ for name in names:
 PersonalitiesEnum = load_enum_from_strings(names)
 
 log(DEBUG_LEVEL_MAX, f"  [personality] available personalities: {str(list(PersonalitiesEnum.__members__.keys()))}")
+log(DEBUG_LEVEL_MAX, f"  [personality] current character is: {current_character}")
 
 class switch_personality(LinguFlexBase):
     "Switches to the given personality name"
@@ -43,10 +44,10 @@ class switch_personality(LinguFlexBase):
     def execute(self):
         global current_character
         if self.personality_name.value not in PersonalitiesEnum.__members__:
-            return {"error": "Invalid personality name. It must be one of the following: {}".format(list(PersonalitiesEnum.__members__.keys()))}
+            return {"result": "error", "reason": "Invalid personality name. It must be one of the following: {}".format(list(PersonalitiesEnum.__members__.keys()))}
 
         current_character = self.personality_name.value
-        return {"result": "personality switched successfully", "new personality": current_character}
+        return {"result": "success", "new personality": current_character}
 
 class AddPersonalityPrompt(ActionModule):
     def handle_input(self, 
