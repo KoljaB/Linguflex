@@ -7,7 +7,6 @@ import os
 import enum
 import json
 
-# file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "smart_home_devices.json")
 file_path = "config/smart_home_devices.json"
 with open(file_path, "r", encoding='utf-8') as file:
     devices = json.load(file)
@@ -44,16 +43,6 @@ class set_bulb_light_color(LinguFlexBase):
         light.raise_color_information_event()
         return result
 
-        # retval = {
-        #     "result": "error",
-        #     "reason" : "no bulbs in list",
-        # }
-        # for bulb in self.bulbs:
-        #     retval = light.set_color_hex(bulb.name, bulb.color)
-        #     if retval["result"] != "success":
-        #         return retval
-        return retval
-    
 class get_bulb_light_colors(LinguFlexBase):
     "Retrieves the hex string colors of the bulbs."
 
@@ -73,9 +62,11 @@ class set_smart_device_on_off(LinguFlexBase):
 
     def execute(self):
         result = {}
+        bulb_state_changed = False
         for name in self.names:
             # Check if device is a bulb
             if name in bulb_names:
+                bulb_state_changed = True
                 result[name] = light.set_bulb_on_off(name, self.turn_on)
             elif name in smartplug_names:
                 result[name] = smartplug.set_state(name, self.turn_on)
@@ -84,6 +75,8 @@ class set_smart_device_on_off(LinguFlexBase):
                 "result": "error",
                 "reason" : f"device name {name} not found, must be one of these: {device_names_string}",
             }
+        if bulb_state_changed:
+            light.raise_color_information_event()
         return result
     
 class get_smart_device_on_off_state(LinguFlexBase):
@@ -99,7 +92,6 @@ class get_smart_device_on_off_state(LinguFlexBase):
             else:
                 result[name] = smartplug.get_state(name)
         return result
-
 
 
 class ShutdownHandler(BaseModule):    

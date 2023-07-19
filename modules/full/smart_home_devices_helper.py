@@ -30,7 +30,7 @@ class SmartBulbThread(threading.Thread):
                         state: bool) -> None:
         with self.action_condition:
             self.new_state = 'on' if state else 'off'
-            #log(DEBUG_LEVEL_MAX, f'  [lights] thread of {self.bulb_param["name"]} set to {state}')
+            log(DEBUG_LEVEL_MAX, f'  [lights] thread of {self.bulb_param["name"]} set to {state}')
             self.action_condition.notify()          
 
     def get_bulb_on_off_state(self) -> str:
@@ -78,13 +78,13 @@ class SmartBulbThread(threading.Thread):
         data = self.device.status()
         self.state = 'off'
         if 'dps' in data:
-            self.state = 'on'
             dps = data['dps']
             if '20' in dps:
                 self.state = 'on' if dps['20'] else 'off'
             if '24' in dps:
                 color = dps['24']
                 self.color = self.hsv_string_to_rgb(color)
+        self.new_color = self.color
         self.new_state = self.state
         log(DEBUG_LEVEL_MAX, f'  [lights] {name} color: {self.color}, device state: {self.state}')                            
         self.status_event.set()
@@ -93,7 +93,8 @@ class SmartBulbThread(threading.Thread):
             with self.action_condition:
                 action_condition_change = self.action_condition.wait(timeout=0.5)  
                 if action_condition_change:
-                    #log(DEBUG_LEVEL_MAX, f'  [lights] notified color_change in thread for bulb {self.bulb_param["name"]}')
+                    # log(DEBUG_LEVEL_MAX, f'  [lights] notified action_condition_change in thread for bulb {self.bulb_param["name"]}')
+                    # log(DEBUG_LEVEL_MAX, f'  [lights] self.new_color {self.new_color} self.color {self.color} self.new_state {self.new_state} self.state {self.state}')
                     if self.new_color != self.color:
                         self.set_color(self.new_color)
                     if self.new_state != self.state:
@@ -164,14 +165,14 @@ class LightManager():
                         state: bool) -> None:
         for bulb_thread in self.bulb_threads:
             if bulb_thread.bulb_param['name'] == bulb_name:
-                #log(DEBUG_LEVEL_MAX, f'  [lights] thread of {bulb_name} set to {state}')
+                #log(DEBUG_LEVEL_MAX, f'  [lights] manager of {bulb_name} set to {state}')
                 bulb_thread.set_bulb_on_off(state)
                 return {
                     "result": "success",
                     "state" : state,
                 }
             
-        bulb_names = [b["Name"] for b in self.bulb_params]
+        bulb_names = [b["name"] for b in self.bulb_params]
         bulb_names_string = ', '.join(bulb_names)
         return {
             "result": "error",
@@ -186,7 +187,7 @@ class LightManager():
                     "state" : bulb_thread.get_bulb_on_off_state(),
                     "name" : bulb_name
                 }
-        bulb_names = [b["Name"] for b in self.bulb_params]
+        bulb_names = [b["name"] for b in self.bulb_params]
         bulb_names_string = ', '.join(bulb_names)
         return {
             "result": "error",
@@ -318,7 +319,7 @@ class LightManager():
 
         log(DEBUG_LEVEL_MAX, f'  [lights] set_color in manager called for {bulb_name}')        
         if i == -1:
-            bulb_names = [b["Name"] for b in self.bulb_params]
+            bulb_names = [b["name"] for b in self.bulb_params]
             bulb_names_string = ', '.join(bulb_names)
             log(DEBUG_LEVEL_MAX, f'  [lights] bulb name {bulb_name} not found')     
             return {
@@ -335,7 +336,6 @@ class LightManager():
                     "result": "success",
                     "state" : color,
                 }        
-                    
         return {
             "result": "error",
             "reason" : f"bulb thread for bulb {bulb_name} not found",
@@ -350,7 +350,10 @@ class LightManager():
     def get_colors(self) -> None:
         for bulb_thread in self.bulb_threads:
             i = self.find_bulb_index(bulb_thread.bulb_param['name'])
-            self.bulb_colors[i] = bulb_thread.color
+            if bulb_thread.new_state == 'off':
+                self.bulb_colors[i] = (0, 0, 0)
+            else:
+                self.bulb_colors[i] = bulb_thread.new_color
 
     def get_color(self, 
             bulb_name: str) -> Tuple[int, int, int]:
@@ -553,7 +556,7 @@ class OutletManager():
             outlet_name: str, 
             state: bool) -> None:
         i = self.find_outlet_index(outlet_name)
-        outlet_names = [b["Name"] for b in self.outlet_param]
+        outlet_names = [b["name"] for b in self.outlet_param]
         outlet_names_string = ', '.join(outlet_names)
         if i == -1:
             return {
@@ -567,23 +570,27 @@ class OutletManager():
                     "result": "success",
                     "state" : state
                 }
+        return {
+            "result": "error",
+            "reason" : f"outlet thread for outlet {outlet_name} not found",
+        }
             
-    def get_state(self, 
-            outlet_name: str) -> bool:
-        outlet_names = [b["Name"] for b in self.outlet_param]
-        outlet_names_string = ', '.join(outlet_names)
-        for outlet_thread in self.outlet_threads:
-            if outlet_thread.outlet_param['name'].lower() == outlet_name.lower():
-                i = self.find_outlet_index(outlet_name)
-                if i == -1:
-                    return {
-                        "result": "error",
-                        "reason" : f"outlet name {outlet_name} not found, must be one of these: {outlet_names_string}",
-                    }
-                return {
-                    "result": "success",
-                    "state" : outlet_thread.state,
-                }            
+    # def get_state(self, 
+    #         outlet_name: str) -> bool:
+    #     outlet_names = [b["Name"] for b in self.outlet_param]
+    #     outlet_names_string = ', '.join(outlet_names)
+    #     for outlet_thread in self.outlet_threads:
+    #         if outlet_thread.outlet_param['name'].lower() == outlet_name.lower():
+    #             i = self.find_outlet_index(outlet_name)
+    #             if i == -1:
+    #                 return {
+    #                     "result": "error",
+    #                     "reason" : f"outlet name {outlet_name} not found, must be one of these: {outlet_names_string}",
+    #                 }
+    #             return {
+    #                 "result": "success",
+    #                 "state" : outlet_thread.state,
+    #             }            
 
     # def set_state(self, 
     #             outlet_names: List[str], 
@@ -608,27 +615,28 @@ class OutletManager():
     #                     })
     #     return results
 
-    # def get_state(self, 
-    #             outlet_names: List[str]) -> bool:
-    #     results = []
-    #     for outlet_name in outlet_names:
-    #         found = False
-    #         for outlet_thread in self.outlet_threads:
-    #             if outlet_thread.outlet_param['name'].lower() == outlet_name.lower():
-    #                 i = self.find_outlet_index(outlet_name)
-    #                 if i != -1:
-    #                     results.append({
-    #                         "result": "success",
-    #                         "state" : outlet_thread.state,
-    #                         "name" : outlet_name
-    #                     })
-    #         if not found:
-    #             results.append({
-    #                 "result": "error",
-    #                 "reason" : "outlet name not found",
-    #                 "name" : outlet_name
-    #             })
-    #     return results
+    def get_state(self, 
+                outlet_names: List[str]) -> bool:
+        results = []
+        outlet_names = [b["name"] for b in self.outlet_param]
+        outlet_names_string = ', '.join(outlet_names)
+        for outlet_name in outlet_names:
+            found = False
+            for outlet_thread in self.outlet_threads:
+                if outlet_thread.outlet_param['name'].lower() == outlet_name.lower():
+                    i = self.find_outlet_index(outlet_name)
+                    if i != -1:
+                        results.append({
+                            "result": "success",
+                            "state" : outlet_thread.state,
+                        })
+            if not found:
+
+                results.append({
+                    "result": "error",
+                    "reason" : f"outlet name {outlet_name} not found, must be one of these: {outlet_names_string}",
+                })
+        return results
 
     def shutdown(self) -> None:
         log(DEBUG_LEVEL_MAX, '  [outlets] shutting down smart plug threads')
