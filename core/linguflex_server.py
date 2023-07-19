@@ -105,12 +105,16 @@ class ActionHandler:
             else:
                 log(DEBUG_LEVEL_MAX, f'  {entity_type} {entity["name"]} returned None')
                 play_sound("function_success")
-                request_success = request.function_answer(entity["name"], "success")
+                request_success = request.function_answer(entity["name"], {"result": "success"})
             request_success.add_prompt(entity['success_prompt'])
             self.report_function_execution(request, entity["name"], entity_type, entity_return_value)
         else:
             play_sound("function_fail")
-            request_fail = request.function_answer(entity["name"], error)                    
+            request_fail = request.function_answer(entity["name"], 
+            {
+                "result": "error",
+                "reason" : error,
+            })
             request_fail.add_prompt(entity['fail_prompt'])
 
 
