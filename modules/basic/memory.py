@@ -15,7 +15,7 @@ class store_information_to_memory(LinguFlexBase):
     This function receives a list of information bits and an optional category. 
     Store precisely, exclusively and compact what the user asked for and DO NOT MAKE UP STUFF.
     """
-    list_of_information: List[Information] = Field(..., description="List of information entries, each consisting of a content string and optional data.")
+    list_of_information: List[Information] = Field(..., description="List of information entries, each consisting of a description string and optional data.")
     category: str = Field(default=None, description="Optional: category information will be stored into.")
 
     def execute(self):

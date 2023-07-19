@@ -780,7 +780,7 @@ class UIWindow:
 
             for pos, entry in enumerate(entries_in_category):
                 self.notebook_data_table.insertRow(pos)
-                title_item = QTableWidgetItem(entry["content"])
+                title_item = QTableWidgetItem(entry["description"])
                 title_item.setTextAlignment(Qt.AlignLeft | Qt.AlignBottom)
                 self.notebook_data_table.setItem(pos, 0, title_item)
 
@@ -793,7 +793,7 @@ class UIWindow:
                 self.notebook_data_table.setItem(pos, 1, data_item)
 
             for row in range(self.notebook_data_table.rowCount()):
-                content = entries_in_category[row]["content"]
+                description = entries_in_category[row]["description"]
                 data = str(entries_in_category[row]["data"])[:2000]
 
                 # Insert a line break every 100 characters
@@ -801,7 +801,7 @@ class UIWindow:
 
                 for column in range(self.notebook_data_table.columnCount()):
                     item = self.notebook_data_table.item(row, column)
-                    tooltip_text = f"📝\n{content}\n\n📎\n{data_with_line_breaks}"
+                    tooltip_text = f"📝\n{description}\n\n📎\n{data_with_line_breaks}"
                     item.setToolTip(tooltip_text)
                     item.setFlags(item.flags() | Qt.ItemIsEnabled)
 
@@ -816,7 +816,7 @@ class UIWindow:
             self.set_wakeword_button_state()
 
     def linkify(self, text):
-        url_pattern = re.compile(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\\(\\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')
+        url_pattern = re.compile(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\\(\\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+(?![.,)])')
         urls = re.findall(url_pattern, text)
         for url in urls:
             text = text.replace(url, f'<a href="{url}" style="color: #A0A0FF;">↪ {url}</a>')

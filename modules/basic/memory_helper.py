@@ -10,8 +10,8 @@ DEFAULT_CATEGORY = "MainMemory"
 MEMORY_FILENAME = "memory.json"
 
 class Information(BaseModel):
-    content: str = Field(..., description="Information content / data description")
-    data: Any = Field(None, description="Optional: use for JSON or data")
+    description: str = Field(..., description="Information description / data description. Store all data in the data property.")
+    data: Any = Field(None, description="Optional: use for JSON or string data.")
 
 class Memory:
     def __init__(self, category=DEFAULT_CATEGORY):
@@ -59,10 +59,10 @@ class Memory:
             self.memory[category] = []
 
         if isinstance(list_of_information, str):   
-            list_of_information = [Information(content=list_of_information)]          
+            list_of_information = [Information(description=list_of_information)]          
 
         if isinstance(list_of_information, list) and all(isinstance(info, str) for info in list_of_information):
-            list_of_information = [Information(content=info) for info in list_of_information]            
+            list_of_information = [Information(description=info) for info in list_of_information]            
 
         for index, information in enumerate(list_of_information):
             information_dict = information.dict()
