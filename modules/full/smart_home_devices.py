@@ -50,21 +50,30 @@ class get_bulb_light_colors(LinguFlexBase):
 smartplug = OutletManager([d for d in devices if d["type"] == "Outlet"])
 smartplug_names = [d["name"].replace(" ", "_") for d in devices if d["type"] == "Outlet"]
 smartplug_names_string = ','.join(smartplug_names)
+device_names_string = ', '.join(bulb_names + smartplug_names)
 
 class set_smart_device_on_off(LinguFlexBase):
     "Turn smart devices with given name on (True) or off (False)."
-    name: str = Field(..., description=f"Name of smart device to turn on or off, MUST be one of these: {smartplug_names_string}")
+    name: str = Field(..., description=f"Name of smart device to turn on or off, MUST be one of these: {device_names_string}")
     turn_on: bool = Field(..., description="True = on, False = off")
 
     def execute(self):
-        return smartplug.set_state(self.name, self.turn_on)
+        # Check if device is a bulb
+        if self.name in bulb_names:
+            return light.set_bulb_on_off(self.name, self.turn_on)
+        else:
+            return smartplug.set_state(self.name, self.turn_on)
     
 class get_smart_device_on_off_state(LinguFlexBase):
     "Returns on/off state of smart devices with given name."
     name: str = Field(..., description=f"Name of smart device to retrieve state from, MUST be one of these: {smartplug_names_string}")
 
     def execute(self):
-        return smartplug.get_state(self.name)
+        # Check if device is a bulb
+        if self.name in bulb_names:
+            return light.get_bulb_on_off_state(self.name)
+        else:
+            return smartplug.get_state(self.name)
 
 
 class ShutdownHandler(BaseModule):    

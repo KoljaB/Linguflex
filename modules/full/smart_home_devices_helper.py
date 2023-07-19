@@ -11,18 +11,29 @@ from typing import Tuple, Dict
 
 class SmartBulbThread(threading.Thread):
     def __init__(self, 
-            bulb_param: Dict[str, str],
-            connection_event: threading.Event(), 
-            status_event: threading.Event(), 
-            color_change_condition: threading.Condition()) -> None:
+                 bulb_param: Dict[str, str],
+                 connection_event: threading.Event(), 
+                 status_event: threading.Event(), 
+                 color_change_condition: threading.Condition(), 
+                 power_change_condition: threading.Condition()) -> None:
         super().__init__()
         self.color_change_condition = color_change_condition
+        self.power_change_condition = power_change_condition
         self.color = (0, 0, 0)
         self.bulb_param = bulb_param
         self.connection_event = connection_event
         self.status_event = status_event
         self.state = 'off'
         self.is_running = True
+
+    def set_bulb_on_off(self, 
+                        state: bool) -> None:
+        with self.power_change_condition:
+            self.state = 'on' if state else 'off'
+            self.power_change_condition.notify()          
+
+    def get_bulb_on_off_state(self) -> str:
+        return self.state
 
     def change_color(self, 
             color: Tuple[int, int, int]) -> None:
@@ -55,9 +66,12 @@ class SmartBulbThread(threading.Thread):
         self.connection_event.set()
         # Get status of bulb    
         data = self.device.status()
+        self.state = 'off'
         if 'dps' in data:
             self.state = 'on'
             dps = data['dps']
+            if '20' in dps:
+                self.state = 'on' if dps['20'] else 'off'
             if '24' in dps:
                 color = dps['24']
                 self.color = self.hsv_string_to_rgb(color)
@@ -69,6 +83,17 @@ class SmartBulbThread(threading.Thread):
                 notified = self.color_change_condition.wait(timeout=0.5)  
                 if notified:
                     self.set_color(self.color)
+
+            with self.power_change_condition:
+                notified = self.power_change_condition.wait(timeout=0.5)
+                if notified:
+                    if self.state == 'on':
+                        self.device.turn_on()
+                        log(DEBUG_LEVEL_MAX, f'  [lights] {self.bulb_param["name"]} turned on')
+                    elif self.state == 'off':
+                        self.device.turn_off()
+                        log(DEBUG_LEVEL_MAX, f'  [lights] {self.bulb_param["name"]} turned off')
+
                 time.sleep(0.01)
 
     def hsv_string_to_rgb(self,
@@ -103,13 +128,30 @@ class LightManager():
         self.connection_events = [threading.Event() for _ in range(num_lamps)]
         self.status_events = [threading.Event() for _ in range(num_lamps)]
         color_change_conditions = [threading.Condition() for _ in range(num_lamps)]
-        # Create and start lamp threads
-        self.bulb_threads = [SmartBulbThread(self.bulb_params[i], self.connection_events[i], self.status_events[i], color_change_conditions[i]) for i in range(num_lamps)]
+        power_change_conditions = [threading.Condition() for _ in range(num_lamps)]
+
+        self.bulb_threads = [SmartBulbThread(self.bulb_params[i], self.connection_events[i], self.status_events[i], color_change_conditions[i], power_change_conditions[i]) for i in range(num_lamps)]        
+        
         for thread in self.bulb_threads:
             self.bulb_colors.append((0,0,0))
             thread.start()
         self.rotation_worker_thread = threading.Thread(target=self.rotation_worker)
         self.rotation_worker_thread.start()
+
+    def set_bulb_on_off(self, 
+                        bulb_name: str, 
+                        state: bool) -> None:
+        for bulb_thread in self.bulb_threads:
+            if bulb_thread.bulb_param['name'] == bulb_name:
+                bulb_thread.set_bulb_on_off(state)
+
+    def get_bulb_on_off_state(self, bulb_name: str) -> str:
+        for bulb_thread in self.bulb_threads:
+            if bulb_thread.bulb_param['name'] == bulb_name:
+                return bulb_thread.get_bulb_on_off_state()
+
+        # Return error message if the bulb_name does not exist
+        return "Error: bulb name does not exist"
 
     def shutdown(self) -> None:
         log(DEBUG_LEVEL_MAX, '  [lights] shutting down bulb threads')
