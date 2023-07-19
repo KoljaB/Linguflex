@@ -135,7 +135,7 @@ The Azure module also uses the `language` parameter of the [system] section.
 | Parameter   | Description  |
 |:------------|:-------------|
 | api_key     | Your ElevenLabs API Key |
-| log_voices  | Whether to log the available voices or not (true or false) |
+| log_voices  | Set to "true" to log available voices (this can extend Linguflex startup time). |
 
 The Elevenlabs module also uses the `language` parameter of the [system] section.
 
