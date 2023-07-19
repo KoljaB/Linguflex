@@ -1,4 +1,4 @@
-from core import BaseModule, Request
+from core import BaseModule, Request, log, DEBUG_LEVEL_MIN, DEBUG_LEVEL_MID, DEBUG_LEVEL_MAX, DEBUG_LEVEL_ERR
 from linguflex_functions import LinguFlexBase
 from typing import List
 from pydantic import Field, BaseModel
@@ -29,15 +29,29 @@ class set_bulb_light_color(LinguFlexBase):
     bulbs: List[Bulb] = Field(..., description=f"List of bulbs: {bulb_names_string}")
 
     def execute(self):
-        retval = {
-            "result": "error",
-            "reason" : "no bulbs in list",
-        }
+        result = {}
         for bulb in self.bulbs:
-            retval = light.set_color_hex(bulb.name, bulb.color)
-            if retval["result"] != "success":
-                return retval
+            # Check if device is a bulb
+            if bulb.name in bulb_names:
+                log(DEBUG_LEVEL_MAX, f'  [lights] {bulb.name} initiating color set to: {bulb.color}')
+                result[bulb.name] = light.set_color_hex(bulb.name, bulb.color)
+            else:
+                log(DEBUG_LEVEL_MAX, f'  [lights] {bulb.name} not found {bulb.color}')        
+                result[bulb.name] = {
+                "result": "error",
+                "reason" : f"bulb name {bulb.name} not found, must be one of these: {bulb_names_string}",
+            }
         light.raise_color_information_event()
+        return result
+
+        # retval = {
+        #     "result": "error",
+        #     "reason" : "no bulbs in list",
+        # }
+        # for bulb in self.bulbs:
+        #     retval = light.set_color_hex(bulb.name, bulb.color)
+        #     if retval["result"] != "success":
+        #         return retval
         return retval
     
 class get_bulb_light_colors(LinguFlexBase):
@@ -63,8 +77,13 @@ class set_smart_device_on_off(LinguFlexBase):
             # Check if device is a bulb
             if name in bulb_names:
                 result[name] = light.set_bulb_on_off(name, self.turn_on)
-            else:
+            elif name in smartplug_names:
                 result[name] = smartplug.set_state(name, self.turn_on)
+            else:
+                result[name] = {
+                "result": "error",
+                "reason" : f"device name {name} not found, must be one of these: {device_names_string}",
+            }
         return result
     
 class get_smart_device_on_off_state(LinguFlexBase):

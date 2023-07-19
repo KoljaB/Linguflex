@@ -14,40 +14,44 @@ class SmartBulbThread(threading.Thread):
                  bulb_param: Dict[str, str],
                  connection_event: threading.Event(), 
                  status_event: threading.Event(), 
-                 color_change_condition: threading.Condition(), 
-                 power_change_condition: threading.Condition()) -> None:
+                 action_condition: threading.Condition()) -> None:
         super().__init__()
-        self.color_change_condition = color_change_condition
-        self.power_change_condition = power_change_condition
+        self.action_condition = action_condition
         self.color = (0, 0, 0)
+        self.new_color = (0, 0, 0)
         self.bulb_param = bulb_param
         self.connection_event = connection_event
         self.status_event = status_event
         self.state = 'off'
+        self.new_state = 'off'
         self.is_running = True
 
     def set_bulb_on_off(self, 
                         state: bool) -> None:
-        with self.power_change_condition:
-            self.state = 'on' if state else 'off'
-            log(DEBUG_LEVEL_MAX, f'  [lights] thread of {self.bulb_param["name"]} set to {state}')
-            self.power_change_condition.notify()          
+        with self.action_condition:
+            self.new_state = 'on' if state else 'off'
+            #log(DEBUG_LEVEL_MAX, f'  [lights] thread of {self.bulb_param["name"]} set to {state}')
+            self.action_condition.notify()          
 
     def get_bulb_on_off_state(self) -> str:
         return self.state
 
     def change_color(self, 
             color: Tuple[int, int, int]) -> None:
-        with self.color_change_condition:
-            self.color = color
-            self.color_change_condition.notify()        
+        with self.action_condition:
+            #self.color = color
+            self.new_color = color
+            #log(DEBUG_LEVEL_MAX, f'  [lights] notifying color_change in thread for bulb {self.bulb_param["name"]}')
+            self.action_condition.notify()        
 
     def shutdown(self) -> None:
         self.is_running = False
 
     def set_color(self, 
             rgb_tupel: Tuple[int, int, int]) -> None:
+        
         self.color = rgb_tupel
+        self.new_color = rgb_tupel
         log(DEBUG_LEVEL_MAX, f'  [lights] {self.bulb_param["name"]} color set to: {rgb_tupel}')        
 
         if self.state == 'off' and (rgb_tupel[0] != 0 or rgb_tupel[1] != 0 or rgb_tupel[2] != 0):
@@ -81,25 +85,36 @@ class SmartBulbThread(threading.Thread):
             if '24' in dps:
                 color = dps['24']
                 self.color = self.hsv_string_to_rgb(color)
+        self.new_state = self.state
         log(DEBUG_LEVEL_MAX, f'  [lights] {name} color: {self.color}, device state: {self.state}')                            
         self.status_event.set()
         # Enter worker cycle
         while self.is_running:
-            with self.color_change_condition:
-                notified_color_change = self.color_change_condition.wait(timeout=0.5)  
-                if notified_color_change:
-                    self.set_color(self.color)
+            with self.action_condition:
+                action_condition_change = self.action_condition.wait(timeout=0.5)  
+                if action_condition_change:
+                    #log(DEBUG_LEVEL_MAX, f'  [lights] notified color_change in thread for bulb {self.bulb_param["name"]}')
+                    if self.new_color != self.color:
+                        self.set_color(self.new_color)
+                    if self.new_state != self.state:
+                        if self.new_state == 'on':
+                            self.device.turn_on()
+                            self.state = 'on'
+                            log(DEBUG_LEVEL_MAX, f'  [lights] {self.bulb_param["name"]} turned on')
+                        elif self.new_state == 'off':
+                            self.device.turn_off()
+                            self.state = 'off'
+                            log(DEBUG_LEVEL_MAX, f'  [lights] {self.bulb_param["name"]} turned off')
 
-            with self.power_change_condition:
-                notified_power_change = self.power_change_condition.wait(timeout=0.5)
-                if notified_power_change:
-                    log(DEBUG_LEVEL_MAX, f'  [lights] power_change_condition notification')
-                    if self.state == 'on':
-                        self.device.turn_on()
-                        log(DEBUG_LEVEL_MAX, f'  [lights] {self.bulb_param["name"]} turned on')
-                    elif self.state == 'off':
-                        self.device.turn_off()
-                        log(DEBUG_LEVEL_MAX, f'  [lights] {self.bulb_param["name"]} turned off')
+                # notified_power_change = self.power_change_condition.wait(timeout=0.5)
+                # if notified_power_change:
+                #     #log(DEBUG_LEVEL_MAX, f'  [lights] power_change_condition notification')
+                #     if self.state == 'on':
+                #         self.device.turn_on()
+                #         log(DEBUG_LEVEL_MAX, f'  [lights] {self.bulb_param["name"]} turned on')
+                #     elif self.state == 'off':
+                #         self.device.turn_off()
+                #         log(DEBUG_LEVEL_MAX, f'  [lights] {self.bulb_param["name"]} turned off')
 
                 time.sleep(0.01)
 
@@ -134,10 +149,9 @@ class LightManager():
         # Create event objects
         self.connection_events = [threading.Event() for _ in range(num_lamps)]
         self.status_events = [threading.Event() for _ in range(num_lamps)]
-        color_change_conditions = [threading.Condition() for _ in range(num_lamps)]
-        power_change_conditions = [threading.Condition() for _ in range(num_lamps)]
+        action_conditions = [threading.Condition() for _ in range(num_lamps)]
 
-        self.bulb_threads = [SmartBulbThread(self.bulb_params[i], self.connection_events[i], self.status_events[i], color_change_conditions[i], power_change_conditions[i]) for i in range(num_lamps)]        
+        self.bulb_threads = [SmartBulbThread(self.bulb_params[i], self.connection_events[i], self.status_events[i], action_conditions[i]) for i in range(num_lamps)]        
         
         for thread in self.bulb_threads:
             self.bulb_colors.append((0,0,0))
@@ -284,10 +298,10 @@ class LightManager():
             color_string: str) -> None:
         
         if not self.is_valid_hex_color(color_string):
+            log(DEBUG_LEVEL_MAX, f'  [lights] color string {color_string.name} is not hex string')
             return {
                 "result": "error",
-                "reason" : "color must be hex string like #C0C0C0",
-                "name" : bulb_name
+                "reason" : "color must be hex string like #C0C0C0"
             }            
         
         color = self.convert_from_hex(color_string)
@@ -301,9 +315,12 @@ class LightManager():
             bulb_name: str, 
             color: Tuple[int, int, int]) -> None:
         i = self.find_bulb_index(bulb_name)
+
+        log(DEBUG_LEVEL_MAX, f'  [lights] set_color in manager called for {bulb_name}')        
         if i == -1:
             bulb_names = [b["Name"] for b in self.bulb_params]
             bulb_names_string = ', '.join(bulb_names)
+            log(DEBUG_LEVEL_MAX, f'  [lights] bulb name {bulb_name} not found')     
             return {
                 "result": "error",
                 "reason" : f"bulb name {bulb_name} not found, must be one of these: {bulb_names_string}",
@@ -312,11 +329,17 @@ class LightManager():
         self.bulb_colors[i] = color
         for bulb_thread in self.bulb_threads:
             if bulb_thread.bulb_param['name'] == bulb_name:
+                log(DEBUG_LEVEL_MAX, f'  [lights] change_color for thread from manager for bulb {bulb_name} called')
                 bulb_thread.change_color(color)
                 return {
                     "result": "success",
                     "state" : color,
-                }                
+                }        
+                    
+        return {
+            "result": "error",
+            "reason" : f"bulb thread for bulb {bulb_name} not found",
+        }
 
     def get_color_hex(self, 
             bulb_name: str) -> str:
