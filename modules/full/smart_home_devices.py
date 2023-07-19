@@ -53,27 +53,34 @@ smartplug_names_string = ','.join(smartplug_names)
 device_names_string = ', '.join(bulb_names + smartplug_names)
 
 class set_smart_device_on_off(LinguFlexBase):
-    "Turn smart devices with given name on (True) or off (False)."
-    name: str = Field(..., description=f"Name of smart device to turn on or off, MUST be one of these: {device_names_string}")
+    "Turn smart devices or lamps with given names on (True) or off (False)."
+    names: List[str] = Field(..., description=f"Names of smart devices to turn on or off, MUST be one of these: {device_names_string}")
     turn_on: bool = Field(..., description="True = on, False = off")
 
     def execute(self):
-        # Check if device is a bulb
-        if self.name in bulb_names:
-            return light.set_bulb_on_off(self.name, self.turn_on)
-        else:
-            return smartplug.set_state(self.name, self.turn_on)
+        result = {}
+        for name in self.names:
+            # Check if device is a bulb
+            if name in bulb_names:
+                result[name] = light.set_bulb_on_off(name, self.turn_on)
+            else:
+                result[name] = smartplug.set_state(name, self.turn_on)
+        return result
     
 class get_smart_device_on_off_state(LinguFlexBase):
-    "Returns on/off state of smart devices with given name."
-    name: str = Field(..., description=f"Name of smart device to retrieve state from, MUST be one of these: {smartplug_names_string}")
+    "Returns on/off state of smart devices or lamps with given names."
+    names: List[str] = Field(..., description=f"Names of smart devices to retrieve state from, MUST be one of these: {smartplug_names_string}")
 
     def execute(self):
-        # Check if device is a bulb
-        if self.name in bulb_names:
-            return light.get_bulb_on_off_state(self.name)
-        else:
-            return smartplug.get_state(self.name)
+        result = {}
+        for name in self.names:
+            # Check if device is a bulb
+            if name in bulb_names:
+                result[name] = light.get_bulb_on_off_state(name)
+            else:
+                result[name] = smartplug.get_state(name)
+        return result
+
 
 
 class ShutdownHandler(BaseModule):    
