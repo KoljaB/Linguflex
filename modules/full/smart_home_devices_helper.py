@@ -30,6 +30,9 @@ class SmartBulbThread(threading.Thread):
                         state: bool) -> None:
         with self.action_condition:
             self.new_state = 'on' if state else 'off'
+            if self.new_state == 'on' and self.color == (0, 0, 0):
+                 self.new_color = (127, 127, 127)
+                            
             log(DEBUG_LEVEL_MAX, f'  [lights] thread of {self.bulb_param["name"]} set to {state}')
             self.action_condition.notify()          
 
@@ -58,7 +61,7 @@ class SmartBulbThread(threading.Thread):
             log(DEBUG_LEVEL_MAX, f'  [lights] {self.bulb_param["name"]} device state turned on')
             self.device.turn_on(nowait=False)
 
-        self.device.set_colour(rgb_tupel[0], rgb_tupel[1], rgb_tupel[2], nowait=True)        
+        self.device.set_colour(rgb_tupel[0], rgb_tupel[1], rgb_tupel[2], nowait=False)        
         
         # we don't ever flood the bulb, so safest bet is forcewait after set color
         time.sleep(0.2) 
@@ -76,14 +79,18 @@ class SmartBulbThread(threading.Thread):
         self.connection_event.set()
         # Get status of bulb    
         data = self.device.status()
-        self.state = 'off'
+        #self.state = 'off'
         if 'dps' in data:
             dps = data['dps']
-            if '20' in dps:
-                self.state = 'on' if dps['20'] else 'off'
+            # if '20' in dps:
+            #     self.state = 'on' if dps['20'] else 'off'
             if '24' in dps:
                 color = dps['24']
                 self.color = self.hsv_string_to_rgb(color)
+
+        data = self.device.state()
+        self.state = 'on' if('is_on' in data and (data['is_on'])) else 'off'
+
         self.new_color = self.color
         self.new_state = self.state
         log(DEBUG_LEVEL_MAX, f'  [lights] {name} color: {self.color}, device state: {self.state}')                            
@@ -93,11 +100,13 @@ class SmartBulbThread(threading.Thread):
             with self.action_condition:
                 action_condition_change = self.action_condition.wait(timeout=0.5)  
                 if action_condition_change:
-                    # log(DEBUG_LEVEL_MAX, f'  [lights] notified action_condition_change in thread for bulb {self.bulb_param["name"]}')
-                    # log(DEBUG_LEVEL_MAX, f'  [lights] self.new_color {self.new_color} self.color {self.color} self.new_state {self.new_state} self.state {self.state}')
+                    log(DEBUG_LEVEL_MAX, f'  [lights] notified action_condition_change in thread for bulb {self.bulb_param["name"]}')
+                    log(DEBUG_LEVEL_MAX, f'  [lights] {self.bulb_param["name"]} self.new_color {self.new_color} self.color {self.color} self.new_state {self.new_state} self.state {self.state}')
                     if self.new_color != self.color:
+                        log(DEBUG_LEVEL_MAX, f'  [lights] self.new_color was new, setting {self.new_color}')
                         self.set_color(self.new_color)
                     if self.new_state != self.state:
+                        log(DEBUG_LEVEL_MAX, f'  [lights] self.new_state was new, setting {self.new_state}')
                         if self.new_state == 'on':
                             self.device.turn_on()
                             self.state = 'on'
