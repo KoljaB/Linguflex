@@ -2,6 +2,7 @@ import imaplib
 import email
 from email.header import decode_header
 from datetime import datetime, timedelta
+from dateutil.parser import parse
 from html2text import HTML2Text
 from getpass import getpass
 import re
@@ -83,9 +84,9 @@ class EmailFetcher:
         subject = decode_header(email_message['Subject'])[0]
         decoded_subject = subject[0].decode(subject[1]) if subject[1] else subject[0]
 
-        # Get the 'Date' string, split at parentheses and take the first part
+        # Get the 'Date' string and parse it with dateutil
         date_str = email_message['Date'].split('(')[0].strip()
-        date = datetime.strptime(date_str, '%a, %d %b %Y %H:%M:%S %z').strftime('%d.%m.%Y %H:%M:%S')
+        date = parse(date_str).strftime('%d.%m.%Y %H:%M:%S')
 
         text_content = EmailFetcher.extract_text_content(email_message)
         summarized_content = EmailFetcher.summarize_content(text_content)
