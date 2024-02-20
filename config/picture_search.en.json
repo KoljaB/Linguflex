@@ -1,9 +1,0 @@
-{
-    "search_for_picture": 
-	{
-		"keywords": ["pictur*", "show*", "search*", "photo*", "photo*", "display*", "present*", "graphi*", "graphi*", "photogra*", "photogra*", "illustrat*", "visual*", "imag*", "pic*", "capture*"],
-		"init_prompt": "",
-		"success_prompt": "Confirm the successful finding and display of the picture.",
-		"fail_prompt": ""
-	}
-}

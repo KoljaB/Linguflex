@@ -1,0 +1,30 @@
+{
+    "set_bulb_light_color": 
+	{
+		"keywords": ["lamp*", "licht*", "farb*", "stimmung*", "leucht*", "wechsel*", "ambient*", "atmosphär*", "hell*", "dunk*", "dimm*", "stell*", "regulier*", "regel*", "ton*", "*zimmer*", "*raum*", "*rot*", "*blau*", "*grün*", "*gelb*", "*violett*", "*orange*", "*pink*", "schwarz*", "*weiß*", "*grau*", "*türkis*", "*gold*", "*silber*", "*beige*", "*braun*", "*flieder*", "*purpur*", "tür", "wintergarten", "couch", "pc", "altar", "*schalt*", "wohnzim*"],
+        "init_prompt": "",
+		"success_prompt": "Die Lampenfarben wurden erfolgreich geändert. Bitte verwende kreative und anschauliche Beschreibungen, Vergleiche mit Alltagsgegenständen und Assoziationen, um die neuen Farben in einem kurzen Satz zu vermitteln. Obwohl wir technische Farbcodes zur Definition der Farben verwenden müssen, ist es wichtig, dass wir diese Codes in unserer Kommunikation vermeiden. Der Grund dafür ist, dass wir eine Ausgabe schaffen möchten, die für jeden verständlich ist, unabhängig von seinem technischen Wissen oder Verständnis von Farbcodierungssystemen. Es ist daher UNGEMEIN WICHTIG, dass du KEINE TECHNISCHEN FARBCODES, einschließlich und insbesondere HEXADEZIMALCODES, in deiner Ausgabe verwendest. Lass uns die neuen Farben in wenigen Worten so malerisch und verständlich wie möglich und auf eine Weise darstellen, die für alle verständlich und zugänglich ist, ohne auf spezifische technische Codierung zurückzugreifen.",
+		"fail_prompt": ""
+	},
+    "get_bulb_light_colors": 
+	{
+		"keywords": ["lamp*", "licht*", "farb*", "stimmung*", "leucht*", "wechsel*", "ambient*", "atmosphär*", "hell*", "dunk*", "dimm*", "stell*", "regulier*", "regel*", "ton*", "*zimmer*", "*raum*", "*schalt*"],
+		"init_prompt": "",
+		"success_prompt": "Bitte verwende kreative und anschauliche Beschreibungen, Vergleiche mit Alltagsgegenständen und Assoziationen, um Farben in einem kurzen Satz zu vermitteln. Obwohl wir technische Farbcodes zur Definition der Farben verwenden müssen, ist es wichtig, dass wir diese Codes in unserer Kommunikation vermeiden. Der Grund dafür ist, dass wir eine Ausgabe schaffen möchten, die für jeden verständlich ist, unabhängig von seinem technischen Wissen oder Verständnis von Farbcodierungssystemen. Es ist daher UNGEMEIN WICHTIG, dass du KEINE TECHNISCHEN FARBCODES, einschließlich und insbesondere HEXADEZIMALCODES, in deiner Ausgabe verwendest. Lass uns die neuen Farben in wenigen Worten so malerisch und verständlich wie möglich und auf eine Weise darstellen, die für alle verständlich und zugänglich ist, ohne auf spezifische technische Codierung zurückzugreifen.",
+		"fail_prompt": ""
+	},
+    "set_smart_device_on_off": 
+    {
+        "keywords": ["steckdose*", "stecker*", "gerät*", "anschluss*", "smartplug*", "ein", "an", "aus", "schalt*", "*aktivier*", "mach*", "kanns*", "sorgen", "warm", "kalt", "kaffee*", "*schalt*", "start*", "wohnzim*", "ventilat*", "frischluft*", "luft", "bewegung", "weg*", "sturm", "orkan", "hurri*", "tornad*"],
+        "init_prompt": "",
+        "success_prompt": "Der Zustand des Smart Device wurde erfolgreich geändert. Erinnerung: Das Gerät ist jetzt entweder eingeschaltet oder ausgeschaltet.",
+        "fail_prompt": ""
+    },
+    "get_smart_device_on_off_state": 
+    {
+        "keywords": ["steckdose*", "stecker*", "gerät*", "anschluss*", "smartplug*", "ein", "an", "aus", "schalt*", "*aktivier*", "mach*", "kanns*", "sorgen", "warm", "kalt", "kaffee*", "*schalt*", "start*", "wohnzim*", "ventilat*", "frischluft*", "luft", "bewegung", "weg*", "sturm", "orkan", "hurri*", "tornad*"],
+        "init_prompt": "",
+        "success_prompt": "Der aktuelle Zustand des Smart Device wurde erfolgreich abgerufen. Erinnerung: Das Gerät ist entweder eingeschaltet oder ausgeschaltet.",
+        "fail_prompt": ""
+    }
+}

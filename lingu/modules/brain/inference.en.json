@@ -1,0 +1,23 @@
+{
+    "SwitchLanguageModel": 
+    {
+        "keywords": ["change", "model", "local", "llm", "gpt"],
+        "init_prompt": "",
+        "success_prompt": "Confirm change of speech model.",
+        "fail_prompt": ""
+    },
+    "PutContentToClipboard": 
+    {
+        "keywords": ["copy*", "clipboard", "clip", "transfer*", "store*", "save*", "memorize*"],
+        "init_prompt": "",
+        "success_prompt": "Confirm successful copying of content to the clipboard.",
+        "fail_prompt": ""
+    },
+    "LookIntoTheClipboard": 
+    {
+        "keywords": ["paste", "insert*", "clipboard", "retrieve", "fetch*", "transfer*", "restore", "call", "pull*"],
+        "init_prompt": "",
+        "success_prompt": "Confirm successful pasting/retrieval of content from the clipboard.",
+        "fail_prompt": ""
+    }
+}

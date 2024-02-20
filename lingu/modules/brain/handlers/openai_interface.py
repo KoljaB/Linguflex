@@ -1,0 +1,148 @@
+from .languagemodelbase import LLM_Base
+from openai import OpenAI
+from lingu import log, cfg
+from lingu import events
+import json
+
+# gpt-3.5-turbo
+# gpt-4
+# gpt-3.5-turbo-0613
+# gpt-3.5-turbo-16k-0613
+# gpt-4-0613
+# gpt-4-32k-0613
+openai_model = cfg("openai_model", default="gpt-3.5-turbo-1106")
+vision_model = cfg("see", "model", default="gpt-4-vision-preview")
+vision_max_tokens = cfg("see", "max_tokens", default=1000)
+
+
+class OpenaiInterface(LLM_Base):
+
+    def __init__(self, model=openai_model):
+        super().__init__()        
+
+        self.model = model
+        self.client = OpenAI()
+        self.fct_calls = []
+        self.assistant_call = ""
+        self.set_temperature(0.7)
+
+    def set_temperature(self, temperature):
+        log.inf(f"  [brain] setting temperature to {temperature}")
+        self.temperature = temperature
+
+    def set_model(self, model_name):
+        self.model = model_name
+        return self.model
+
+    def generate_image(
+            self,
+            messages,
+    ):
+        params = {
+            "model": vision_model,
+            # "temperature": self.temperature,
+            "messages": messages,
+            "stream": True,
+            "max_tokens": vision_max_tokens,
+        }
+
+        log.inf("  [brain] calling gpt vision with params:")
+        log.inf('    {}'.format(json.dumps(params, indent=4)))
+        log.inf('  Messages:')
+        log.inf('=>{}'.format(json.dumps(messages, indent=4)))
+
+        response = self.client.chat.completions.create(**params)
+
+        log.inf('  <= stream')
+
+        for chunk in response:
+            delta = chunk.choices[0].delta
+            content = delta.content
+            if content:
+                yield content
+
+    def generate(self, messages, tools=None):
+
+        def add_fct(fct):
+            fct["args"] = json.loads(fct["arguments"])
+            self.fct_calls.append(fct)
+            events.trigger("function_call_request", "brain", fct)
+
+        params = {
+            "model": self.model,
+            "temperature": self.temperature,
+            "messages": messages,
+            # prevent model from constantly saying "but, hey" bcs that sucks
+            "logit_bias": {35309: -100, 36661: -100},
+            "stream": True,
+        }
+
+        if tools and len(tools) > 0:
+            params["tools"] = tools
+            params["tool_choice"] = "auto"
+
+        log.inf("  [brain] calling openai with params:")
+        log.inf('    {}'.format(json.dumps(params, indent=4)))
+        log.inf('  Tools:')
+        log.inf('=>{}'.format(json.dumps(tools, indent=4)))
+        log.inf('  Messages:')
+        log.inf('=>{}'.format(json.dumps(messages, indent=4)))
+
+        response = self.client.chat.completions.create(**params)
+
+        log.inf('  <= stream')
+
+        fct = {}
+        self.assistant_call = ""
+
+        self.tool_calls_message = {
+                         "content": None,
+                         "role": "assistant",
+                         "tool_calls": []
+                       }
+        for chunk in response:
+            delta = chunk.choices[0].delta
+            content = delta.content
+
+            if delta.tool_calls:
+
+                tool = delta.tool_calls[0]
+
+                if tool.id:
+
+                    if "id" in fct:
+                        self.tool_calls_message["tool_calls"].append({
+                            "id": fct["id"],
+                            "function": {
+                                "arguments": fct["arguments"],
+                                "name": fct["name"]
+                            },
+                            "type": "function"
+                        })
+                        add_fct(fct)
+
+                    fct = {
+                        "arguments": "",
+                        "id": tool.id,
+                        "name": tool.function.name
+                    }
+                    events.trigger("function_call_start", "brain", fct)
+                else:
+                    fct["arguments"] += tool.function.arguments
+            else:
+                if content:
+                    yield content
+                elif chunk.choices[0].finish_reason:
+                    if chunk.choices[0].finish_reason == "tool_calls":
+                        self.tool_calls_message["tool_calls"].append({
+                            "id": fct["id"],
+                            "function": {
+                                "arguments": fct["arguments"],
+                                "name": fct["name"]
+                            },
+                            "type": "function"
+                        })
+                        add_fct(fct)
+
+        print(f"Recovered pieces: {self.tool_calls_message}")
+        events.trigger("answer_finished", "brain", fct)

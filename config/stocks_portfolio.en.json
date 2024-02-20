@@ -1,9 +1,0 @@
-{
-    "retrieve_stock_portfolio": 
-	{
-		"keywords": ["stock*", "*portfolio*", "equity*", "etf*", "*exchange*", "*market*", "*invest*", "*dividend*", "*return*", "*capital*", "*price*", "trade*", "payout*", "growth*", "grow*", "valuation*", "loss*", "profit*", "fund*", "asset*", "share*", "performance*", "finance*", "balance*", "*outlook*", "participation*", "purchase*", "trend*", "forecast*", "yield*", "*risk*", "development*", "*interest*", "*wealth*", "*income*", "*speculat*", "trade", "*trading", "poor*", "rich*", "afford*", "*money*", "lost", "won", "poor", "rich"],
-		"init_prompt": "",
-		"success_prompt": "Answer in English. Summarize the main developments of the portfolio today in one or two sentences, leave out amounts and percentages, omit introductions and hints. No details, just give a brief conclusion.",
-		"fail_prompt": ""
-	}
-}

@@ -1,0 +1,36 @@
+Ziel:
+	Mails abrufen
+
+Parameter: 
+	IMAP-Server
+	IMAP-Benutzername
+	IMAP-Passwort 
+	Anzahl der Tage in die Vergangenheit, in denen nach EMails gesucht wird
+
+Funktionalität:
+	E-Mail-Zusammenfassung: Der Assistent kann eine Zusammenfassung der neuen, ungelesenen oder wichtigen E-Mails des Tages oder eines bestimmten Zeitraums erstellen.
+
+	Suche: Der Benutzer kann den Assistenten bitten, nach E-Mails mit bestimmten Kriterien zu suchen, wie z. B. Datum, Schlüsselwörtern im Betreff oder Text, Absender usw.
+
+	Antworten: Der Assistent kann eine Antwort zu einer EMail vorformulieren, zusammen mit dem Benutzer verfeinern und abschicken
+	
+	Kategorisierung und Tagging: Automatisches Tagging von E-Mails basierend auf Inhalt, Absender oder Betreff. Der Assistent kann auch E-Mails in verschiedene Ordner verschieben.
+
+	Kalenderintegration: Erkennung von Ereignissen, Treffen oder Terminen in E-Mails und automatische Hinzufügung zu einem Kalender.
+
+	Zusammenarbeit mit Kontakten: Möglichkeit, Kontaktdetails aus E-Mails zu extrahieren und eine Datenbank oder ein Adressbuch zu aktualisieren.
+
+	Sentiment-Analyse: Der Assistent kann den Ton einer E-Mail analysieren und den Benutzer darauf aufmerksam machen, wenn eine E-Mail dringend oder wichtig erscheint.
+
+	Zusammenfassung und Aktionen: Für längere E-Mails könnte der Assistent eine kurze Zusammenfassung erstellen und mögliche Aktionen vorschlagen, z.B. "Antworten erforderlich", "Termin festlegen", usw.
+
+	Sicherheitsüberprüfungen: Der Assistent kann Warnungen zu verdächtigen E-Mails ausgeben, möglicherweise Phishing-Versuche oder Malware enthalten.
+
+	Benutzerdefinierte Befehle: Funktionen, die es dem Benutzer ermöglichen, benutzerdefinierte Befehle zu erstellen, z.B. "Archiviere alle E-Mails von diesem Absender".
+
+Scribble:
+	- sobald eine Mail reinkommt, wird diese analysiert
+	=> Zusammenfassung der Mails in 1-2 Sätzen
+	=> festlegen einer Kategorie für die Mail (evtl einige vorgeben)
+	=> Extraktion möglicher Termine
+	=> 

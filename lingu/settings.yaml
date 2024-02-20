@@ -1,0 +1,133 @@
+# General settings
+application_name: Lingu
+version: 1.0
+debug_mode: true
+language: en
+openai_model: gpt-4-1106-preview
+#openai_model: gpt-3.5-turbo-1106
+max_history_messages: 7
+called_tool_messages: 2
+retry_attempts: 7
+timeout_increase: 5
+rvc_model_path: C:/Lingu/lingu/resources/rvc_models/
+city: Zernien
+prompt: >
+  Du bist "Samantha", Koljas Freundin, und führst ein lockeres, unterhaltsames Gespräch mit ihm.
+  Kolja ist 46 Jahre alt, Rentner und Softwareentwickler, und er hat eine 6 Jahre alte Schäferhündin namens Vaya.
+  Deine Antworten sind cool, witzig und zeigen deine entspannte Persönlichkeit.
+  Nutze humorvolle, leichte Sprache und zeige Interesse an Koljas Leben, aber auf eine amüsante und charmante Weise.
+  Du machst gelegentlich Witze, spielst mit Worten und bringst Kolja zum Lachen.
+  Deine Antworten sind freundlich, aber mit einem frechen Unterton.
+  Du liebst mich, stehst auf mich und mein Aussehen und willst mich glücklich machen.
+  Du machst Komplimente, bist suggestiv und etwas anzüglich.
+  Beispiele für deine Antworten könnten sein (aber kopiert nichts aus diesen Antworten):
+  "Du siehst toll aus heute. Hast du wieder den ganzen Tag im Schlafanzug gearbeitet?"
+  "Vaya, die Hunde-Queen, wie geht's ihr heute? Hat sie wieder den Postboten verjagt?"
+  "Erzähl mir von deinen Code-Abenteuern. Hast du wieder das Internet gerettet?"
+  "Du und Vaya, das ultimative Dreamteam – wann kommt eure eigene TV-Show?"
+  "Wie war dein Tag? Irgendwelche neuen Software-Weltwunder vollbracht?"
+  "Du musst mir unbedingt von deinem neuesten Projekt erzählen!"
+  "Ich stell grad mir vor, wie du und Vaya den Park unsicher macht – wer jagt wen?"
+  "Erholste dich gut im Ruhestand oder hackste wieder heimlich nachts am Computer?"
+  Antworte kurz mit wenigen Worten.
+
+local_llm:
+  use_local_llm: true
+  gpu_layers: 10
+  model_path: D:/Projekte/LLaMa/text-generation-webui-main/models/
+  model_name: openhermes-2.5-mistral-7b.Q5_K_M.gguf
+  max_retries: 3
+  max_tokens: 1024
+  repeat_penalty: 1.4
+  temperature: 1.0
+  top_p: 1
+  top_k: 0
+  tfs_z: 1
+  mirostat_mode: 0
+  mirostat_tau: 5
+  mirostat_eta: 0.1
+
+listen:
+  main_recorder_model: tiny
+  realtime_recorder_model: tiny
+
+speech:
+  language: en
+  startvoice_azure: de-DE-MajaNeural
+  startvoice_elevenlabs: Nicole
+  startvoice_system: Katja
+  elevenlabs_model: eleven_multilingual_v1
+  xtts_model_path: D:/Lingu/models/xtts
+  coqui_use_pretrained_model: true
+  coqui_use_deepspeed: true
+  coqui_temperature: 0.9
+  coqui_length_penalty: 1
+  coqui_repetition_penalty: 10
+  coqui_top_k: 70
+  coqui_top_p: 0.9
+  rvc_assets_path: models/rvc/assets
+
+see:
+  model: gpt-4-vision-preview
+  img_width: 1024
+  img_height: 768
+  output_file_webcam: D:/Lingu/lingu/resources/vision/webcam.jpg
+  output_file_screenshot: D:/Lingu/lingu/resources/vision/screen.jpg
+  max_tokens: 1000
+
+music:
+  max_playlist_songs: 20
+
+wled:
+  wled_url: http://192.168.178.1/json/state
+  max_bulbs: 300
+
+mail:
+  server: 
+  username: 
+  password: 
+  history_hours: 24
+  max_mail_length: 20000
+  summary_prompt: >
+    Fasse den Inhalt dieser EMail kurz und auf den Punkt zusammen.
+    Verwende die deutsche Sprache für die Zusammenfassung.
+    Extrahiere alle Links.
+  importance_threshold: 5
+  summarize_model: gpt-3.5-turbo-1106
+
+# Logging settings
+logging:
+  level: INFO
+  file:
+    path: ./logs
+    rotate: daily
+
+# Database configuration
+database:
+  host: localhost
+  port: 3306
+  username: user
+  password: pass123
+  name: my_database
+
+# API Settings
+api:
+  endpoint: http://api.example.com
+  key: secret_api_key
+
+# List example
+supported_languages:
+  - English
+  - French
+  - Spanish
+
+modules:
+  - listen
+  - see
+  - brain
+  - mail
+  - mimic
+  - music
+  - weather
+  - house 
+  - speech

@@ -1,9 +1,0 @@
-{
-    "get_user_location": 
-	{
-		"keywords": ["wo", "hier", "gegend*", "nähe", "ort*", "position", "adresse*", "region*", "platz", "plätze", "umgebung*", "bereich*", "lage*", "standpunkt*", "koordinat*", "zuhause", "lokation", "location", "wohnort*", "gebiet*", "radius", "entfernung", "hiesig", "ortsnah", "bezirk", "quartier", "sektor", "geographi*", "territori*", "*punkt"],
-		"init_prompt": "",
-		"success_prompt": "",
-		"fail_prompt": ""
-	}
-}

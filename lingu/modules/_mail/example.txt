@@ -1,0 +1,71 @@
+Abruf der EMails.
+Erkennung von 6 neuen E-Mails durch den Assistenten.
+[Symbol ändert sich von 📪 zu 📫]
+
+Benutzer: "Wie sieht's mit Mails aus?"
+Assistent: "Sie haben 6 neue E-Mails. Möchten Sie eine Zusammenfassung hören oder sie selbst durchgehen?"
+Benutzer: "Kannst du mir bitte eine Zusammenfassung geben?"
+Assistent: "Sicher, hier ist eine Zusammenfassung Ihrer neuen E-Mails:
+'Treffen nächste Woche' von Ihrem Chef, Herr Müller, gesendet heute um 9:15 Uhr, scheint wichtig.
+'Urlaubsfotos' von Julia Meier, gesendet heute um 10:30 Uhr.
+'Rechnung #123' von Ihrem Internetanbieter, gesendet heute um 11:00 Uhr, könnte eine Zahlung erforderlich sein.
+'Monatlicher Newsletter' von XYZ Magazin, gesendet heute um 12:00 Uhr.
+'Lass uns aufholen!' von einem alten Freund, Peter, gesendet heute um 13:15 Uhr.
+'Feedback-Anfrage' von einem Ihrer letzten Einkäufe, gesendet heute um 14:30 Uhr.
+Möchten Sie auf eine dieser E-Mails antworten, weitere Details erfahren oder eine andere Aktion ausführen?"
+Benutzer: "Kann ich die E-Mail von meinem Chef sehen?"
+Assistent: "Sicher, das Thema lautet 'Treffen nächste Woche', und die Nachricht lautet: 'Guten Morgen, ich möchte ein Meeting für nächste Woche Montag um 10 Uhr ansetzen, um unser laufendes Projekt zu besprechen. Bitte bestätigen Sie Ihre Verfügbarkeit.' Möchten Sie jetzt antworten oder eine andere Aktion ausführen?"
+Benutzer: "Antworte mit 'Guten Morgen, Herr Müller, Montag um 10 Uhr passt für mich. Ich freue mich auf unser Meeting. Beste Grüße.'"
+Assistent: "Ihre Antwort wurde gesendet. Gibt es noch etwas, bei dem ich Ihnen behilflich sein kann?"
+Benutzer: "Trage das Meeting in meinen Terminkalender ein."
+Assistent: "Erledigt, der Termin wurde in ihren Kalender für Montag um 10 Uhr eingetragen."
+
+
+Analysis:
+=======================================================
+
+Benutzer: "Wie sieht's mit Mails aus?"
+Assistent: "Sie haben 6 neue E-Mails. Möchten Sie eine Zusammenfassung hören oder sie selbst durchgehen?"
+
+	Dies kann bereits umgesetzt werden. Besser wäre aber, wenn der Assistent bereits Datum, Absender und Titel kennen würde. 
+	(er könnte auf Fragen wie "ist eine Mail von XY dabei?" oder "von wann ist die neueste?" reagieren)
+
+Benutzer: "Kannst du mir bitte eine Zusammenfassung geben?"
+Assistent: "Sicher, hier ist eine Zusammenfassung Ihrer neuen E-Mails:
+'Treffen nächste Woche' von Ihrem Chef, Herr Müller, gesendet heute um 9:15 Uhr, scheint wichtig.
+'Urlaubsfotos' von Julia Meier, gesendet heute um 10:30 Uhr.
+'Rechnung #123' von Ihrem Internetanbieter, gesendet heute um 11:00 Uhr, könnte eine Zahlung erforderlich sein.
+'Monatlicher Newsletter' von XYZ Magazin, gesendet heute um 12:00 Uhr.
+'Lass uns aufholen!' von einem alten Freund, Peter, gesendet heute um 13:15 Uhr.
+'Feedback-Anfrage' von einem Ihrer letzten Einkäufe, gesendet heute um 14:30 Uhr.
+Möchten Sie auf eine dieser E-Mails antworten, weitere Details erfahren oder eine andere Aktion ausführen?"
+
+	Der Assistent benötigt eine Funktion, die er dazu aufrufen kann.
+	- summarize_mails
+
+	1. Daraufhin sollte Lingu:
+	- die erste/nächste unbearbeitete Email im UI öffnen
+	- der LLM die erste unbearbeitete Email als Antwort zur Verfügung stellen
+	- eine Funktion anbieten, die aufgerufen werden MUSS:
+	- summarize_mail(summarized mail)
+
+	2. Daraufhin sollte Lingu:
+	- die summary vorlesen
+	- die summary zu der EMail anhängen
+	- die EMail als "bearbeitet" markieren
+	- das ganze Speichern
+	- prüfen, ob weitere Mails zur Verfügung stehen
+	  falls ja => zurück zu 1.
+
+	Um das umsetzen zu können, dürfen neu abgerufenen EMails die vorhandenen Informationen nicht mehr überschreiben, sonst sind die Summaries futsch.
+	
+	Beim Abruf muss also geprüft werden, ob wirklich eine neue Mail 
+	reingekommen ist und nur diese zu den vorhandenen hinzugefügt 
+	werden.
+
+Benutzer: "Kann ich die E-Mail von meinem Chef sehen?"
+Assistent: "Sicher, das Thema lautet 'Treffen nächste Woche', und die Nachricht lautet: 'Guten Morgen, ich möchte ein Meeting für nächste Woche Montag um 10 Uhr ansetzen, um unser laufendes Projekt zu besprechen. Bitte bestätigen Sie Ihre Verfügbarkeit.' Möchten Sie jetzt antworten oder eine andere Aktion ausführen?"
+Benutzer: "Antworte mit 'Guten Morgen, Herr Müller, Montag um 10 Uhr passt für mich. Ich freue mich auf unser Meeting. Beste Grüße.'"
+Assistent: "Ihre Antwort wurde gesendet. Gibt es noch etwas, bei dem ich Ihnen behilflich sein kann?"
+Benutzer: "Trage das Meeting in meinen Terminkalender ein."
+Assistent: "Erledigt, der Termin wurde in ihren Kalender für Montag um 10 Uhr eingetragen."

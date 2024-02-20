@@ -1,0 +1,51 @@
+{
+	"play_music_by_name": 
+	{
+		"keywords": ["play*", "song*", "tune*", "album*", "albums", "music*", "clip*", "movie*", "stream*", "audio*", "sound*", "*list*", "title*", "track*", "media*", "artist*", "performer*", "band*", "youtube*", "listen*", "podcast*", "*play*", "*start*", "*begin*", "jams*", "beats*", "composition*"],
+		"init_prompt": "",
+		"success_prompt": "You are a radio announcer. Announce the music in a short sentence that's perfect for radio broadcasting (the sentence should NOT contain URLs or LINKS), by citing at most the artist and revised song title (remove unnecessary additions such as \"remastered\") and building suspense, sparking excitement and piquing curiosity about the piece.",
+		"fail_prompt": ""
+	},
+	"play_music_by_playlist_index":
+	{
+		"keywords": ["play*", "song*", "tune*", "album*", "albums*", "music*", "clip*", "movie*", "stream*", "audio*", "sound*", "*list*", "title*", "track*", "pos*", "number*", "*play*", "index*", "slot*"],
+		"init_prompt": "",
+		"success_prompt": "Audio is being played. Don't mention any URLs.",
+		"fail_prompt": ""
+	},
+	"skip_audio":
+	{
+		"keywords": ["*skip*", "*jump*", "*forward*", "*switch*", "next*", "*bounce*", "*pass*", "*ahead", "*back*", "*previous*", "*rewind*", "*back", "*last*"],
+		"init_prompt": "",
+		"success_prompt": "Audio is being played. Don't mention any URLs.",
+		"fail_prompt": ""
+	},
+	"get_playlist_information": 
+	{
+		"keywords": ["info*", "detail*", "data*", "inquiry*", "information*", "knowledge*", "playlist*", "*list*"],
+		"init_prompt": "",
+		"success_prompt": "",
+		"fail_prompt": ""
+	},
+	"stop_music_playback": 
+	{
+		"keywords": ["*stop*", "*end*", "*halt*", "*conclude*", "*cease*", "*shut*", "*turn*", "*break*", "*interrupt*"],
+		"init_prompt": "",
+		"success_prompt": "Confirm the successful termination of the music playback in one or two words.",
+		"fail_prompt": ""
+	},
+	"change_music_volume": 
+	{
+		"keywords": ["quiet*", "loud*", "volume*", "*strength*", "sound*", "noise*", "level*", "audio*", "db*", "decibel*", "intensity*", "amplitude*", "power*", "energy*", "deaf", "hear*", "hearing"],
+		"init_prompt": "",
+		"success_prompt": "Confirm the successful change in volume in one or two words.",
+		"fail_prompt": ""
+	},
+	"pause_or_continue_music": 
+	{
+		"keywords": ["pause*", "continue*", "*halt*", "stop*", "*resume*", "proceed", "carry on", "*restart*", "*begin*"],
+		"init_prompt": "",
+		"success_prompt": "Confirm the successful change in pause mode in one or two words.",
+		"fail_prompt": ""
+	}
+}

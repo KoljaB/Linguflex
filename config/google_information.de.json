@@ -1,9 +1,0 @@
-{
-    "search_world_wide_web": 
-	{
-		"keywords": [],
-		"init_prompt": "",
-		"success_prompt": "Analysiere die Suchergebnisse und fasse die für die Antwort notwendigen Informationen daraus zusammen. Schreibe KEIN HTML in die Ausgabe!",
-		"fail_prompt": ""
-	}
-}

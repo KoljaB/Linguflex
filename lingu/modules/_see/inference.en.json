@@ -1,0 +1,16 @@
+{
+    "LookAtWebcam": 
+		{
+			"keywords": ["see", "look", "watch", "screenshot", "webcam"],
+			"init_prompt": "",
+			"success_prompt": "Sum up what is seen in the webcam image.",
+			"fail_prompt": ""
+		},
+	"LookAtDesktop": 
+		{
+			"keywords": ["see", "look", "watch", "screenshot", "desktop"],
+			"init_prompt": "",
+			"success_prompt": "Sum up what is seen in the desktop screenshot.",
+			"fail_prompt": ""
+		}
+}

@@ -1,0 +1,23 @@
+{
+    "SwitchLanguageModel": 
+    {
+        "keywords": ["wechs*", "*modell", "komma", "lokal", "llm", "gpt"],
+        "init_prompt": "",
+        "success_prompt": "Bestätige den Wechsel des Sprachmodells.",
+        "fail_prompt": ""
+    },
+    "PutContentToClipboard": 
+    {
+        "keywords": ["schreib*", "kopier*", "*ablage", "clip*", "übertrag*", "speicher*", "ableg*", "copy*", "paste", "leg"],
+        "init_prompt": "",
+        "success_prompt": "Bestätige erfolgreiches Kopieren des Inhalts in die Zwischenablage.",
+        "fail_prompt": ""
+    },
+    "LookIntoTheClipboard": 
+    {
+        "keywords": ["schau*", "guck*", "füg", "einfüg*", "*ablage", "clip*", "ruf", "abruf*", "hol*", "übertrag*", "*herstell*", "aufruf*", "paste"],
+        "init_prompt": "",
+        "success_prompt": "Bestätige erfolgreiches Einfügen/Abholen des Inhalts aus der Zwischenablage.",
+        "fail_prompt": ""
+    }    
+}

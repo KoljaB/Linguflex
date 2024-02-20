@@ -1,0 +1,9 @@
+{
+    "switch_char": 
+		{
+			"keywords": ["char*", "verhalt*", "sei", "wirst", "werd*", "verwand*", "schlüpf*", "rolle", "verkörper*", "identität", "person", "figur", "avatar", "übernehm*", "übernimm", "profil", "wechs*", "tausch", "änder*", "pass", "persön*"],
+			"init_prompt": "",
+			"success_prompt": "Der Charakter bzw die Persönlichkeit wurde gewechselt.",
+			"fail_prompt": ""
+		}
+}

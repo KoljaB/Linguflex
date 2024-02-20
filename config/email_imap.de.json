@@ -1,9 +1,0 @@
-{
-    "retrieve_emails": 
-		{
-			"keywords": ["*mail*"],
-			"init_prompt": "",
-			"success_prompt": "Fasse E-Mails in äußerst knapper Form zusammen, ohne Buchstaben-Zahlen-Kombinationen wie Bestellnummern oder Rechnungsnummern.",
-			"fail_prompt": ""
-		}
-}

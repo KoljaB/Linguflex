@@ -1,0 +1,9 @@
+{
+    "RetrieveEmails": 
+		{
+			"keywords": ["*mail*"],
+			"init_prompt": "",
+			"success_prompt": "Fasse E-Mails in äußerst knapper Form zusammen. Deine Ausgabe wird vorgelesen, also keine Sonderzeichen, keine Buchstaben-Zahlen-Kombinationen wie Bestellnummern oder Rechnungsnummern, keine Auflistungen. Wenn eine EMail eine importance >= 7 hat, erwähne dass sie wichtig ist.",
+			"fail_prompt": ""
+		}
+}

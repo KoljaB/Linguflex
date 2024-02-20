@@ -1,0 +1,9 @@
+{
+    "switch_char": 
+		{
+			"keywords": ["charact*", "behav*", "be", "will", "becom*", "transform*", "slip*", "role", "embody*", "identity", "person", "figure", "avatar", "take over*", "assume", "profile", "switch*", "exchange", "chang*", "adapt", "personal*"],
+			"init_prompt": "",
+			"success_prompt": "The character or personality has been switched.",
+			"fail_prompt": ""
+		}
+}
