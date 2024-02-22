@@ -13,16 +13,12 @@ import os
 language = cfg("speech", "language", default="en")
 startvoice_azure = cfg(
     "speech", "startvoice_azure", default="en-US-JennyNeural")
-# startvoice_azure = "de-DE-MajaNeural" if language == "de" else "en-US-JennyNeural"
 elevenlabs_model = cfg(
     "speech", "elevenlabs_model", default="eleven_multilingual_v1")
-# elevenlabs_model = "eleven_multilingual_v1"
 startvoice_elevenlabs = cfg(
     "speech", "startvoice_elevenlabs", default="FunnyVoice")
-# startvoice_elevenlabs = "FunnyVoice"
 startvoice_system = cfg(
     "speech", "startvoice_system", default="Katja")
-# startvoice_system = "Katja"
 model_path = os.environ.get(
     "COQUI_MODEL_PATH2",
     default=cfg("speech", "xtts_model_path"))
@@ -35,7 +31,6 @@ coqui_top_k = int(cfg("speech", "coqui_top_k", default=70))
 coqui_top_p = float(cfg("speech", "coqui_top_p", default=0.9))
 coqui_pretrained = bool(cfg(
     "speech", "coqui_use_pretrained_model", default=True))
-print(f"XTTS model path: {model_path}")
 
 
 class Engines():

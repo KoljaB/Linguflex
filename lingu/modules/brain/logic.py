@@ -19,11 +19,13 @@ class BrainLogic(Logic):
 
         self.history = History(int(cfg("max_history_messages")))
         self.use_local_llm = bool(
-            cfg("use_local_llm", "local_llm", default=False))
+            cfg("local_llm", "use_local_llm", default=False))
 
         if self.use_local_llm:
+            log.inf("  [brain] using local language model")
             self.llm = LocalLLMInterface(self.history)
         else:
+            log.inf("  [brain] using openai language model")
             self.llm = OpenaiInterface()
 
         self.tools = None
@@ -205,12 +207,14 @@ class BrainLogic(Logic):
 
         self.trigger("assistant_text_start")
 
+        log.dbg("  [brain] creating assistant answer")
         assistant_response_stream = self.generate(
             user_text,
             tools_for_usertext,
             functions)
 
         assistant_text = ""
+        log.dbg("  [brain] processing assistant answer")
         for chunk in assistant_response_stream:
             assistant_text += chunk
             self.trigger("assistant_text", assistant_text)
@@ -218,6 +222,8 @@ class BrainLogic(Logic):
 
         if assistant_text:
             self.history.assistant(assistant_text)
+        else:
+            log.err("  [brain] no assistant text generated")
 
         self.trigger("assistant_text_complete", assistant_text)
         self.state.set_active(False)

@@ -1,26 +1,10 @@
 """
-Python script to download the models from Huggingface's model hub.
+Python script to download the ai models
+needed by linguflex from Huggingface's model hub.
 """
 
-from tqdm import tqdm
-import requests
+from huggingface_hub import hf_hub_download
 import os
-
-
-local_hubert_path = "models/rvc/assets/hubert"
-local_trained_path = "models/rvc/models"
-
-hf_hubert_url = "https://huggingface.co/KoljaB/RVC_Assets/resolve/main"
-hubert_base_file = "hubert_base.pt"
-hubert_input_file = "hubert_inputs.pth"
-
-hf_trained_url = "https://huggingface.co/KoljaB/RVC_Models/resolve/main"
-rvc_models = ["Lasinya", "Samantha"]
-
-hf_xtts_url = "https://huggingface.co/KoljaB/XTTS_Models/"
-xtts_models = ["Lasinya", "Samantha"]
-
-xtts_files = ["config.json", "model.pth", "speakers_xtts.pth", "vocab.json"]
 
 
 def create_directory(path):
@@ -30,57 +14,77 @@ def create_directory(path):
 
 def create_directories():
     create_directory("models")
+    create_directory("models/llm")
     create_directory("models/rvc")
     create_directory("models/rvc/assets")
+    create_directory("models/rvc/assets/hubert")
     create_directory("models/rvc/models")
     create_directory("models/xtts")
+    create_directory("models/xtts/Lasinya")
+    create_directory("models/xtts/Samantha")
 
-    create_directory(local_hubert_path)
-    create_directory(local_trained_path)
 
+def download_file(
+        url,
+        filename_server,
+        path_local
+        ):
 
-def download_file(url, filename):
-    if os.path.exists(filename):
-        print(f"File {filename} already exists.")
+    local_file = os.path.join(path_local, filename_server)
+    if os.path.exists(local_file):
+        print(f"File {filename_server} already exists in {path_local}.")
         return
 
-    print(f"Downloading {url} to {filename}...")
-    response = requests.get(url, stream=True)
-    with open(filename, "wb") as handle:
-        for data in tqdm(response.iter_content()):
-            handle.write(data)
+    print(f"Downloading {filename_server} from repo {url} to {path_local}")
+    hf_hub_download(
+        repo_id=url,
+        filename=filename_server,
+        local_dir=path_local)
 
 
 create_directories()
 
-# download hubert (rvc base model) files
+# download default local llm file
+print("Downloading default local llm model file")
 download_file(
-    os.path.join(hf_hubert_url, hubert_base_file),
-    os.path.join(local_hubert_path, hubert_base_file))
-download_file(
-    os.path.join(hf_hubert_url, hubert_input_file),
-    os.path.join(local_hubert_path, hubert_input_file))
+    "TheBloke/OpenHermes-2.5-Mistral-7B-GGUF",
+    "openhermes-2.5-mistral-7b.Q5_K_M.gguf", "models/llm")
 
+# download rvc base model (hubert) files
+print("Downloading hubert base model files")
+download_file(
+    "KoljaB/RVC_Assets", "hubert_base.pt", "models/rvc/assets/hubert")
+download_file(
+    "KoljaB/RVC_Assets", "hubert_inputs.pth", "models/rvc/assets/hubert")
 
 # download rvc trained model files
-for model in rvc_models:
-    download_file(
-        os.path.join(hf_trained_url, f"{model}.pth"),
-        os.path.join(local_trained_path, f"{model}.pth"))
-    download_file(
-        os.path.join(hf_trained_url, f"{model}.index"),
-        os.path.join(local_trained_path, f"{model}.index"))
-
+print("Downloading rvc trained model files")
+download_file(
+    "KoljaB/RVC_Models", "Lasinya.pth", "models/rvc/models")
+download_file(
+    "KoljaB/RVC_Models", "Lasinya.index", "models/rvc/models")
+download_file(
+    "KoljaB/RVC_Models", "Samantha.pth", "models/rvc/models")
+download_file(
+    "KoljaB/RVC_Models", "Samantha.index", "models/rvc/models")
 
 # download xtts trained model files
-for model in xtts_models:
-    xtts_path = hf_xtts_url + model + "/resolve/main"
-    local_path = os.path.join("models/xtts", model)
+print("Downloading xtts trained model files (Lasinya)")
+download_file(
+     "KoljaB/XTTS_Lasinya", "config.json", "models/xtts/Lasinya")
+download_file(
+     "KoljaB/XTTS_Lasinya", "vocab.json", "models/xtts/Lasinya")
+download_file(
+     "KoljaB/XTTS_Lasinya", "speakers_xtts.pth", "models/xtts/Lasinya")
+download_file(
+     "KoljaB/XTTS_Lasinya", "model.pth", "models/xtts/Lasinya")
 
-    for file in xtts_files:
-        download_file(
-            os.path.join(xtts_path, file),
-            os.path.join(local_path, file))
-
-
-
+print("Downloading xtts trained model files (Samantha)")
+download_file(
+    "KoljaB/XTTS_Samantha", "config.json", "models/xtts/Samantha")
+download_file(
+    "KoljaB/XTTS_Samantha", "vocab.json", "models/xtts/Samantha")
+download_file(
+    "KoljaB/XTTS_Samantha", "speakers_xtts.pth", "models/xtts/Samantha")
+download_file(
+    "KoljaB/XTTS_Samantha", "model.pth", "models/xtts/Samantha")

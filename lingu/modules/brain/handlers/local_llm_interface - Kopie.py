@@ -1,10 +1,12 @@
 from llama_cpp.llama_speculative import LlamaPromptLookupDecoding
 from .languagemodelbase import LLM_Base
 from lingu import cfg, log, exc, prompt, Prompt
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 from .history import History
 import instructor
 import llama_cpp
+from typing import Annotated
+from pydantic.functional_validators import AfterValidator
 
 gpu_layers = int(cfg("local_llm", "gpu_layers", default=17))
 model_path = cfg("local_llm", "model_path", default="models/")
@@ -25,7 +27,7 @@ mirostat_eta = float(cfg("local_llm", "mirostat_eta", default=0.1))
 
 class ChatAnswer(BaseModel):
     answer: str = Field(
-        ..., description="Answer to the user. Must contain at least one word."
+        ..., description="Answer to the user. Must contain at least one word. DO NOT LEAVE BLANK!"
     )
 
 
@@ -144,8 +146,7 @@ class LocalLLMInterface(LLM_Base):
             log.inf(f"  [brain] {self.model_name} no function to call")
             return False, None
 
-        log.inf(f"  [brain] {self.model_name} wants to "
-                f"call function {fct_call}")
+        log.inf(f"  [brain] {self.model_name} wants to call function {fct_call}")
 
         tool = self.tools.get_tool_by_name(fct_call)
         if not tool:
@@ -160,9 +161,7 @@ class LocalLLMInterface(LLM_Base):
             user_message
         ]
 
-        log.dbg(f"  [brain] {self.model_name} "
-                f"calling tool {fct_call} "
-                f"with messages {messages}")
+        log.dbg(f"  [brain] {self.model_name} calling tool {fct_call} with messages {messages}")
         try:
             extraction_stream = self.create(
                 response_model=tool.instance,
@@ -237,15 +236,19 @@ class LocalLLMInterface(LLM_Base):
                 log.dbg(f"  [brain] {self.model_name} tool name: "
                         f"{name} description: {description}")
 
+        answer = ""
+
         log.dbg(f"  [brain] {self.model_name} creating extraction stream")
-        log.dbg(f"  [brain] Parameters: "
-                f"max_tokens={max_tokens}, "
+        log.dbg(f"  [brain] Parameters: max_retries={max_retries}, "
+                f"messages={messages}, max_tokens={max_tokens}, "
                 f"repeat_penalty={repeat_penalty}, temperature={temperature}, "
                 f"top_p={top_p}, top_k={top_k}, tfs_z={tfs_z}, "
                 f"mirostat_mode={mirostat_mode}, mirostat_tau={mirostat_tau}, "
                 f"mirostat_eta={mirostat_eta}")
 
-        response = self.llama.create_chat_completion_openai_v1(
+        extraction_stream = self.create(
+            response_model=instructor.Partial[ChatAnswer],
+            max_retries=max_retries,
             messages=messages,
             stream=True,
             max_tokens=max_tokens,
@@ -259,12 +262,29 @@ class LocalLLMInterface(LLM_Base):
             mirostat_eta=mirostat_eta,
         )
 
-        for chunk in response:
-            delta = chunk.choices[0].delta
-            content = delta.content
+        log.dbg(f"  [brain] {self.model_name} processing extraction stream")
 
-            if content:
-                yield content
+        for extraction in extraction_stream:
+            if not extraction.answer:
+                continue
+
+            print(f"\r{extraction.answer}", end="", flush=True)
+
+            # Calculate the length of the new part in the extraction.
+            new_part_length = len(extraction.answer) - len(answer)
+
+            # Check if there is a new part in the extraction.
+            if new_part_length > 0:
+                # Extract the new part from the extraction.
+                new_part = extraction.answer[-new_part_length:]
+
+                # Yield the new part.
+                yield new_part
+
+            # Update the answer with the current extraction.
+            answer = extraction.answer
+
+        log.dbg(f"  [brain] {self.model_name} extraction stream processed")
 
     def set_temperature(self, temperature):
         log.inf(f"  [brain] setting temperature to {temperature}")

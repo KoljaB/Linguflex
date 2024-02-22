@@ -93,7 +93,6 @@ class Symbol(QWidget):
         Args:
             is_active (bool): The new active state to set.
         """
-        print(f"set_disabled: {is_disabled}")
         self.is_disabled = is_disabled
         self.update()
 

@@ -24,6 +24,9 @@ class SettingsManager:
         """
         self.file_path: str = file_path
         self.settings: Dict[str, Any] = self.load_settings()
+        if not self.settings:
+            log.err("No settings loaded.")
+            exit(0)
 
     def load_settings(self) -> Dict[str, Any]:
         """
@@ -62,6 +65,7 @@ class SettingsManager:
         Returns:
             Any: The value of the setting or the default value if not found.
         """
+
         current_level = self.settings
         for key in keys:
             if isinstance(current_level, dict) and key in current_level:
