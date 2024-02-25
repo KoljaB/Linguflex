@@ -4,13 +4,13 @@
 This guide will help you set up your environment for the project. Please follow the steps carefully.
 
 ## Prerequisites
-- Python 3.10.9
+- Python 3.10.9  
   https://www.python.org/downloads/release/python-3109/
-- NVIDIA CUDA Toolkit installed (11.8 recommended)
+- NVIDIA CUDA Toolkit installed (11.8 recommended)  
   https://developer.nvidia.com/cuda-11-8-0-download-archive
-- NVIDIA cuDNN installed (8.7.0 for CUDA 11.x recommended):
+- NVIDIA cuDNN installed (8.7.0 for CUDA 11.x recommended)  
   https://developer.nvidia.com/rdp/cudnn-archive
-- ffmpeg installed
+- ffmpeg installed  
   https://ffmpeg.org/download.html
 
 ## Step-by-Step Installation
