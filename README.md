@@ -9,11 +9,11 @@ Linguflex 2.0 emerges from a deep-rooted passion for science fiction, aspiring t
 ## Key Advancements in 2.0
 
 ### Performance Focus
-- **Ultra-Low Latency:** We've fine-tuned every aspect of Linguflex to minimize response times, achieving unparalleled speed in both language model communication and text-to-speech (TTS) generation.
+- **Ultra-Low Latency:** Every aspect of Linguflex was fine-tuned to minimize response times, achieving unparalleled speed in both language model communication and text-to-speech (TTS) generation.
 - **Local Operation:** Full functionality is maintained locally, encompassing speech-to-text, TTS, and language model inference, ensuring privacy and reliability.
 - **High-Quality Audio:** Integrating advanced voice clone technology for real-time post-processing, Linguflex offers a near-Elevenlabs quality in local TTS synthesis.
 - **Enhanced Functionality:** Streamlined function selection allows Linguflex to quickly adapt and respond to a wide range of text-based commands and queries.
-- **Developer-Friendly:** Building new modules is more intuitive and efficient, thanks to our minimalistic and clear coding framework.
+- **Developer-Friendly:** Building new modules is more intuitive and efficient, thanks to the minimalistic and clear coding framework.
 
 ### Core Features
 - **Listen (Audio Input Module):** Serving as Linguflex's auditory system, this module captures spoken instructions via the microphone with precision.
