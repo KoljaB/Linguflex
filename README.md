@@ -38,4 +38,4 @@ Linguflex 2.0 emerges from a deep-rooted passion for science fiction, aspiring t
 
 ## Getting Started
 
-To embark on your journey with Linguflex 2.0, follow our detailed [Installation Guide](https://github.com/KoljaB/Linguflex/blob/lingu-2.0-preview/installation_guide.md). This guide provides step-by-step instructions to set up the core software and harness the full potential of Linguflex.
+To embark on your journey with Linguflex 2.0, follow our detailed [Installation Guide](https://github.com/KoljaB/Linguflex/blob/lingu-2.0-preview/installation_guide.md). This guide provides step-by-step instructions to set up the core software of Linguflex.
