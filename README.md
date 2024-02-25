@@ -21,7 +21,7 @@ Linguflex 2.0 emerges from a deep-rooted passion for science fiction, aspiring t
 - **Speech (Audio Output Module):** A versatile speech engine offering customizable TTS options, various provider choices, and advanced voice tuning capabilities, including Realtime Voice Cloning (RVC).
 
 ### Current Expansion Modules
-- **Mimic:** This creative tool allows users to design custom AI characters, assign unique voices crafted with the Speech module, and seamlessly switch between them.
+- **Mimic:** This creative tool allows users to design custom AI characters, assign unique voices created with the Speech module, and switch between them.
 - **Music:** A voice-command module for playing selected songs or albums, enhancing the user experience with musical integration.
 
 ### Modules Coming Soon
