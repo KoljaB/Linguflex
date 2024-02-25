@@ -30,7 +30,7 @@ Linguflex 2.0 emerges from a deep-rooted passion for science fiction, aspiring t
 - **House:** Smart Home control for Tuya-compatible devices, enhancing your living experience.
 - **See:** Empower the assistant with visual capabilities using the GPT Vision API. Enables processing of webcam pictures and desktop screenshots.
 - **Calendar:** Manages personal calendars and appointments, including Google Calendar integration.
-- **Search:** Conducts comprehensive text and image searches using the Google Search API.
+- **Search:** Performs text and image searches using the Google Search API.
 - **Memory:** Stores and retrieves JSON-translatable data.
 - **News:** Delivers compact summaries of current news.
 - **Finance:** Offers financial management integrating various financial APIs for real-time tracking of investments.
