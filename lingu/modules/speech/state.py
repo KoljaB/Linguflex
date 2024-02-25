@@ -5,7 +5,7 @@ class SpeechState(State):
     def __init__(self):
         super().__init__()
         self.engine_index = 0
-        self.engine_name = "azure"
+        self.engine_name = "system"
         self.large_symbol = "👄"
 
         self.azure_api_key = ""
