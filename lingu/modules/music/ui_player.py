@@ -3,7 +3,8 @@ from PyQt6.QtWidgets import (
     QVBoxLayout,
     QTableWidgetItem,
     QStyleOptionViewItem,
-    QAbstractItemView
+    QAbstractItemView,
+    QHeaderView
 )
 from qfluentwidgets import (
     TableWidget,
@@ -13,7 +14,7 @@ from qfluentwidgets import (
     TableItemDelegate,
     # setCustomStyleSheet
 )
-from PyQt6.QtCore import pyqtSignal, QModelIndex, Qt
+from PyQt6.QtCore import pyqtSignal, QModelIndex, Qt, QTimer
 from PyQt6.QtGui import QFont, QPalette
 import copy
 
@@ -158,7 +159,6 @@ class PlayerWidget(QWidget):
                     audio_information["playlist"])
 
                 self.playlist.blockSignals(False)
-                self.playlist.resizeColumnsToContents()
 
                 if audio_index_changed:
                     self.current_playing_row = audio_information["audio_index"]
@@ -177,3 +177,21 @@ class PlayerWidget(QWidget):
                         QAbstractItemView.ScrollHint.EnsureVisible
                     )
                     self.playlist.viewport().update()
+
+                # Solution 1: Call resizeColumnsToContents after a short delay
+                # QTimer.singleShot(100, self.playlist.resizeColumnsToContents)
+
+                # Solution 2: Set a minimum width for the "Title" column
+                self.playlist.setColumnWidth(2, 150)
+
+                # Solution 3: Use QHeaderView stretch mode for the "Title" column
+                header = self.playlist.horizontalHeader()
+                header.setSectionResizeMode(
+                    0,
+                    QHeaderView.ResizeMode.ResizeToContents)
+                header.setSectionResizeMode(
+                    1,
+                    QHeaderView.ResizeMode.ResizeToContents)
+                header.setSectionResizeMode(
+                    2,
+                    QHeaderView.ResizeMode.Stretch)

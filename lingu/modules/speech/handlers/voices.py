@@ -39,6 +39,12 @@ class Voices():
     def send_voices(self):
         events.trigger("voices", "speech", self.state.voices)
 
+    def select_first_voice(self, engine):
+        engine_name = engine.engine_name
+        voices = self.get_voices(engine_name)
+        if len(voices) > 0:
+            engine.set_voice(voices[0])
+
     def save_voice(self, voice, voice_index):
         log.dbg(f"  saving voice {voice} to index {voice_index}")
 

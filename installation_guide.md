@@ -6,7 +6,7 @@ This guide will help you set up your environment for the project. Please follow 
 ## Prerequisites
 - Python 3.10.9  
   https://www.python.org/downloads/release/python-3109/
-- NVIDIA CUDA Toolkit installed (11.8 recommended)  
+- NVIDIA CUDA Toolkit installed (11.8 STRONGLY recommended)  
   https://developer.nvidia.com/cuda-11-8-0-download-archive
 - NVIDIA cuDNN installed (8.7.0 for CUDA 11.x recommended)  
   https://developer.nvidia.com/rdp/cudnn-archive
@@ -16,12 +16,19 @@ This guide will help you set up your environment for the project. Please follow 
 ## Step-by-Step Installation
 
 1. **Set up Python Virtual Environment:**
+   Download Python 3.10.9 and prepare a virtual environment:
+
    ```bash
    python -m venv test_env
-   test_env\Scripts\activate.bat
    ```
 
-   If you have multiple Python installations or environments, use path_to_your_python_exe/python.exe -m venv test_env, where path_to_your_python_exe is the specific path to the Python 3.10.9 executable needed for this project.
+   **Note:** Adjust to your python 3.10.9 exeutable (for example you might need to call C:\Python3-10-9\python.exe -m venv test_env).
+
+   Start that environment:
+
+   ```bash
+   test_env\Scripts\activate.bat
+   ```
 
 2. **Upgrade pip:**
    ```bash
@@ -33,10 +40,7 @@ This guide will help you set up your environment for the project. Please follow 
    pip install -r requirements.txt
    pip install RealtimeSTT
    pip install RealtimeTTS
-   pip install torch==2.2.0+cu118 torchaudio==2.2.0+cu118 --index-url https://download.pytorch.org/whl/cu118
-   pip install numpy==1.23.5
-   pip install pyautogui
-   pip install opencv-python
+   pip install torch==2.1.2+cu118 torchaudio==2.1.2+cu118 --index-url https://download.pytorch.org/whl/cu118
    ```
 
    **Note:** Adjust Torch installation according to your CUDA version.
@@ -50,7 +54,12 @@ This guide will help you set up your environment for the project. Please follow 
    - [Deepspeed on Windows](https://github.com/daswer123/deepspeed-windows-wheels)
    - [Alltalk TTS Deepspeed Options](https://github.com/erew123/alltalk_tts?tab=readme-ov-file#-deepspeed-installation-options)
 
-5. **Install llama-cpp-python:**
+   **Note:** I used `pip install https://github.com/daswer123/xtts-webui/releases/download/deepspeed/deepspeed-0.11.2+cuda118-cp310-cp310-win_amd64.whl` for my Windows 10 system. 
+
+5. **Install some more dependencies:**
+   pip install pyautogui opencv-python openai_token_counter instructor
+
+6. **Install llama-cpp-python:**
    ```bash
    pip install llama-cpp-python --force-reinstall --upgrade --no-cache-dir --verbose
    ```
@@ -71,12 +80,17 @@ This guide will help you set up your environment for the project. Please follow 
      ```
      before executing the pip install command.
 
-6. **Download models:**
+7. **Reinstal numpy:**
+   ```bash
+   pip install numpy==1.23.5
+   ```
+
+8. **Download models:**
    ```bash
    python download_models.py
    ```
 
-7. **Adjust settings:**
+9. **Adjust settings:**
    - adjust lingu/settings.yaml to configure linguflex to your environment
    - setup the needed environment keys
      - OPENAI_API_KEY to use GPT API for answers
@@ -84,7 +98,7 @@ This guide will help you set up your environment for the project. Please follow 
      - ELEVENLABS_API_KEY to use Elevenlabs TTS
      - GOOGLE_API_KEY to use Music Playout
 
-8. **Start linguflex:**
+10. **Start linguflex:**
    - start run.bat or type:
       ```bash
       python -m lingu.core.run

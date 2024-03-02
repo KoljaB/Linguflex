@@ -19,9 +19,10 @@ startvoice_elevenlabs = cfg(
     "speech", "startvoice_elevenlabs", default="FunnyVoice")
 startvoice_system = cfg(
     "speech", "startvoice_system", default="Katja")
-model_path = os.environ.get(
-    "COQUI_MODEL_PATH2",
-    default=cfg("speech", "xtts_model_path"))
+model_path = cfg("speech", "xtts_model_path")
+# model_path = os.environ.get(
+#     "COQUI_MODEL_PATH",
+#     default=cfg("speech", "xtts_model_path"))
 coqui_use_deepspeed = bool(cfg("speech", "coqui_use_deepspeed", default=True))
 coqui_temperature = float(cfg("speech", "coqui_temperature", default=0.9))
 coqui_length_penalty = float(cfg("speech", "coqui_length_penalty", default=1))
@@ -93,6 +94,7 @@ class Engines():
                     language=language,
                     speed=1.0,
                     specific_model=self.state.coqui_model,
+                    local_models_path=self.model_path,
                     voices_path="lingu/resources",
                     voice="female.json",
                     temperature=coqui_temperature,
@@ -152,6 +154,9 @@ class Engines():
         self.switch_engine(engine_name)
 
     def switch_engine(self, engine_name):
+        import traceback
+        print("switch_engine called from:")
+        print(traceback.format_stack())
 
         engine_name = engine_name.lower()
         if self.engine and self.state.engine_name == engine_name:
@@ -187,8 +192,6 @@ class Engines():
             self.engine = self.get_engine(engine_name)
             self.state.engine_name = "system"
 
-        log.dbg(f"trying to switch engine to {self.state.engine_name}")
-
         if self.stream:
             self.stream.stop()
             self.stream.load_engine(self.engine)
@@ -218,6 +221,10 @@ class Engines():
         ]
 
     def set_coqui_model(self, model):
+        import traceback
+        print(f"DEBUG set_coqui_model({model}) called from:")
+        print(traceback.format_stack())
+
         if self.coqui_engine:
             self.state.coqui_model = model
             if self.coqui_engine.specific_model != model:

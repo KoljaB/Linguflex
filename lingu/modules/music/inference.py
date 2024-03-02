@@ -5,7 +5,7 @@ Music Playout Module
 
 """
 
-from lingu import Invokable, Populatable
+from lingu import Populatable
 from pydantic import Field
 from .logic import logic
 import enum
@@ -20,27 +20,48 @@ class play_music_by_name(Populatable):
         return logic.load_and_play(self.name_or_search_terms, not self.single_song)
 
 
-@Invokable
-def stop_music_playback():
+class stop_music_playback(Populatable):
     "Stops playback of music"
 
-    logic.player.stop()
-    return "playback stopped"
+    def on_populated(self):
+        logic.player.stop()
+        return "playback stopped"
 
 
-@Invokable
-def pause_or_continue_music():
+class pause_or_continue_music(Populatable):
     "Switches between music playback pause mode or continue play mode"
 
-    logic.player.pause()
-    return "music pause mode switched"
+    def on_populated(self):
+        logic.player.pause()
+        return "music pause mode switched"
 
 
-@Invokable
-def get_playlist_information():
+class get_playlist_information(Populatable):
     "FIRST call start_music_playback with single_song=False before you call this; ONLY THEN you may retrieve information about that playlist"
 
-    return logic.player.get_playlist_information()
+    def on_populated(self):
+        return logic.player.get_playlist_information()
+
+# @Invokable
+# def stop_music_playback():
+#     "Stops playback of music"
+
+#     logic.player.stop()
+#     return "playback stopped"
+
+# @Invokable
+# def pause_or_continue_music():
+#     "Switches between music playback pause mode or continue play mode"
+
+#     logic.player.pause()
+#     return "music pause mode switched"
+
+
+# @Invokable
+# def get_playlist_information():
+#     "FIRST call start_music_playback with single_song=False before you call this; ONLY THEN you may retrieve information about that playlist"
+
+#     return logic.player.get_playlist_information()
 
 
 class VolumeDirection(enum.Enum):

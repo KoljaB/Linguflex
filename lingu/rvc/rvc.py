@@ -13,8 +13,10 @@ import re
 
 flag_vc = False
 rvc_model_path = cfg("rvc_model_path")
-PTH_DEFAULT = rvc_model_path + "Samantha.pth"
-INDEX_DEFAULT = rvc_model_path + "Samantha.index"
+# if not rvc_model_path.endswith("/"):
+#     rvc_model_path += "/"
+PTH_DEFAULT = os.path.join(rvc_model_path, "Samantha.pth")
+INDEX_DEFAULT = os.path.join(rvc_model_path, "Samantha.index")
 
 
 def _stream_play_worker(
@@ -401,7 +403,7 @@ class RealtimeRVCBase:
             outdata[:] = (
                 infer_wav[: self.block_frame].repeat(2, 1).t().cpu().numpy()
             )
-        total_time = time.perf_counter() - start_time
+        # total_time = time.perf_counter() - start_time
         # printt("Infer time: %.2f", total_time)
 
     def set_pitch(self, pitch):
@@ -439,8 +441,8 @@ class RealtimeRVC:
             model_name = "Samantha"
 
         self.rvc = RealtimeRVCBase(
-            pth=rvc_model_path + model_name + ".pth",
-            index=rvc_model_path + model_name + ".index"
+            pth=os.path.join(rvc_model_path, model_name + ".pth"),
+            index=os.path.join(rvc_model_path, model_name + ".index")
         )
         self.rvc.start_vc()
 
@@ -558,57 +560,7 @@ class RealtimeRVC:
         # print("Setting RVC model to", model_name)
         self.unload_model()
         self.rvc = RealtimeRVCBase(
-            pth=rvc_model_path + model_name + ".pth",
-            index=rvc_model_path + model_name + ".index"
+            pth=os.path.join(rvc_model_path, model_name + ".pth"),
+            index=os.path.join(rvc_model_path, model_name + ".index")
         )
         self.rvc.start_vc()
-
-    # def get_indexfiles(self):
-    #     path = "lingu/resources/rvc_models"
-    #     import os
-    #     import glob
-    #     import re
-
-    #     indexfiles = []
-    #     for file in glob.glob(os.path.join(path, "*.index")):
-    #         indexfile = os.path.basename(file)
-    #         indexfile = re.sub(r"\.index$", "", indexfile)
-    #         indexfiles.append(indexfile)
-
-    #     return indexfiles
-
-# if __name__ == "__main__":
-
-#     print ("Starting RVC")
-
-#     rvc = RealtimeRVC()
-#     rvc.start()
-
-#     from RealtimeTTS import TextToAudioStream, CoquiEngine
-
-#     # def dummy_generator():
-#     #     yield "Dies ist die Sprachausgabe eines lokalen neuronalen Netzes, welches auf eine süße Frauenstimme feingetuned wurde. Anschließend wird die Stimme von einem weiteren neuronalen Netz, ebenfalls auf eine süße Frauenstimme feingetuned, per post processing optimiert. Das Ergebnis ist eine lokale Echtzeitstimme, die der Qualität von Elevenlabs in nichts nachsteht. "
-#     #     #yield "So, mein Lieber. Das hier ist die aktuelle Qualität meiner neuronalen Echtzeit-Sprachausgabe. Ist die nicht absolut abgefahren geil? Ich könnte Luftsprünge machen vor Freude. Endlich eine emotionale Sprachausgabe, geil oder? Ich hoffe, du bist zufrieden damit. Ich bin es jedenfalls. Ich finde, das ist tatsächlich richtig phänomenale next-level Sprachausgabe, oder etwa nicht? Jetzt sag doch auch mal was dazu! Ich laber mir hier den Mund fusselig und du sagst einfach kein Wort. Das ist doch nicht fair!"
-
-#     import logging
-#     logging.basicConfig(level=logging.DEBUG)    
-#     engine = CoquiEngine(language="de", specific_model="Lasinya", voice="Lasinya_Reference.wav", use_deepspeed=True, pretrained=False)
-#     stream = TextToAudioStream(engine)
-
-#     # let user input text
-#     input_text = input("Enter text: ")
-
-
-#     while input_text:
-#         try:
-#             rvc.init()
-#             stream.feed(input_text)
-#             stream.play(output_wavfile="Lasinya_synth.wav", on_audio_chunk=rvc.feed, muted=True)
-#             rvc.stop_and_wait()
-#             input_text = input("Enter text: ")
-#         except KeyboardInterrupt:
-#             break
-
-#     print("Stopping stream")
-#     rvc.shutdown()
-#     engine.shutdown()

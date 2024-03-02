@@ -367,11 +367,18 @@ class SpeechUI(UI):
                 if "voice_name" in self.voice:
                     self.engine_widget.select_voice.setCurrentText(
                         self.voice["voice_name"])
+                print("DEBUG handle coqui model")
                 if "model" in self.voice:
                     self.engine_widget.select_model.setCurrentText(
                         self.voice["model"])
+                    print(f"DEBUG model in self.voice, setting model to "
+                          f"{self.voice['model']}")
                     logic.engines.set_coqui_model(self.voice["model"])
                 else:
+                    print("DEBUG model not in self.voice, setting model to "
+                          "v2.0.2")
+                    self.engine_widget.select_model.setCurrentText(
+                        "v2.0.2")
                     logic.engines.set_coqui_model("v2.0.2")
                 logic.voices.set_voice_data()
             elif self.voice["engine"] == "openai":
@@ -388,13 +395,17 @@ class SpeechUI(UI):
                         self.voice["voice_name"])
         else:
             self.voice = None
-            self.handle_engine_change(0)
+            engine_index = state.engine_index
+            if engine_index < 0 or engine_index > 4:
+                engine_index = 0
+            self.handle_engine_change(engine_index)
+            if logic.engines.engine.engine_name == "coqui":
+                self.engine_widget.select_model.setCurrentText(
+                    "v2.0.2")
             self.select_voice.setCurrentText("")
             self.rvc_groupbox.setChecked(False)
             self.rvc_pitch.setValue(0)
             self.label_rvc_pitch.setText("0")
-            voices = logic.voices.get_voices("system")
-            logic.engines.set_voice_instance("system", voices[0])
 
         self.rvc_groupbox.blockSignals(False)
         self.rvc_pitch.blockSignals(False)
@@ -414,6 +425,10 @@ class SpeechUI(UI):
     def test_voice(self):
         text = self.voice_test.toPlainText()
         logic.test_voice(text)
+
+    def perform_engine_change(self, index):
+        self.handle_engine_change(index)
+        self.update_display()
 
     def handle_engine_change(self, index):
         if hasattr(self, "engine_index") and index == self.engine_index:

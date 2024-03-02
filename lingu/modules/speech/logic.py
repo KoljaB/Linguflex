@@ -66,9 +66,12 @@ class SpeechLogic(Logic):
 
         # Initialize voice and engine
         if not self.voices.set_voice_data():
+            # no voice defined yet, start with last selected engine
+            # (fetch from state)
             log.dbg("  [speech] starting with engine "
                     f"{state.engine_name}")
             self.engines.switch_engine(state.engine_name)
+            self.voices.select_first_voice(self.engines.engine)
 
         self.trigger("speech_ready")
         self.ready()
