@@ -80,7 +80,7 @@ This guide will help you set up your environment for the project. Please follow 
      ```
      before executing the pip install command.
 
-7. **Reinstal numpy:**
+7. **Reinstall numpy with correct version:**
    ```bash
    pip install numpy==1.23.5
    ```
