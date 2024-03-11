@@ -66,7 +66,9 @@ Please just ignore the "xyz is incompatible" errors occurring while installation
    **Note:** I used `pip install https://github.com/daswer123/xtts-webui/releases/download/deepspeed/deepspeed-0.11.2+cuda118-cp310-cp310-win_amd64.whl` for my Windows 10 system. 
 
 5. **Install some more dependencies:**
+   ```bash
    pip install pyautogui opencv-python openai_token_counter instructor chardet
+   ```
 
 6. **Install llama-cpp-python:**
    ```bash
