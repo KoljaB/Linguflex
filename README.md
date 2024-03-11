@@ -4,7 +4,7 @@
 
 ## Introduction
 
-Linguflex 2.0 emerges from a deep-rooted passion for science fiction, aspiring to create voice-based, dynamic, and convincingly human-like interactions with AI. While the landscape is populated with similar offerings, Linguflex distinguishes itself through its relentless pursuit of minimal latency, ensuring rapid responses without compromising on quality. This version marks a significant stride towards realizing a versatile, yet specialized AI assistant.
+Linguflex 2.0 emerges from a deep-rooted passion for science fiction, aspiring to create voice-based, dynamic, and convincingly human-like interactions with AI. Linguflex is a solid voice based function calling framework supporting a variety of LLMs (local included). It combines relentless pursuit of minimal latency (ensuring rapid responses) with a outstanding TTS voice quality, all locally generated. This new version marks a significant stride towards realizing a versatile, yet specialized AI assistant.
 
 ## Key Advancements in 2.0
 
@@ -23,10 +23,10 @@ Linguflex 2.0 emerges from a deep-rooted passion for science fiction, aspiring t
 ### Current Expansion Modules
 - **Mimic:** This creative tool allows users to design custom AI characters, assign unique voices created with the Speech module, and switch between them.
 - **Music:** A voice-command module for playing selected songs or albums, enhancing the user experience with musical integration.
-
-### Modules Coming Soon
 - **Mail:** Retrieves emails via IMAP, integrating with your digital correspondence.
 - **Weather:** Provides current weather data and forecasts, adapting to your location.
+
+### Modules Coming Soon
 - **House:** Smart Home control for Tuya-compatible devices, enhancing your living experience.
 - **See:** Empower the assistant with visual capabilities using the GPT Vision API. Enables processing of webcam pictures and desktop screenshots.
 - **Calendar:** Manages personal calendars and appointments, including Google Calendar integration.
@@ -38,4 +38,6 @@ Linguflex 2.0 emerges from a deep-rooted passion for science fiction, aspiring t
 
 ## Getting Started
 
-To embark on your journey with Linguflex 2.0, follow our detailed [Installation Guide](https://github.com/KoljaB/Linguflex/blob/lingu-2.0-preview/installation_guide.md). This guide provides step-by-step instructions to set up the core software of Linguflex.
+Follow the [Installation Guide](./docs/installation.md) for step-by-step instructions about how to set up the Linguflex core.
+
+Follow the [Modules Guide](./docs/modules.md) for step-by-step instructions about how to set up and configure the Linguflex modules.

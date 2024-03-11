@@ -3,6 +3,7 @@ from .handlers.local_llm_interface import LocalLLMInterface
 from .handlers.history import History
 from lingu import log, cfg, prompt, Logic
 from .state import state
+import datetime
 
 
 class BrainLogic(Logic):
@@ -118,6 +119,30 @@ class BrainLogic(Logic):
         if save:
             state.save()
 
+    def get_system_prompt(self):
+        """
+        Constructs and returns the system prompt string with the current date,
+        including the day of the week.
+
+        Returns:
+            str: The system prompt with the current date
+              and day of the week appended.
+        """
+        # Retrieve the existing prompt content, if any.
+        prompt_content = prompt.get() if prompt.get() else ""
+
+        # Append a newline for formatting, if the prompt has content.
+        if prompt_content:
+            prompt_content += "\n\n"
+
+        # Get the current date and day of the week.
+        current_date = datetime.datetime.now().strftime("%A, %Y-%m-%d")
+
+        # Append the current date to the prompt content.
+        prompt_content += "Current date: " + current_date
+
+        return prompt_content
+
     def generate(
             self,
             text,
@@ -136,7 +161,7 @@ class BrainLogic(Logic):
         """
         system_prompt_message = {
             'role': 'system',
-            'content': prompt.get()
+            'content': self.get_system_prompt()
         }
 
         self.history.trim_tokens(

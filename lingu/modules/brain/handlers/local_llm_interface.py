@@ -1,10 +1,12 @@
 from llama_cpp.llama_speculative import LlamaPromptLookupDecoding
 from .languagemodelbase import LLM_Base
-from lingu import cfg, log, exc, prompt, Prompt
+from lingu import cfg, log, exc, prompt, events, Prompt
 from pydantic import BaseModel, Field
 from .history import History
 import instructor
 import llama_cpp
+import itertools
+import time
 
 gpu_layers = int(cfg("local_llm", "gpu_layers", default=17))
 model_path = cfg("local_llm", "model_path", default="models/")
@@ -12,6 +14,7 @@ model_name = cfg(
     "local_llm", "model_name",
     default="openhermes-2.5-mistral-7b.Q5_K_M.gguf")
 max_retries = int(cfg("local_llm", "max_retries", default=3))
+context_length = int(cfg("local_llm", "context_length", default=2048))
 max_tokens = int(cfg("local_llm", "max_tokens", default=1024))
 repeat_penalty = float(cfg("local_llm", "repeat_penalty", default=1.4))
 temperature = float(cfg("local_llm", "temperature", default=1.0))
@@ -54,19 +57,55 @@ class LocalLLMInterface(LLM_Base):
             model_path=self.model_full_path,
             n_gpu_layers=gpu_layers,
             chat_format="chatml",
-            n_ctx=2048,
+            n_ctx=context_length,
             draft_model=LlamaPromptLookupDecoding(num_pred_tokens=2),
             logits_all=True,
-            verbose=False
+            verbose=True
         )
         self.create = instructor.patch(
             create=self.llama.create_chat_completion_openai_v1,
             mode=instructor.Mode.JSON_SCHEMA
         )
+        self.sleep = False
+        events.add_listener(
+            "inference_start",
+            "inference",
+            lambda: self.set_sleep(True))
+        events.add_listener(
+            "inference_processing",
+            "inference",
+            lambda: self.set_sleep(False))
+        events.add_listener(
+            "inference_end",
+            "inference",
+            lambda: self.set_sleep(False))
+
         log.dbg("  [brain] warm up llm")
         self.warm_up()
 
+    def set_sleep(self, value: bool):
+        self.sleep = value
+
+    def wait_wake(self):
+        """Waits for wake-up, logging every second."""
+        for count in itertools.cycle(range(10)):
+            if not count:
+                log.inf("  [brain] waiting for wake up")
+
+            if not self.sleep:
+                break
+
+            time.sleep(0.1)
+
+
+    # def wait_wake(self):
+    #     while self.sleep:
+    #         time.sleep(0.1)
+    #         if not int(time.time() * 10) % 10:  # every second
+    #             log.inf("  [brain] waiting for wake up")
+
     def warm_up(self):
+        self.wait_wake()
         extraction_stream = self.create(
             response_model=instructor.Partial[ChatAnswer],
             messages=[
@@ -130,11 +169,12 @@ class LocalLLMInterface(LLM_Base):
         log.inf(f"  [brain] {self.model_name} creating tool stream for "
                 f"messages {messages}")
 
+        self.wait_wake()
         extraction_stream = self.create(
             response_model=FunctionName,
             max_retries=max_retries,
             messages=messages_decide,
-            max_tokens=100,
+            max_tokens=500,
         )
 
         fct_call = extraction_stream.name_of_function_to_call
@@ -164,6 +204,7 @@ class LocalLLMInterface(LLM_Base):
                 f"calling tool {fct_call} "
                 f"with messages {messages}")
         try:
+            self.wait_wake()
             extraction_stream = self.create(
                 response_model=tool.instance,
                 max_retries=max_retries,
@@ -237,26 +278,28 @@ class LocalLLMInterface(LLM_Base):
                 log.dbg(f"  [brain] {self.model_name} tool name: "
                         f"{name} description: {description}")
 
-        log.dbg(f"  [brain] {self.model_name} creating extraction stream")
-        log.dbg(f"  [brain] Parameters: "
-                f"max_tokens={max_tokens}, "
-                f"repeat_penalty={repeat_penalty}, temperature={temperature}, "
-                f"top_p={top_p}, top_k={top_k}, tfs_z={tfs_z}, "
-                f"mirostat_mode={mirostat_mode}, mirostat_tau={mirostat_tau}, "
-                f"mirostat_eta={mirostat_eta}")
+        # Define the llm creation parameters in a dictionary
+        params = {
+            "max_tokens": max_tokens,
+            "repeat_penalty": repeat_penalty,
+            "temperature": temperature,
+            "top_p": top_p,
+            "top_k": top_k,
+            "tfs_z": tfs_z,
+            "mirostat_mode": mirostat_mode,
+            "mirostat_tau": mirostat_tau,
+            "mirostat_eta": mirostat_eta,
+        }
 
+        # Log the parameters using the dictionary
+        log.dbg(f"  [brain] Parameters: {params}")
+
+        # Call the API using the dictionary unpacking
+        self.wait_wake()
         response = self.llama.create_chat_completion_openai_v1(
             messages=messages,
             stream=True,
-            max_tokens=max_tokens,
-            repeat_penalty=repeat_penalty,
-            temperature=temperature,
-            top_p=top_p,
-            top_k=top_k,
-            tfs_z=tfs_z,
-            mirostat_mode=mirostat_mode,
-            mirostat_tau=mirostat_tau,
-            mirostat_eta=mirostat_eta,
+            **params
         )
 
         for chunk in response:

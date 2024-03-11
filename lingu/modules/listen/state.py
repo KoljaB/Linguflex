@@ -10,7 +10,7 @@ class ListenState(State):
         self.wake_word_activation_delay = 40
         self.end_of_speech_silence = 0.7
         self.is_muted = False
-        self.language = "Auto"
+        self.language = "en"
 
 
 state = ListenState()

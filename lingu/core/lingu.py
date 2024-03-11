@@ -4,7 +4,7 @@ from lingu.ui.main import UI
 from .modules import Modules
 from .events import events
 from .prompt import prompt
-from lingu import log, notify
+from lingu import cfg, log, notify
 from .tools import Tools
 import threading
 import time
@@ -80,6 +80,14 @@ class Lingu:
 
         self.brainlogic: BrainLogic = self.modules.all["brain"]["logic"]
         self.brainlogic.set_tools(self.tools)
+
+        self.use_local_llm = bool(
+            cfg("local_llm", "use_local_llm", default=False))
+
+        if self.use_local_llm:
+            self.modules.inference_manager.set_instructor(
+                self.brainlogic.llm.create
+            )
 
         notify("Ready", "Modules loaded.", 5000, "success", "✅")
 

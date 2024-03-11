@@ -58,6 +58,29 @@ class ListenLogic(Logic):
             "stop_recorder",
             "speech",
             self._on_stop_recorder)
+        # self.add_listener(
+        #     "inference_start",
+        #     "inference",
+        #     self.sleep)
+        # self.add_listener(
+        #     "inference_processing",
+        #     "inference",
+        #     self.wakeup)
+        # self.add_listener(
+        #     "inference_end",
+        #     "inference",
+        #     self.wakeup)
+
+    def sleep(self):
+        self.start_listen_event.clear()
+        self.recorder.abort()
+        self.recorder.stop()
+        self.state.set_active(False)
+        self.state.set_disabled(True)
+
+    def wakeup(self):
+        self.state.set_disabled(False)
+        self.start_listen_event.set()
 
     def set_lang_shortcut(self, lang_shortcut):
         log.inf(f"  [listen] setting language shortcut to {lang_shortcut}")
@@ -146,12 +169,18 @@ class ListenLogic(Logic):
             return_to_wakewords_after_silence
 
     def set_mute_state(self):
+        print(f"  [listen] set_mute_state: {self.state.is_muted}")
+
         if self.state.is_muted:
             log.dbg("  [listen] mute")
             self.start_listen_event.clear()
+            print("  [listen] aborting recorder")
             self.recorder.abort()
+            print("  [listen] stopping recorder")
             self.recorder.stop()
+            print("  [listen] setting active to False")            
             self.state.set_active(False)
+            print("  [listen] setting disabled to True")
             self.state.set_disabled(True)
         else:
             log.dbg("  [listen] unmute")
@@ -204,32 +233,41 @@ class ListenLogic(Logic):
         lang = self.state.language
         if lang == "Auto":
             lang = ""
-        self.recorder = AudioToTextRecorder(
-            model=main_recorder_model,
-            language=lang,
-            wake_words="Jarvis",
-            spinner=False,
-            silero_sensitivity=silero_sensitivity_normal,
-            silero_use_onnx=silero_use_onnx,
-            webrtc_sensitivity=webrtc_sensitivity,
-            on_recording_start=self._recording_start,
-            on_recording_stop=self._recording_stop,
-            on_vad_detect_start=self._vad_start,
-            on_wakeword_detection_start=self._wakeword_start,
-            on_wakeword_detection_end=self._wakeword_end,
-            on_transcription_start=self._transcription_start,
-            post_speech_silence_duration=self.state.end_of_speech_silence,
-            min_length_of_recording=min_length_of_recording,
-            min_gap_between_recordings=min_gap_between_recordings,
-            wake_word_timeout=wake_word_timeout,
-            wake_word_activation_delay=self.state.wake_word_activation_delay,
-            enable_realtime_transcription=enable_realtime_transcription,
-            realtime_processing_pause=realtime_processing_pause,
-            realtime_model_type=realtime_recorder_model,
-            on_realtime_transcription_update=self._realtime_transcription,
-        )
 
-        # log.inf("  [listen] waiting for speech ready event")
+        # recorder construction parameters dictionary
+        recorder_params = {
+            'model': main_recorder_model,
+            'language': lang,
+            'wake_words': "Jarvis",
+            'spinner': False,
+            'silero_sensitivity': silero_sensitivity_normal,
+            'silero_use_onnx': silero_use_onnx,
+            'webrtc_sensitivity': webrtc_sensitivity,
+            'on_recording_start': self._recording_start,
+            'on_recording_stop': self._recording_stop,
+            'on_vad_detect_start': self._vad_start,
+            'on_wakeword_detection_start': self._wakeword_start,
+            'on_wakeword_detection_end': self._wakeword_end,
+            'on_transcription_start': self._transcription_start,
+            'post_speech_silence_duration': self.state.end_of_speech_silence,
+            'min_length_of_recording': min_length_of_recording,
+            'min_gap_between_recordings': min_gap_between_recordings,
+            'wake_word_timeout': wake_word_timeout,
+            'wake_word_activation_delay':
+                self.state.wake_word_activation_delay,
+            'enable_realtime_transcription': enable_realtime_transcription,
+            'realtime_processing_pause': realtime_processing_pause,
+            'realtime_model_type': realtime_recorder_model,
+            'on_realtime_transcription_update': self._realtime_transcription
+        }
+
+        # log the parameters
+        log.dbg("  [listen] creating recorder with parameters: "
+                f"{recorder_params}")
+
+        # Initialize the recorder with the unpacked parameters
+        self.recorder = AudioToTextRecorder(**recorder_params)
+
         self.speech_ready_event.wait()
         self.start_listen_event.wait()
 

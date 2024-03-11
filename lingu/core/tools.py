@@ -105,6 +105,7 @@ class Tools:
                         exc(e)
                 elif inf_obj.is_populatable:
                     inf_obj.execute_count = called_tool_messages
+                    inf_obj.module["state"] = "executing"
                     obj = inf_obj.info_dict["obj"]
                     args = tool["arguments"]
                     try:

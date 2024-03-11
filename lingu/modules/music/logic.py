@@ -99,7 +99,6 @@ class MusicLogic(Logic):
         self.trigger("playback_start")
 
         log.low("  [music] on_playback_start called")
-        # state.bottom_info = "▶️"
 
     def on_playback_stop(self):
         self.state.set_active(False)
