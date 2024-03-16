@@ -67,6 +67,12 @@ class LocalLLMInterface(LLM_Base):
             mode=instructor.Mode.JSON_SCHEMA
         )
         self.sleep = False
+        self.abort = False
+        events.add_listener(
+            "escape_key_pressed",
+            "*",
+            self.abort_immediately)
+
         events.add_listener(
             "inference_start",
             "inference",
@@ -83,6 +89,9 @@ class LocalLLMInterface(LLM_Base):
         log.dbg("  [brain] warm up llm")
         self.warm_up()
 
+    def abort_immediately(self):
+        self.abort = True
+
     def set_sleep(self, value: bool):
         self.sleep = value
 
@@ -96,13 +105,6 @@ class LocalLLMInterface(LLM_Base):
                 break
 
             time.sleep(0.1)
-
-
-    # def wait_wake(self):
-    #     while self.sleep:
-    #         time.sleep(0.1)
-    #         if not int(time.time() * 10) % 10:  # every second
-    #             log.inf("  [brain] waiting for wake up")
 
     def warm_up(self):
         self.wait_wake()
@@ -242,24 +244,34 @@ class LocalLLMInterface(LLM_Base):
 
         message_tool_execution = {
             "role": "user",
-            "content":
-                f"User's request:\n"
-                f'"{user_content}"\n'
-                f"The function {fct_call} was called to aid in adressing the "
-                "user's request.\n"
-                f"The function {fct_call} was called with these parameters:\n"
-                f'"{extraction_stream}"\n'
-                f"The function {fct_call} returned:\n"
-                f'"{return_value}"\n'
-                f"Your task is to evaluate the return of the function call. "
-                "Report it in your own words by answering the user's request."
+            "content": f"""\
+User's request:
+"{user_content}"
+
+To help address the user's request, the function {fct_call} was called with these parameters:
+"{extraction_stream}"
+
+The function returned the following data:
+"{return_value}"
+
+Your task is to carefully analyze and interpret the returned data.
+Translate the returned data into an easily understandable form.
+Imagine explaining it to someone without technical knowledge.
+If the data is complex, simplify it.
+Turn numbers, codes, or technical terms into plain explanations.
+Using the function's returned data and your understanding, provide a clear response that addresses the user's request.
+Extract the key information relevant to the user's request and present it in clear, easily understandable language.
+Focus on providing a short, concise, and direct response to the user's query, rather than simply reproducing the raw data.\
+"""
         }
-        messages.append(message_tool_execution)
+
         self.history.history.append(message_tool_execution)
 
         return True, return_value
 
     def generate(self, messages, tools=None):
+        self.abort = False
+
         log.dbg(f"  [brain] {self.model_name}"
                 " generating answer for messages:"
                 f" {messages}")
@@ -296,18 +308,24 @@ class LocalLLMInterface(LLM_Base):
 
         # Call the API using the dictionary unpacking
         self.wait_wake()
+        if self.abort:
+            return
+
         response = self.llama.create_chat_completion_openai_v1(
             messages=messages,
             stream=True,
             **params
         )
 
-        for chunk in response:
-            delta = chunk.choices[0].delta
-            content = delta.content
+        if not self.abort:
+            for chunk in response:
+                if self.abort:
+                    break
+                delta = chunk.choices[0].delta
+                content = delta.content
 
-            if content:
-                yield content
+                if content:
+                    yield content
 
     def set_temperature(self, temperature):
         log.inf(f"  [brain] setting temperature to {temperature}")

@@ -1,5 +1,6 @@
 from RealtimeSTT import AudioToTextRecorder
 from lingu import cfg, log, Logic
+import numpy as np
 import threading
 import gc
 
@@ -29,6 +30,10 @@ silero_sensitivity_music = float(cfg(
     "listen", "silero_sensitivity_music", default=0.01))
 fast_silence_duration = float(cfg(
     "listen", "fast_post_speech_silence_duration", default=0.25))
+long_term_noise_decay = float(cfg(
+    "listen", "long_term_noise_decay", default=0.995))
+short_term_noise_decay = float(cfg(
+    "listen", "short_term_noise_decay", default=0.9))
 sentence_delimiters = '.?!。'
 
 
@@ -42,6 +47,8 @@ class ListenLogic(Logic):
         self.start_listen_event = threading.Event()
         self.speech_ready_event = threading.Event()
         self.recorder_active = True
+        self.long_term_noise_level = 0.0
+        self.current_noise_level = 0.0
 
         self.add_listener("playback_start", "music", self._on_playback_start)
         self.add_listener("playback_stop", "music", self._on_playback_stop)
@@ -229,6 +236,34 @@ class ListenLogic(Logic):
         self.state.end_of_speech_silence = value
         self.state.save()
 
+    def get_levels(self, data, long_term_noise_level, current_noise_level):
+
+        pegel = np.abs(np.frombuffer(data, dtype=np.int16)).mean()
+
+        long_term_noise_level = \
+            (long_term_noise_level * long_term_noise_decay
+                + pegel * (1.0 - long_term_noise_decay))
+
+        current_noise_level = \
+            (current_noise_level * short_term_noise_decay
+                + pegel * (1.0 - short_term_noise_decay))
+
+        return pegel, long_term_noise_level, current_noise_level
+
+    def _recorded_chunk(self, chunk):
+        pegel, self.long_term_noise_level, self.current_noise_level = \
+            self.get_levels(
+                chunk,
+                self.long_term_noise_level,
+                self.current_noise_level)
+
+        if self.state.interrupt_thresh > 0:
+            if pegel > self.state.interrupt_thresh:
+                self.trigger("volume_interrupt")
+
+        self.state.pegel = pegel
+        self.trigger("recorded_chunk")
+
     def _recording_worker(self):
         lang = self.state.language
         if lang == "Auto":
@@ -258,7 +293,8 @@ class ListenLogic(Logic):
             'enable_realtime_transcription': enable_realtime_transcription,
             'realtime_processing_pause': realtime_processing_pause,
             'realtime_model_type': realtime_recorder_model,
-            'on_realtime_transcription_update': self._realtime_transcription
+            'on_realtime_transcription_update': self._realtime_transcription,
+            'on_recorded_chunk': self._recorded_chunk,
         }
 
         # log the parameters

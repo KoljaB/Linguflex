@@ -11,6 +11,7 @@ class ListenState(State):
         self.end_of_speech_silence = 0.7
         self.is_muted = False
         self.language = "en"
+        self.interrupt_thresh = 0
 
 
 state = ListenState()

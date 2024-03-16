@@ -78,3 +78,5 @@ google-api-python-client
 yt-dlp
 pytube
 python-vlc
+tinytuya==1.13.2
+pynput==1.7.6

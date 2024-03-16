@@ -13,8 +13,6 @@ import re
 
 flag_vc = False
 rvc_model_path = cfg("rvc_model_path")
-# if not rvc_model_path.endswith("/"):
-#     rvc_model_path += "/"
 PTH_DEFAULT = os.path.join(rvc_model_path, "Samantha.pth")
 INDEX_DEFAULT = os.path.join(rvc_model_path, "Samantha.index")
 
@@ -22,7 +20,8 @@ INDEX_DEFAULT = os.path.join(rvc_model_path, "Samantha.index")
 def _stream_play_worker(
         stream_queue: mp.Queue,
         shutdown_event: mp.Event,
-        stop_event: mp.Event):
+        finished_event: mp.Event,
+        ):
     import pyaudio
     pyaudio_instance = pyaudio.PyAudio()
     stream = pyaudio_instance.open(
@@ -34,11 +33,11 @@ def _stream_play_worker(
 
     while not shutdown_event.is_set():
         try:
-            name, chunk_to_play = stream_queue.get(timeout=0.5)
-            if name == "stop":
-                stop_event.set()
-            elif name == "play":
+            name, chunk_to_play = stream_queue.get(timeout=0.02)
+            if name == "play":
                 stream.write(chunk_to_play)
+            elif name == "finished":
+                finished_event.set()
         except Empty:
             continue
         except KeyboardInterrupt:
@@ -214,13 +213,13 @@ class RealtimeRVCBase:
         - handles incoming audio data, applies transformations, and sends it
           to the output
         """
-        import time
+        # import time
         import librosa
         import torch
         import torch.nn.functional as F
 
         global flag_vc
-        start_time = time.perf_counter()
+        # start_time = time.perf_counter()
         indata = librosa.to_mono(indata.T)
         if self.gui_config.threhold > -60:
             rms = librosa.feature.rms(
@@ -417,7 +416,7 @@ class RealtimeRVC:
         self.is_active = True
         self.stream_play_chunk_queue = mp.Queue()
         self.shutdown_event = mp.Event()
-        self.stop_event = mp.Event()
+        self.finished_event = mp.Event()
         self.started = False
         self.current_model = ""
 
@@ -428,17 +427,27 @@ class RealtimeRVC:
         self.stop_worker_thread.start()
 
     def start(self, model_name=None):
+        print("Starting RVC")
         self.started = True
+
+        print("Starting RVC worker process")
         self.stream_play_worker_process = mp.Process(
             target=_stream_play_worker, args=(
                 self.stream_play_chunk_queue,
                 self.shutdown_event,
-                self.stop_event
+                self.finished_event
+                # self.stop_request_event
             ))
         self.stream_play_worker_process.start()
 
         if not model_name:
             model_name = "Samantha"
+
+        pth_path = os.path.join(rvc_model_path, model_name + ".pth")
+        index_path = os.path.join(rvc_model_path, model_name + ".index")
+        print("Starting RVC with model", model_name)
+        print("pth_path:", pth_path)
+        print("index_path:", index_path)
 
         self.rvc = RealtimeRVCBase(
             pth=os.path.join(rvc_model_path, model_name + ".pth"),
@@ -452,15 +461,14 @@ class RealtimeRVC:
     def stop_worker(self):
         import time
         # print("Stop worker started")
-        if self.stop_callback:
-            pass
-            # print("Stop callback set")
+        # if self.stop_callback:
+        #     pass
+            #  print("Stop callback set")
         while self.is_active:
-            if self.stop_event.is_set():
-                self.stop_event.clear()
+            if self.finished_event.is_set():
                 if self.stop_callback:
-                    # print("Calling stop callback")
                     self.stop_callback()
+                self.finished_event.clear()
             time.sleep(0.02)
 
     def init(self):
@@ -514,23 +522,24 @@ class RealtimeRVC:
             write_data = np.array(outdata_list, dtype='float32').tobytes()
             self.stream_play_chunk_queue.put(("play", write_data))
 
+    def is_playing(self):
+        # check stream_play_chunk_queue for data
+        return not self.stream_play_chunk_queue.empty()
+
+    def feed_finished(self):
+        self.stream_play_chunk_queue.put(("finished", None))
+
     def stop(self):
-        # print("Stopping RVC")
-        self.stream_play_chunk_queue.put(("stop", None))
-
-    def wait(self):
-        self.stop_event.wait()
-        self.stop_event.clear()
-
-    def stop_and_wait(self):
-        self.stop()
-        self.wait()
+        # clear self.stream_play_chunk_queue
+        while not self.stream_play_chunk_queue.empty():
+            self.stream_play_chunk_queue.get()
+        if self.stop_callback:
+            self.stop_callback()
 
     def shutdown(self):
         self.shutdown_event.set()
 
     def get_models(self):
-        # path = "lingu/resources/rvc_models"
         models = []
         for file in glob.glob(os.path.join(rvc_model_path, "*.pth")):
             model_name = os.path.basename(file)

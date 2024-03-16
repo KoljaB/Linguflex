@@ -60,6 +60,14 @@ class SpeechLogic(Logic):
         self.add_listener("set_voice",
                           "mimic",
                           self.voices.mimic_set_voice)
+        self.add_listener(
+            "escape_key_pressed",
+            "*",
+            self.abort_speech_immediately)
+        self.add_listener(
+            "volume_interrupt",
+            "*",
+            self.abort_speech_immediately)
 
         # Create buffer for output text stream.
         self.text_stream = BufferStream()
@@ -166,7 +174,7 @@ class SpeechLogic(Logic):
             self.trigger("audio_stream_stop")
             self.state.set_active(False)
         else:
-            self.rvc.stop()
+            self.rvc.feed_finished()
 
     def update_ui(self):
         """
@@ -210,13 +218,15 @@ class SpeechLogic(Logic):
         state.rvc_enabled = enabled
 
         if enabled and not self.rvc.started:
-            # print("Starting Realtime Voice Cloning (enabled)")
+            log.dbg("Starting Realtime Voice Cloning (enabled)")
             if state.rvc_model:
                 self.rvc.start(state.rvc_model)
             else:
+                log.dbg("Retrieving models")
                 models = self.rvc.get_models()
                 if models:
                     state.rvc_model = models[0]
+                    log.dbg("Starting first model")
                     self.rvc.start(state.rvc_model)
 
     def set_rvc_pitch(self, pitch):
@@ -250,6 +260,19 @@ class SpeechLogic(Logic):
         log.dbg(f"setting rvc model to {model_name}")
         state.save()
         self.rvc.set_model(model_name)
+
+    def abort_speech_immediately(self):
+        """
+        Abort speech immediately.
+
+        This method aborts speech immediately by stopping the audio stream.
+
+        """
+        if self.engines and self.engines.stream:
+            self.engines.stream.stop()
+
+        if self.rvc and self.rvc.is_playing():
+            self.rvc.stop()
 
 
 logic = SpeechLogic()

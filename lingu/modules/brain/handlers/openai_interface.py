@@ -25,6 +25,14 @@ class OpenaiInterface(LLM_Base):
         self.fct_calls = []
         self.assistant_call = ""
         self.set_temperature(0.7)
+        self.abort = False
+        events.add_listener(
+            "escape_key_pressed",
+            "*",
+            self.abort_immediately)
+
+    def abort_immediately(self):
+        self.abort = True
 
     def set_temperature(self, temperature):
         log.inf(f"  [brain] setting temperature to {temperature}")
@@ -38,6 +46,8 @@ class OpenaiInterface(LLM_Base):
             self,
             messages,
     ):
+        self.abort = False
+
         params = {
             "model": vision_model,
             # "temperature": self.temperature,
@@ -55,13 +65,17 @@ class OpenaiInterface(LLM_Base):
 
         log.inf('  <= stream')
 
-        for chunk in response:
-            delta = chunk.choices[0].delta
-            content = delta.content
-            if content:
-                yield content
+        if not self.abort:
+            for chunk in response:
+                if self.abort:
+                    break
+                delta = chunk.choices[0].delta
+                content = delta.content
+                if content:
+                    yield content
 
     def generate(self, messages, tools=None):
+        self.abort = False
 
         def add_fct(fct):
             fct["args"] = json.loads(fct["arguments"])
@@ -100,49 +114,52 @@ class OpenaiInterface(LLM_Base):
                          "role": "assistant",
                          "tool_calls": []
                        }
-        for chunk in response:
-            delta = chunk.choices[0].delta
-            content = delta.content
+        if not self.abort:
+            for chunk in response:
+                if self.abort:
+                    break
+                delta = chunk.choices[0].delta
+                content = delta.content
 
-            if delta.tool_calls:
+                if delta.tool_calls:
 
-                tool = delta.tool_calls[0]
+                    tool = delta.tool_calls[0]
 
-                if tool.id:
+                    if tool.id:
 
-                    if "id" in fct:
-                        self.tool_calls_message["tool_calls"].append({
-                            "id": fct["id"],
-                            "function": {
-                                "arguments": fct["arguments"],
-                                "name": fct["name"]
-                            },
-                            "type": "function"
-                        })
-                        add_fct(fct)
+                        if "id" in fct:
+                            self.tool_calls_message["tool_calls"].append({
+                                "id": fct["id"],
+                                "function": {
+                                    "arguments": fct["arguments"],
+                                    "name": fct["name"]
+                                },
+                                "type": "function"
+                            })
+                            add_fct(fct)
 
-                    fct = {
-                        "arguments": "",
-                        "id": tool.id,
-                        "name": tool.function.name
-                    }
-                    events.trigger("function_call_start", "brain", fct)
+                        fct = {
+                            "arguments": "",
+                            "id": tool.id,
+                            "name": tool.function.name
+                        }
+                        events.trigger("function_call_start", "brain", fct)
+                    else:
+                        fct["arguments"] += tool.function.arguments
                 else:
-                    fct["arguments"] += tool.function.arguments
-            else:
-                if content:
-                    yield content
-                elif chunk.choices[0].finish_reason:
-                    if chunk.choices[0].finish_reason == "tool_calls":
-                        self.tool_calls_message["tool_calls"].append({
-                            "id": fct["id"],
-                            "function": {
-                                "arguments": fct["arguments"],
-                                "name": fct["name"]
-                            },
-                            "type": "function"
-                        })
-                        add_fct(fct)
+                    if content:
+                        yield content
+                    elif chunk.choices[0].finish_reason:
+                        if chunk.choices[0].finish_reason == "tool_calls":
+                            self.tool_calls_message["tool_calls"].append({
+                                "id": fct["id"],
+                                "function": {
+                                    "arguments": fct["arguments"],
+                                    "name": fct["name"]
+                                },
+                                "type": "function"
+                            })
+                            add_fct(fct)
 
         print(f"Recovered pieces: {self.tool_calls_message}")
         events.trigger("answer_finished", "brain", fct)

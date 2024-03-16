@@ -1,4 +1,5 @@
 from PyQt6.QtWidgets import (
+    QSlider,
     QWidget,
     QPushButton,
     QHBoxLayout,
@@ -15,6 +16,8 @@ from PyQt6.QtGui import QTextOption
 from PyQt6 import QtCore
 
 from .draggable import DraggableWidget
+from qfluentwidgets import Slider
+
 from lingu import events
 from .line import Line
 import time
@@ -59,9 +62,6 @@ class UI(DraggableWidget):
 
     def init(self):
         pass
-
-    # def init_finished(self):
-    #     pass
 
     def add_listener(
             self,
@@ -189,6 +189,45 @@ class UI(DraggableWidget):
     def add(self, widget):
         self.main_border_layout.addWidget(widget)
         return widget
+
+    def add_slider(
+            self,
+            label: str,
+            descr_val_left: str,
+            descr_val_right: str,
+            default_val: int
+    ):
+
+        self.add(UI.label(label))
+
+        line = Line()
+        label_descr_left = UI.label(descr_val_left)
+        label_descr_left.setWordWrap(False)
+        label_descr_left.setSizePolicy(
+            QSizePolicy.Policy.Maximum,
+            QSizePolicy.Policy.Fixed)
+        line.add(label_descr_left)
+        label_value = UI.label(
+            str(default_val),
+            "one_line_content")
+        line.add(label_value)
+        label_descr_right = UI.label(descr_val_right)
+        label_descr_right.setSizePolicy(
+            QSizePolicy.Policy.Maximum,
+            QSizePolicy.Policy.Fixed)
+        line.add(label_descr_right)
+        self.add(line)
+
+        slider = Slider(
+            Qt.Orientation.Horizontal,
+            self)
+        slider.setMinimum(0)
+        slider.setMaximum(10000)
+        slider.setTickPosition(QSlider.TickPosition.TicksBelow)
+        slider.setTickInterval(1)
+        self.add(slider)
+
+        return label_value, slider
 
     def remove(self, widget):
         self.main_border_layout.removeWidget(widget)
