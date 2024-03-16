@@ -114,7 +114,3 @@ Please just ignore the "xyz is incompatible" errors occurring while installation
       ```bash
       python -m lingu.core.run
       ```
-
-   > [!TIP]
-   > You can submit a settings file as parameter: python -m lingu.core.run C:\MySettings\settings.yaml   
-      
