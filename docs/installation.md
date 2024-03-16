@@ -15,6 +15,9 @@ This guide will help you set up your environment for the project. Please follow 
 
 ## Step-by-Step Installation
 
+Please just ignore the "xyz is incompatible" errors occurring while installation. These won't affect the functionality.
+
+
 1. **Set up Python Virtual Environment:**
    Download Python 3.10.9 and prepare a virtual environment:
 
@@ -22,7 +25,7 @@ This guide will help you set up your environment for the project. Please follow 
    python -m venv test_env
    ```
 
-   **Note:** Adjust to your python 3.10.9 exeutable (for example you might need to call C:\Python3-10-9\python.exe -m venv test_env).
+   **Note:** Adjust to your python 3.10.9 executable (for example you might need to call C:\Python3-10-9\python.exe -m venv test_env).
 
    Start that environment:
 
@@ -32,7 +35,13 @@ This guide will help you set up your environment for the project. Please follow 
 
 2. **Upgrade pip:**
    ```bash
-   python -m pip install --upgrade pip
+   test_env\Scripts\python -m pip install --upgrade pip
+   ```
+
+3. **Clone the project:**
+   ```bash
+   git clone -b lingu-2.0-preview https://github.com/KoljaB/Linguflex.git
+   cd Linguflex
    ```
 
 3. **Install Dependencies:**
@@ -43,7 +52,7 @@ This guide will help you set up your environment for the project. Please follow 
    pip install torch==2.1.2+cu118 torchaudio==2.1.2+cu118 --index-url https://download.pytorch.org/whl/cu118
    ```
 
-   **Note:** Adjust Torch installation according to your CUDA version.
+   **Note:** You may need to adjust torch installation according to your CUDA version (11.8 recommended)
 
 4. **Deepspeed Installation:**
    ```bash
@@ -57,7 +66,9 @@ This guide will help you set up your environment for the project. Please follow 
    **Note:** I used `pip install https://github.com/daswer123/xtts-webui/releases/download/deepspeed/deepspeed-0.11.2+cuda118-cp310-cp310-win_amd64.whl` for my Windows 10 system. 
 
 5. **Install some more dependencies:**
+   ```bash
    pip install pyautogui opencv-python openai_token_counter instructor chardet
+   ```
 
 6. **Install llama-cpp-python:**
    ```bash
@@ -102,4 +113,8 @@ This guide will help you set up your environment for the project. Please follow 
    - start run.bat or type:
       ```bash
       python -m lingu.core.run
-      ``` 
+      ```
+
+   > [!TIP]
+   > You can submit a settings file as parameter: python -m lingu.core.run C:\MySettings\settings.yaml   
+      
