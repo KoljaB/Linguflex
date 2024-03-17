@@ -1,4 +1,4 @@
-from lingu import log, Logic, RealtimeRVC
+from lingu import log, cfg, Logic, RealtimeRVC
 from .state import state
 from .handlers.feed2stream import BufferStream
 from .handlers.engines import Engines
@@ -24,6 +24,7 @@ class SpeechLogic(Logic):
         # RealtimeRVC object for real-time voice cloning.
         self.rvc = RealtimeRVC(self.rvc_stop)
         self.set_rvc_enabled(state.rvc_enabled)
+        self.muted = False
 
         # Read environment variables for Azure and Elevenlabs API keys.
         if os.environ.get("AZURE_SPEECH_KEY"):
@@ -82,7 +83,19 @@ class SpeechLogic(Logic):
             self.voices.select_first_voice(self.engines.engine)
 
         self.trigger("speech_ready")
+
         self.ready()
+
+    def post_init_processing(self):
+        if not state.engine_name == "coqui":
+            return
+
+        warmup = bool(cfg("speech", "warmup", default=False))
+        if warmup:
+            warmup_text = cfg("speech", "warmup_text", default="Hi")
+            warmup_muted = bool(cfg("speech", "warmup_muted", default=False))
+
+            self.test_voice(warmup_text, warmup_muted)
 
     def assistant_text_start(self):
         """
@@ -106,7 +119,7 @@ class SpeechLogic(Logic):
         """
         self.text_stream.stop()
 
-    def play_text(self, text):
+    def play_text(self, text, muted=False):
         """
         Play synthesized speech for the given text.
 
@@ -114,6 +127,7 @@ class SpeechLogic(Logic):
             text (str): The text to be synthesized and played.
 
         """
+        self.muted = muted
         self.text_stream.add(text)
         self.engines.stream.feed(self.text_stream.gen())
 
@@ -123,7 +137,8 @@ class SpeechLogic(Logic):
                     fast_sentence_fragment=True,
                     minimum_sentence_length=10,
                     minimum_first_fragment_length=10,
-                    on_audio_chunk=self.feed_to_rvc,
+                    # log_synthesized_text=True,
+                    on_audio_chunk=self.feed_to_rvc,                    
                     context_size=8,
                     muted=True)
             else:
@@ -131,9 +146,11 @@ class SpeechLogic(Logic):
                     fast_sentence_fragment=True,
                     minimum_sentence_length=10,
                     minimum_first_fragment_length=10,
-                    context_size=8)
+                    # log_synthesized_text=True,
+                    context_size=8,
+                    muted=muted)
 
-    def test_voice(self, text):
+    def test_voice(self, text, muted=False):
         """
         Test a voice by synthesizing and playing the given text.
 
@@ -148,7 +165,7 @@ class SpeechLogic(Logic):
         if state.rvc_enabled:
             self.rvc.init()
 
-        self.play_text(text)
+        self.play_text(text, muted)
         self.text_stream.stop()
 
     def audio_start(self):
@@ -194,8 +211,9 @@ class SpeechLogic(Logic):
             text (str): The synthesized speech text to be fed to RealtimeRVC.
 
         """
-        _, _, sample_rate = self.engines.engine.get_stream_info()
-        self.rvc.feed(chunk, sample_rate)
+        if not self.muted:
+            _, _, sample_rate = self.engines.engine.get_stream_info()
+            self.rvc.feed(chunk, sample_rate)
 
     def rvc_stop(self):
         """
@@ -268,11 +286,12 @@ class SpeechLogic(Logic):
         This method aborts speech immediately by stopping the audio stream.
 
         """
+
         if self.engines and self.engines.stream:
-            self.engines.stream.stop()
+            if self.engines.stream.is_playing():
+                self.engines.stream.stop()
 
-        if self.rvc and self.rvc.is_playing():
-            self.rvc.stop()
-
+            if self.rvc and self.rvc.is_playing():
+                self.rvc.stop()
 
 logic = SpeechLogic()

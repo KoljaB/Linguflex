@@ -206,7 +206,8 @@ class UI:
             text: Contains the transcription text.
         """
         self.user_text.setText(text)
-        self.assistant_text.set_y(self.user_text.geometry().bottom())
+        self.assistant_text.setText("")
+        self.assistant_text.setVisibility(False)
 
     def _on_final_text(self, text):
         """
@@ -217,6 +218,7 @@ class UI:
             text: Contains the transcription text.
         """
         self.user_text.setText(text)
+        self.assistant_text.setVisibility(True)
         self.assistant_text.set_y(self.user_text.geometry().bottom())
 
     def _on_assistant_text(self, text):

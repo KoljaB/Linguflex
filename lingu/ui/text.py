@@ -140,14 +140,24 @@ class Text(QWidget):
             Qt.TextFlag.TextWordWrap | Qt.AlignmentFlag.AlignRight,
             self.text)
 
+    def setVisibility(self, visible: bool):
+        """
+        Sets the visibility of the widget.
+
+        Args:
+            visible (bool): A boolean indicating whether the widget should be visible.
+        """
+        if visible:
+            QTimer.singleShot(0, self.show)
+        else:
+            QTimer.singleShot(0, self.hide)
+
     def updateGeometry(self, y: int = None):
         """
         Updates the geometry of the widget based on the current text and width.
         """
-        # print(f"updateGeometry y param: {y}")
         if y is None:
             y = self.y()
-        # print(f"updateGeometry new y: {y}")
         shifted_x = self.origX - self.calculateWidth()
         self.setGeometry(
             shifted_x,
@@ -166,5 +176,4 @@ class Text(QWidget):
         Args:
             y (int): The y-coordinate of the widget.
         """
-        # print(f"set_y: {y}")
         QTimer.singleShot(0, partial(self.updateGeometry, y))

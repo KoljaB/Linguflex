@@ -338,3 +338,11 @@ class Modules:
 
         self.inference_manager.set_inference_objects(
             self.get_inference_objects())
+
+    def post_init_processing(self):
+        """
+        Performs post-initialization processing for all modules.
+        """
+        for module in self.all.values():
+            if "logic" in module:
+                module["logic"].post_init_processing()

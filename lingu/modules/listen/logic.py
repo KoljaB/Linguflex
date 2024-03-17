@@ -199,6 +199,7 @@ class ListenLogic(Logic):
         self.set_mute_state()
 
     def _recording_start(self):
+        log.dbg("  [listen] recording start")
         self.recorder.post_speech_silence_duration = \
             self.state.end_of_speech_silence
         self.last_realtime_text = ""
@@ -208,6 +209,7 @@ class ListenLogic(Logic):
     def _recording_stop(self):
         log.dbg("  [listen] recording stop")
         self.state.set_active(False)
+        self.start_listen_event.clear()
         self.state.set_disabled(True)
         self.trigger("recording_stop")
 

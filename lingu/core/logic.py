@@ -101,3 +101,10 @@ class Logic:
         Can be overridden by subclasses.
         """
         pass
+
+    def post_init_processing(self):
+        """
+        Placeholder for post initialization processing logic.
+        Can be overridden by subclasses.
+        """
+        pass

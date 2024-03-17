@@ -30,9 +30,25 @@ class BrainLogic(Logic):
             self.llm = OpenaiInterface()
 
         self.tools = None
+        self.abort = False
 
         self.add_listener("set_prompt", "mimic", self.set_prompt)
         self.add_listener("set_temperature", "*", self.set_temperature)
+
+        self.add_listener(
+            "escape_key_pressed",
+            "*",
+            self.abort_immediately)
+        self.add_listener(
+            "volume_interrupt",
+            "*",
+            self.abort_immediately)
+
+    def abort_immediately(self):
+        """
+        Aborts the current process immediately.
+        """
+        self.abort = True
 
     def set_tools(self, tools):
         """
@@ -228,6 +244,7 @@ class BrainLogic(Logic):
             tools_for_usertext: Tools for processing user text.
             functions: Additional functions.
         """
+        self.abort = False
         self.state.set_active(True)
 
         self.trigger("assistant_text_start")
@@ -240,10 +257,16 @@ class BrainLogic(Logic):
 
         assistant_text = ""
         log.dbg("  [brain] processing assistant answer")
-        for chunk in assistant_response_stream:
-            assistant_text += chunk
-            self.trigger("assistant_text", assistant_text)
-            self.trigger("assistant_chunk", chunk)
+        if not self.abort:
+            for chunk in assistant_response_stream:
+                if self.abort:
+                    break
+                assistant_text += chunk
+                self.trigger("assistant_text", assistant_text)
+                self.trigger("assistant_chunk", chunk)
+
+        if self.abort:
+            assistant_text += " (aborted)"
 
         if assistant_text:
             self.history.assistant(assistant_text)

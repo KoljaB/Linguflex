@@ -17,6 +17,8 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torchcrepe
 
+debug = False
+
 from lingu.rvc.infer.lib.infer_pack.models import (
     SynthesizerTrnMs256NSFsid,
     SynthesizerTrnMs256NSFsid_nono,
@@ -388,7 +390,8 @@ class RVC:
                     + (1 - self.index_rate) * feats[0][skip_head // 2 :]
                 )
             else:
-                printt("Index search FAILED or disabled")
+                if debug:
+                    printt("Index search FAILED or disabled")
         except:
             traceback.print_exc()
             printt("Index search FAILED")
@@ -441,11 +444,12 @@ class RVC:
                     feats, p_len, sid, skip_head, return_length
                 )
         t5 = ttime()
-        printt(
-            "Spent time: fea = %.3fs, index = %.3fs, f0 = %.3fs, model = %.3fs",
-            t2 - t1,
-            t3 - t2,
-            t4 - t3,
-            t5 - t4,
-        )
+        if debug:
+            printt(
+                "Spent time: fea = %.3fs, index = %.3fs, f0 = %.3fs, model = %.3fs",
+                t2 - t1,
+                t3 - t2,
+                t4 - t3,
+                t5 - t4,
+            )
         return infered_audio.squeeze().float()

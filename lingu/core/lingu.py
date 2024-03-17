@@ -82,6 +82,7 @@ class Lingu:
         self.modules.wait_ready()
         self.ui.set_symbols_ready()
         self.modules.set_ready_event()
+        self.modules.post_init_processing()
         self.tools = Tools(self.modules.get_inference_objects())
 
         self.main_worker = threading.Thread(

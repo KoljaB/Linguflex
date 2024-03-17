@@ -102,11 +102,6 @@ class Engines():
                     repetition_penalty=coqui_repetition_penalty,
                     top_k=coqui_top_k,
                     top_p=coqui_top_p,
-                    # temperature=0.75,
-                    # length_penalty=1,
-                    # repetition_penalty=10,
-                    # top_k=50,
-                    # top_p=0.85,
                     add_sentence_filter=True,
                     use_deepspeed=coqui_use_deepspeed,
                     pretrained=coqui_pretrained)
@@ -154,9 +149,9 @@ class Engines():
         self.switch_engine(engine_name)
 
     def switch_engine(self, engine_name):
-        import traceback
-        print("switch_engine called from:")
-        print(traceback.format_stack())
+        # import traceback
+        # print("switch_engine called from:")
+        # print(traceback.format_stack())
 
         engine_name = engine_name.lower()
         if self.engine and self.state.engine_name == engine_name:
@@ -221,9 +216,10 @@ class Engines():
         ]
 
     def set_coqui_model(self, model):
-        import traceback
-        print(f"DEBUG set_coqui_model({model}) called from:")
-        print(traceback.format_stack())
+        # log.dbg(f"[speech]  set_coqui_model({model}) called from:")
+        # import traceback
+        # print(f"DEBUG set_coqui_model({model}) called from:")
+        # print(traceback.format_stack())
 
         if self.coqui_engine:
             self.state.coqui_model = model
