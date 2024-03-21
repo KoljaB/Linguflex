@@ -29,17 +29,18 @@ Adhering closely to the recommended setup will greatly enhance the likelihood of
 
 2. **Installation Process**:
 
-   - For windows run the batch file:
-     ```bash
-     _install_win.bat
-     ```
-   - For other platforms (Linux, Mac, etc., which are less recommended):
-     ```bash
-     pip install -r requirements.txt
-     pip install torch==2.1.2+cu118 torchaudio==2.1.2+cu118 --index-url https://download.pytorch.org/whl/cu118
-     pip install deepspeed
-     pip install llama-cpp-python
-     python download_models.py   
+   For windows run the batch file:
+   ```bash
+   _install_win.bat
+   ```
+   For other platforms (Linux, Mac, etc., which are less recommended):
+   ```bash
+   pip install -r requirements.txt
+   pip install torch==2.1.2+cu118 torchaudio==2.1.2+cu118 --index-url https://download.pytorch.org/whl/cu118
+   pip install deepspeed
+   pip install llama-cpp-python
+   python download_models.py   
+   ```
 
 3. **Adjust settings:**
    - Modify `lingu/settings.yaml` to suit your setup.
