@@ -64,7 +64,7 @@ listen:
   realtime_recorder_model: tiny.en
 
 speech:
-  warmup: true
+  warmup: false
   warmup_muted: false
   warmup_text: Hi
   language: en
