@@ -353,6 +353,6 @@ if __name__ == "__main__":
     install_library("numpy==1.23.5")
 
     if perform_download:
-        download_models(always_download_models)
+        download_models()
 
     # vram_mb = detect_vram()
