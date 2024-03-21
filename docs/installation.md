@@ -21,7 +21,8 @@ Adhering closely to the recommended setup will greatly enhance the likelihood of
 
 ## Windows-Installation
 
-1. **Clone the project:**
+1. **Clone the project**:
+
    ```bash
    git clone -b lingu-2.0-preview https://github.com/KoljaB/Linguflex.git
    cd Linguflex
@@ -42,7 +43,8 @@ Adhering closely to the recommended setup will greatly enhance the likelihood of
    python download_models.py   
    ```
 
-3. **Adjust settings:**
+3. **Adjust settings**:
+
    - Modify `lingu/settings.yaml` to suit your setup.
    - Set the required environment variables:
      - `OPENAI_API_KEY` for GPT API usage.
@@ -52,6 +54,7 @@ Adhering closely to the recommended setup will greatly enhance the likelihood of
      - `OPENWEATHERMAP_API_KEY` for the Weather module.
 
 4. **Starting the Application**:
+
    Either run `run.bat` or use the command:
    ```bash
    python -m lingu.core.run
