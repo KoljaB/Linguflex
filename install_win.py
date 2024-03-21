@@ -225,6 +225,8 @@ def install_deepspeed(deepspeed_version, cuda_version, python_version):
         ("0.13.1", "12.1", (3, 11)): "https://github.com/daswer123/deepspeed-windows/releases/download/13.1/deepspeed-0.13.1+cu121-cp311-cp311-win_amd64.whl"
     }
 
+                                      https://github.com/daswer123/xtts-webui/releases/download/deepspeed/deepspeed-0.11.2+cuda118-cp310-cp310-win_amd64.whl
+
     # Constructing the key for the mapping
     key = (deepspeed_version, cuda_version, (python_version[0], python_version[1]))
 
@@ -346,7 +348,7 @@ if __name__ == "__main__":
     printl("\nInstalling torch with CUDA ...")
     install_pytorch_torchaudio(cuda_version)
     printl("\nInstalling required deepspeed ...")
-    install_deepspeed("0.12.6", cuda_version, python_version)
+    install_deepspeed("0.11.2", cuda_version, python_version)
     printl("\nInstalling required llama.cpp ...")
     install_llama_cpp_python(cuda_version)
     printl("\nSetting numpy version ...")
