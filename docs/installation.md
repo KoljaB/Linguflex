@@ -33,7 +33,7 @@ This guide will help you set up your environment for the project. Please follow 
    _install_win.bat
    ```
 
-   For other platforms (not recommended, esp Mac OS will prob not work):  
+   For other platforms (not really recommended, especially Mac OS will probably not work; but let me know if you manage to get it run):  
    ```bash
    pip install -r requirements.txt
    pip install torch==2.1.2+cu118 torchaudio==2.1.2+cu118 --index-url https://download.pytorch.org/whl/cu118
