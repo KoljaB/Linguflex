@@ -225,8 +225,6 @@ def install_deepspeed(deepspeed_version, cuda_version, python_version):
         ("0.13.1", "12.1", (3, 11)): "https://github.com/daswer123/deepspeed-windows/releases/download/13.1/deepspeed-0.13.1+cu121-cp311-cp311-win_amd64.whl"
     }
 
-                                      https://github.com/daswer123/xtts-webui/releases/download/deepspeed/deepspeed-0.11.2+cuda118-cp310-cp310-win_amd64.whl
-
     # Constructing the key for the mapping
     key = (deepspeed_version, cuda_version, (python_version[0], python_version[1]))
 
