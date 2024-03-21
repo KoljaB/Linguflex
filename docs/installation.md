@@ -1,7 +1,9 @@
 
-# Installation Guide
+# Linguflex Installation Guide
 
-This guide will help you set up your environment for the project. Please follow the steps carefully.
+Welcome to the linguflex installation guide that helps you set up your environment for our project.  
+
+Adhering closely to the recommended setup will greatly enhance the likelihood of a successful and smooth operation.
 
 ## Prerequisites
 - Windows 10 or 11  
@@ -25,35 +27,30 @@ This guide will help you set up your environment for the project. Please follow 
    cd Linguflex
    ```
 
-2. **Installation:**
+2. **Installation Process**:
 
-   For windows:  
-
-   ```bash
-   _install_win.bat
-   ```
-
-   For other platforms (not really recommended, especially Mac OS will probably not work; but let me know if you manage to get it run):  
-   ```bash
-   pip install -r requirements.txt
-   pip install torch==2.1.2+cu118 torchaudio==2.1.2+cu118 --index-url https://download.pytorch.org/whl/cu118
-   pip install deepspeed
-   pip install llama-cpp-python
-   python download_models.py
-   ```
+   - For windows run the batch file:
+     ```bash
+     _install_win.bat
+     ```
+   - For other platforms (Linux, Mac, etc., which are less recommended):
+     ```bash
+     pip install -r requirements.txt
+     pip install torch==2.1.2+cu118 torchaudio==2.1.2+cu118 --index-url https://download.pytorch.org/whl/cu118
+     pip install deepspeed
+     pip install llama-cpp-python
+     python download_models.py   
 
 3. **Adjust settings:**
-   - adjust lingu/settings.yaml to configure linguflex to your environment
-     - in mail section enter your mail server settings
-   - setup the needed environment keys
-     - OPENAI_API_KEY to use GPT API for answers
-     - AZURE_SPEECH_KEY, AZURE_SPEECH_REGION to use Azure TTS
-     - ELEVENLABS_API_KEY to use Elevenlabs TTS
-     - GOOGLE_API_KEY to use Music Playout
-     - OPENWEATHERMAP_API_KEY to use Weather module
+   - Modify `lingu/settings.yaml` to suit your setup.
+   - Set the required environment variables:
+     - `OPENAI_API_KEY` for GPT API usage.
+     - `AZURE_SPEECH_KEY` and `AZURE_SPEECH_REGION` for Azure TTS.
+     - `ELEVENLABS_API_KEY` for Elevenlabs TTS.
+     - `GOOGLE_API_KEY` for Music Playout.
+     - `OPENWEATHERMAP_API_KEY` for the Weather module.
 
-4. **Start linguflex:**
-   - start run.bat or type:
-      ```bash
-      python -m lingu.core.run
-      ```
+4. **Starting the Application**:
+   Either run `run.bat` or use the command:
+   ```bash
+   python -m lingu.core.run
