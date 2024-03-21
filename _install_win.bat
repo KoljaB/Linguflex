@@ -1,5 +1,5 @@
 @echo off
-set PYTHON_EXE=D:\Programme\miniconda3\envs\textgen\python.exe
+set PYTHON_EXE=python.exe
 
 
 cd /d %~dp0
