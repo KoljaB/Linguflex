@@ -30,18 +30,35 @@ Adhering closely to the recommended setup will greatly enhance the likelihood of
 
 2. **Installation Process**:
 
-   For windows run the batch file:
-   ```bash
-   _install_win.bat
-   ```
-   For other platforms (Linux, Mac, etc., which are less recommended):
-   ```bash
-   pip install -r requirements.txt
-   pip install torch==2.1.2+cu118 torchaudio==2.1.2+cu118 --index-url https://download.pytorch.org/whl/cu118
-   pip install deepspeed
-   pip install llama-cpp-python
-   python download_models.py   
-   ```
+   - **For Windows Users**:
+
+     **If Python 3.10.9 is your main Python environment:**
+     - You can skip to running the installation script.
+
+     **If Python 3.10.9 is not your main Python environment:**
+     - Open the installation script file `_install_win.bat`.
+     - Enter the path to the .exe of your Python 3.10.9 environment in the second line. For example:
+       ```bash
+       set PYTHON_EXE=D:\Programme\miniconda3\envs\textgen\python.exe
+       ```
+     - Save the file.
+
+     **Run the installation script:**
+     - Execute the following command:
+       ```bash
+       _install_win.bat
+       ```
+
+   - **For Other Platforms (Linux, Mac, etc.)**:
+     - These platforms are less recommended and may require additional expertise.
+     - Install the requirements and dependencies:
+       ```bash
+       pip install -r requirements.txt
+       pip install torch==2.1.2+cu118 torchaudio==2.1.2+cu118 --index-url https://download.pytorch.org/whl/cu118
+       pip install deepspeed
+       pip install llama-cpp-python
+       python download_models.py   
+       ```
 
 3. **Adjust settings**:
 
