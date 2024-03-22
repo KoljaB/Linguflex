@@ -34,7 +34,25 @@ class MailLogic(Logic):
     def init(self):
         """Initializes the MailLogic class."""
         self.thread_started = False
-        self.fetcher = MailFetcher(imap_server, user_name, password)
+        self.fetcher = None
+        if not imap_server or not user_name or not password:
+            log.err(
+                "[mail] Missing IMAP server, username, or password.\n"
+                "  Please open the 'settings.yaml' file and provide "
+                "these data.")
+            self.state.set_disabled(True)
+        else:
+            try:
+                self.fetcher = MailFetcher(imap_server, user_name, password)
+            except Exception as e:
+                log.err(
+                    f"[mail] Initialization failed: {e}\n"
+                    "  Please open the 'settings.yaml' file and verify your "
+                    "server, username and pw data.\n"
+                    "  Check if the IMAP server is accessible.")
+                self.fetcher = None
+                self.state.set_disabled(True)
+
         self.ready()
 
     def return_emails(
@@ -103,6 +121,10 @@ class MailLogic(Logic):
         Args:
             mailbox (str): The mailbox from which to fetch emails.
         """
+
+        if not self.fetcher or state.is_disabled:
+            log.dbg("  [mail] state is disabled, not fetching mails")
+            return
 
         if state.last_fetch_time:
             last_fetch_time = datetime.fromisoformat(state.last_fetch_time)
@@ -258,6 +280,9 @@ class MailLogic(Logic):
     @repeat(60)
     def init_fetch_email(self):
         """Initializes and schedules the email fetching process."""
+        if not self.fetcher or state.is_disabled:
+            return
+
         self.fetch_email()
         state.process_state()
 

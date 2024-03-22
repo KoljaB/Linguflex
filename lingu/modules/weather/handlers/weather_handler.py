@@ -136,6 +136,13 @@ def convert_to_optimized_structure(original_data):
 
 
 def get_weather_data(city: str):
+    if not api_key:
+        log.err(
+            "[weather] Missing OpenWeatherMap API key.\n"
+            "  Open the 'settings.yaml' file and provide the API key.")
+        err_str = "Can't provide weather, OpenWeatherMap API key missing"
+        return [], err_str, "?", "?"
+
     url = (
         f"http://api.openweathermap.org/data/2.5/forecast?q={city}"
         f"&appid={api_key}&units=metric"

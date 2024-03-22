@@ -5,6 +5,7 @@ from enum import Enum
 import colorama
 import datetime
 import shutil
+import os
 
 colorama.init()
 
@@ -28,6 +29,22 @@ CONFIG_SECTION_NOT_FOUND_ERROR_MESSAGE = \
     f"Configuration section for {CONFIG_SECTION} not found in config file"
 CONFIG_PARSING_ERROR_MESSAGE = \
     f"Error parsing configuration for {CONFIG_SECTION}."
+
+LOG_DIR = "logs"
+# Create the log directory if it does not exist
+if not os.path.exists(LOG_DIR):
+    os.makedirs(LOG_DIR)
+
+LOG_FILE_DATE = datetime.datetime.now().strftime("%Y-%m-%d")
+LOG_FILE_TIME = datetime.datetime.now().strftime("%H-%M-%S")
+LOG_FILE_DATETIME = f"{LOG_FILE_DATE}_{LOG_FILE_TIME}"
+LOG_FILE_NAME = f"logfile_{LOG_FILE_DATETIME}.log"
+LOG_FILE_PATH = os.path.join(LOG_DIR, LOG_FILE_NAME)
+
+# Delete the log file if it exists
+if os.path.exists(LOG_FILE_PATH):
+    os.remove(LOG_FILE_PATH)
+
 debug_level = Level.Low
 last_timestamp = None
 start_time = datetime.datetime.now()
@@ -186,64 +203,88 @@ def _log(dbg_lvl: Level,
         timestamp_to_print = get_elapsed_time()
         len_timestamp_to_print = len(timestamp_to_print)
 
-        if dbg_lvl == Level.ERR:
-            # play_sound("error")
-            timestamp_to_print = colorize(Level.ERR, timestamp_to_print)
-            colored_text = colorize(Level.Low, text)
-            chars_left = cols - len_timestamp_to_print - 1
-            fill_minus = '-' * chars_left
-            print("")
-            print(timestamp_to_print + '|' + Fore.WHITE + Back.RED
-                  + fill_minus + Style.RESET_ALL)
-            print(timestamp_to_print + '|' + Fore.WHITE + Back.RED
-                  + "       " + Style.RESET_ALL)
-            print(timestamp_to_print + '|' + Fore.WHITE + Back.RED
-                  + "ERROR: " + Style.RESET_ALL + " " + colored_text)
-            print(timestamp_to_print + '|' + Fore.WHITE + Back.RED
-                  + "       " + Style.RESET_ALL)
-            print(timestamp_to_print + '|' + Fore.RED + fill_minus
-                  + Style.RESET_ALL)
-            print("")
-        elif debug_level.value <= dbg_lvl.value:
-            if last_timestamp == timestamp_to_print:
-                timestamp_to_print = colorize(Level.Dbg, timestamp_to_print)
-            else:
-                last_timestamp = timestamp_to_print
-                timestamp_to_print = colorize(Level.Info, timestamp_to_print)
+        with open(LOG_FILE_PATH, 'a', encoding='utf-8') as log_file:
 
-            timestamp_to_print += '|'
-            if lf:
+            if dbg_lvl == Level.ERR:
+                # play_sound("error")
+                timestamp_to_print = colorize(Level.ERR, timestamp_to_print)
                 chars_left = cols - len_timestamp_to_print - 1
-                if len(text) > chars_left or '\n' in text:
-                    chunks = chunk_text(text, chars_left - leading_spaces)
-                    first_line = True
-                    for chunk in chunks:
-                        print_line = timestamp_to_print
-                        if first_line:
-                            print_line += colorize(dbg_lvl, str(chunk))
-                        else:
-                            print_line += ' ' * leading_spaces
-                            print_line += colorize(dbg_lvl, str(chunk))
+                fill_minus = '-' * chars_left
+                print("")
+                print(timestamp_to_print + '|' + Fore.WHITE + Back.RED
+                    + fill_minus + Style.RESET_ALL)
+                print(timestamp_to_print + '|' + Fore.WHITE + Back.RED
+                    + "       " + Style.RESET_ALL)
+                
+                lines = text.split('\n')
+                for line in lines:
+                    colored_text = colorize(Level.Low, line)
+                    print(timestamp_to_print + '|' + Fore.WHITE + Back.RED
+                        + "ERROR: " + Style.RESET_ALL + " " + colored_text)
+                print(timestamp_to_print + '|' + Fore.WHITE + Back.RED
+                    + "       " + Style.RESET_ALL)
+                print(timestamp_to_print + '|' + Fore.RED + fill_minus
+                    + Style.RESET_ALL)
+                print("")
 
-                        if len(print_line) > 0:
-                            if flush:
-                                print(print_line, end="", flush=True)
-                            else:
-                                print(print_line)
-                        first_line = False
+                # Log to file without colorization
+                log_file.write(f"\n{timestamp_to_print}|ERROR: {text}\n\n")
+
+            elif debug_level.value <= dbg_lvl.value:
+                if last_timestamp == timestamp_to_print:
+                    timestamp_to_print = colorize(Level.Dbg, timestamp_to_print)
                 else:
-                    if flush:
-                        print(
-                            timestamp_to_print + colorize(dbg_lvl, str(text)),
-                            end="", flush=True)
+                    last_timestamp = timestamp_to_print
+                    timestamp_to_print = colorize(Level.Info, timestamp_to_print)
+
+                timestamp_to_print += '|'
+                last_timestamp_to_print = last_timestamp + '|'
+                if lf:
+                    chars_left = cols - len_timestamp_to_print - 1
+                    if len(text) > chars_left or '\n' in text:
+                        chunks = chunk_text(text, chars_left - leading_spaces)
+                        first_line = True
+                        for chunk in chunks:
+                            print_line_uncolorized = last_timestamp_to_print
+                            print_line = timestamp_to_print
+                            if first_line:
+                                print_line_uncolorized += chunk
+                                print_line += colorize(dbg_lvl, str(chunk))
+                            else:
+                                print_line_uncolorized += ' ' * leading_spaces
+                                print_line_uncolorized += chunk
+                                print_line += ' ' * leading_spaces
+                                print_line += colorize(dbg_lvl, str(chunk))
+
+                            if len(print_line) > 0:
+                                if flush:
+                                    print(print_line, end="", flush=True)
+                                    log_file.write(print_line_uncolorized)
+                                else:
+                                    print(print_line)
+                                    log_file.write(print_line_uncolorized + "\n")
+                            first_line = False
                     else:
-                        print(
-                            timestamp_to_print + colorize(dbg_lvl, str(text))
-                            )
-            else:
-                print(
-                    timestamp_to_print + colorize(dbg_lvl, str(text)),
-                    end="", flush=True)
+                        if flush:
+                            print(
+                                timestamp_to_print +
+                                colorize(dbg_lvl, str(text)),
+                                end="", flush=True)
+                            log_file.write(
+                                last_timestamp_to_print + str(text))
+                        else:
+                            print(
+                                timestamp_to_print +
+                                colorize(dbg_lvl, str(text))
+                                )
+                            log_file.write(
+                                last_timestamp_to_print + str(text) + "\n")
+                else:
+                    print(
+                        timestamp_to_print + colorize(dbg_lvl, str(text)),
+                        end="", flush=True)
+                    log_file.write(
+                        last_timestamp_to_print + str(text))
 
 
 def get_timestamp() -> str:

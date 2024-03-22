@@ -117,6 +117,8 @@ class Tools:
                         )
                         class_instance = obj.from_arguments(args)
                         if hasattr(class_instance, 'on_populated'):
+                            log.dbg("  calling on_populated for "
+                                    f"{inf_obj.name}")
                             return_value = class_instance.on_populated()
                         else:
                             return_value = "success"
@@ -171,8 +173,8 @@ class Tools:
             if inf_obj.is_internal:
                 continue
 
-            print(f"  checking {inf_obj.name}")
-            print(f"  keywords {inf_obj.language_info.get('keywords', None)}")
+            # print(f"  checking {inf_obj.name}")
+            # print(f"  keywords {inf_obj.language_info.get('keywords', None)}")
 
             if "keywords" in inf_obj.language_info and \
                     inf_obj.language_info["keywords"] and \
@@ -192,8 +194,8 @@ class Tools:
                         init_prompt = inf_obj.language_info["init_prompt"]
                         self.prompt.add(init_prompt)
                 functions.append(inf_obj.schema)
-                log.dbg(f"  no keywords attached to {inf_obj.name}, "
-                        "added schema")
+                # log.dbg(f"  no keywords attached to {inf_obj.name}, "
+                #         "added schema")
                 continue
 
             if keywords_in_input:
@@ -205,8 +207,8 @@ class Tools:
                 log.dbg(f"  keywords detected {str(keywords_in_input)} "
                         f"for {inf_obj.name}, added schema")
                 continue
-            else:
-                log.dbg(f"  no keywords detected for {inf_obj.name}")
+            # else:
+            #     log.dbg(f"  no keywords detected for {inf_obj.name}")
 
             if inf_obj.execute_count:
                 log.dbg(f"  execute_count for {inf_obj.name} is "

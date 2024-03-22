@@ -3,6 +3,7 @@ from .state import state
 from .handlers.feed2stream import BufferStream
 from .handlers.engines import Engines
 from .handlers.voices import Voices
+import threading
 import os
 
 
@@ -95,7 +96,8 @@ class SpeechLogic(Logic):
             warmup_text = cfg("speech", "warmup_text", default="Hi")
             warmup_muted = bool(cfg("speech", "warmup_muted", default=False))
 
-            self.test_voice(warmup_text, warmup_muted)
+            # delayed execute warmup
+            threading.Timer(2, self.test_voice, args=[warmup_text, warmup_muted]).start()
 
     def assistant_text_start(self):
         """
@@ -127,6 +129,7 @@ class SpeechLogic(Logic):
             text (str): The text to be synthesized and played.
 
         """
+        # print(f"Playing text: {text}, muted: {muted}")
         self.muted = muted
         self.text_stream.add(text)
         self.engines.stream.feed(self.text_stream.gen())
@@ -135,20 +138,45 @@ class SpeechLogic(Logic):
             if state.rvc_enabled:
                 self.engines.stream.play_async(
                     fast_sentence_fragment=True,
-                    minimum_sentence_length=10,
-                    minimum_first_fragment_length=10,
+                    minimum_sentence_length=5,
+                    minimum_first_fragment_length=5,
                     # log_synthesized_text=True,
-                    on_audio_chunk=self.feed_to_rvc,                    
-                    context_size=8,
-                    muted=True)
+                    on_audio_chunk=self.feed_to_rvc,
+                    context_size=4,
+                    muted=True,
+                    sentence_fragment_delimiters=".?!;:,\n()[]{}。-“”„”—…/|《》¡¿\"",
+                    force_first_fragment_after_words=5,
+                    )
             else:
                 self.engines.stream.play_async(
                     fast_sentence_fragment=True,
-                    minimum_sentence_length=10,
-                    minimum_first_fragment_length=10,
+                    minimum_sentence_length=5,
+                    minimum_first_fragment_length=5,
                     # log_synthesized_text=True,
-                    context_size=8,
-                    muted=muted)
+                    context_size=4,
+                    muted=muted,
+                    sentence_fragment_delimiters=".?!;:,\n()[]{}。-“”„”—…/|《》¡¿\"",
+                    force_first_fragment_after_words=5,
+                    )
+
+        # if not self.engines.stream.is_playing():
+        #     if state.rvc_enabled:
+        #         self.engines.stream.play_async(
+        #             fast_sentence_fragment=True,
+        #             minimum_sentence_length=10,
+        #             minimum_first_fragment_length=10,
+        #             # log_synthesized_text=True,
+        #             on_audio_chunk=self.feed_to_rvc,                    
+        #             context_size=8,
+        #             muted=True)
+        #     else:
+        #         self.engines.stream.play_async(
+        #             fast_sentence_fragment=True,
+        #             minimum_sentence_length=10,
+        #             minimum_first_fragment_length=10,
+        #             # log_synthesized_text=True,
+        #             context_size=8,
+        #             muted=muted)
 
     def test_voice(self, text, muted=False):
         """
@@ -158,7 +186,9 @@ class SpeechLogic(Logic):
             text (str): The text to be synthesized and played for testing.
 
         """
+        print(f"Testing voice: {text}, muted: {muted}")
         self.trigger("stop_recorder")
+        print("self.state.set_active(True)")
         self.state.set_active(True)
 
         self.text_stream = BufferStream()
@@ -293,5 +323,6 @@ class SpeechLogic(Logic):
 
             if self.rvc and self.rvc.is_playing():
                 self.rvc.stop()
+
 
 logic = SpeechLogic()

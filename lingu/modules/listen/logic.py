@@ -34,6 +34,8 @@ long_term_noise_decay = float(cfg(
     "listen", "long_term_noise_decay", default=0.995))
 short_term_noise_decay = float(cfg(
     "listen", "short_term_noise_decay", default=0.9))
+allow_speech_interruption = bool(cfg(
+    "listen", "allow_speech_interruption", default=True))
 sentence_delimiters = '.?!。'
 
 
@@ -97,7 +99,7 @@ class ListenLogic(Logic):
         self.create_recorder()
 
     def _on_stop_recorder(self):
-        log.dbg("  [listen] stop recorder")
+        log.inf("  [listen] stop recorder")
         self.start_listen_event.clear()
         self.recorder.abort()
         self.recorder.stop()
@@ -148,6 +150,7 @@ class ListenLogic(Logic):
         self.start_listen_event.set()
 
     def init_finished(self):
+        # print("⚠️⚠️⚠️ init finished Creating recorder")
         self.create_recorder()
 
     def create_recorder(self):
@@ -259,7 +262,7 @@ class ListenLogic(Logic):
                 self.long_term_noise_level,
                 self.current_noise_level)
 
-        if self.state.interrupt_thresh > 0:
+        if self.state.interrupt_thresh > 0 and allow_speech_interruption:
             if pegel > self.state.interrupt_thresh:
                 self.trigger("volume_interrupt")
 
@@ -318,10 +321,12 @@ class ListenLogic(Logic):
                 self._final_text(text)
 
         while (self.recorder_active):
+            # print("  [listen] ⚠️⚠️⚠️ waiting for start_listen_event")
             self.start_listen_event.wait()
 
             self.start_listen_event.clear()
 
+            # print("  [listen] ⚠️⚠️⚠️ self.recorder.text")
             self.recorder.text(final_text)
 
         self.start_listen_event.clear()

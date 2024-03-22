@@ -177,7 +177,7 @@ class BrainLogic(Logic):
         """
         system_prompt_message = {
             'role': 'system',
-            'content': self.get_system_prompt()
+            'content': prompt.system_prompt()
         }
 
         self.history.trim_tokens(

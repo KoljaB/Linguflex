@@ -6,6 +6,7 @@ from .history import History
 import instructor
 import llama_cpp
 import itertools
+import json
 import time
 
 gpu_layers = int(cfg("local_llm", "gpu_layers", default=17))
@@ -24,6 +25,10 @@ tfs_z = int(cfg("local_llm", "tfs_z", default=1))
 mirostat_mode = int(cfg("local_llm", "mirostat_mode", default=0))
 mirostat_tau = int(cfg("local_llm", "mirostat_tau", default=5))
 mirostat_eta = float(cfg("local_llm", "mirostat_eta", default=0.1))
+verbose = bool(cfg("local_llm", "verbose", default=False))
+n_threads = int(cfg("local_llm", "threads", default=6))
+rope_freq_base = int(cfg("local_llm", "rope_freq_base", default=10000))
+rope_freq_scale = float(cfg("local_llm", "rope_freq_scale", default=1.0))
 
 
 class ChatAnswer(BaseModel):
@@ -58,9 +63,12 @@ class LocalLLMInterface(LLM_Base):
             n_gpu_layers=gpu_layers,
             chat_format="chatml",
             n_ctx=context_length,
+            n_threads=n_threads,
+            rope_freq_base=rope_freq_base,
+            rope_freq_scale=rope_freq_scale,
             draft_model=LlamaPromptLookupDecoding(num_pred_tokens=2),
             logits_all=True,
-            verbose=True
+            verbose=verbose
         )
         self.create = instructor.patch(
             create=self.llama.create_chat_completion_openai_v1,
@@ -132,7 +140,7 @@ class LocalLLMInterface(LLM_Base):
 
     def decide_for_tool_to_call(self, messages, tools):
         if not tools:
-            return
+            return False, None
 
         user_message, user_content = self.get_user_message(messages)
 
@@ -224,6 +232,7 @@ class LocalLLMInterface(LLM_Base):
             # executing function call
             if hasattr(extraction_stream, 'on_populated'):
                 return_value = extraction_stream.on_populated()
+                log.dbg(f"  [brain] tool {fct_call} returned: {return_value}")
             else:
                 return_value = "success"
 
@@ -265,30 +274,32 @@ Focus on providing a short, concise, and direct response to the user's query, ra
 """
         }
 
-        self.history.history.append(message_tool_execution)
+        messages.append(message_tool_execution)
+        #self.history.history.append(message_tool_execution)
 
         return True, return_value
 
     def generate(self, messages, tools=None):
         self.abort = False
 
-        log.dbg(f"  [brain] {self.model_name}"
-                " generating answer for messages:"
-                f" {messages}")
+        # log.dbg(f"  [brain] {self.model_name}"
+        #         " generating answer for messages:"
+        #         f" {messages}")
 
         self.prompt.start()
 
-        self.decide_for_tool_to_call(messages, tools)
+        was_tool_called, return_value = \
+            self.decide_for_tool_to_call(messages, tools)
 
         prompt.add(self.prompt.get(), prioritize=True)
 
-        if tools:
-            for tool in tools:
-                name = tool["function"]["name"]
-                description = tool["function"]["description"]
+        # if tools:
+        #     for tool in tools:
+        #         name = tool["function"]["name"]
+        #         description = tool["function"]["description"]
 
-                log.dbg(f"  [brain] {self.model_name} tool name: "
-                        f"{name} description: {description}")
+        #         log.dbg(f"  [brain] {self.model_name} tool name: "
+        #                 f"{name} description: {description}")
 
         # Define the llm creation parameters in a dictionary
         params = {
@@ -303,13 +314,33 @@ Focus on providing a short, concise, and direct response to the user's query, ra
             "mirostat_eta": mirostat_eta,
         }
 
-        # Log the parameters using the dictionary
-        log.dbg(f"  [brain] Parameters: {params}")
+        if was_tool_called:
+            # rewrite system prompt, because instructions of tool may have been added
+
+            # create new system prompt
+            new_system_prompt_message = {
+                'role': 'system',
+                'content': prompt.system_prompt()
+            }
+            # remove first message from messages (existing system prompt)
+            messages.pop(0)
+
+            # insert system prompt as first message into messages
+            messages.insert(0, new_system_prompt_message)
+
+        # log.dbg(f"  [brain] Parameters: {params}")
 
         # Call the API using the dictionary unpacking
         self.wait_wake()
         if self.abort:
             return
+
+        log.inf(f"  [brain] calling {model_name} with params:")
+        log.inf('    {}'.format(json.dumps(params, indent=4)))
+        # log.inf('  Tools:')
+        # log.inf('=>{}'.format(json.dumps(tools, indent=4)))
+        log.inf('  Messages:')
+        log.inf('=>{}'.format(json.dumps(messages, indent=4)))
 
         response = self.llama.create_chat_completion_openai_v1(
             messages=messages,

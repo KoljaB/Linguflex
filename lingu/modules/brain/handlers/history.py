@@ -208,31 +208,51 @@ class History:
         """
         Get the number of tokens in the messages.
         """
-        try:
-            result = openai_token_counter(
-                messages=messages,
-                model=model,
-                functions=functions,
-                function_call="auto"
-            )
-            return result
-        except Exception as e:
-            log.err(f"  [history] Error in token counting: {e}")
-            result_no_tools = openai_token_counter(
-                messages=messages,
-                model=model,
-                functions=None,
-                function_call="auto"
-            )
-            tokens_tools_est = 0
-            if functions:
-                for fct in functions:
-                    print(fct)
-            log.dbg(
-                f"  [history] Estimated tokens for tools: {tokens_tools_est}")
-            result = result_no_tools + tokens_tools_est
+        result_no_tools = openai_token_counter(
+            messages=messages,
+            model=model,
+            functions=None,
+            function_call="auto"
+        )
+        tokens_tools_est = 0
+        if functions:
+            for fct in functions:
+                # print(fct)
+                tokens_tools_est += len(str(fct))
+        tokens_tools_est = int(tokens_tools_est * 0.33)
+        # log.dbg(
+        #     f"  [history] Estimated tokens for tools: {tokens_tools_est}")
+        result = result_no_tools + tokens_tools_est
 
-            return result
+        return result
+
+        # try:
+        #     result = openai_token_counter(
+        #         messages=messages,
+        #         model=model,
+        #         functions=functions,
+        #         function_call="auto"
+        #     )
+        #     return result
+        # except Exception as e:
+        #     log.err(f"  [history] Error in token counting: {e}")
+        #     result_no_tools = openai_token_counter(
+        #         messages=messages,
+        #         model=model,
+        #         functions=None,
+        #         function_call="auto"
+        #     )
+        #     tokens_tools_est = 0
+        #     if functions:
+        #         for fct in functions:
+        #             print(fct)
+        #             tokens_tools_est += len(str(fct))
+        #     tokens_tools_est = tokens_tools_est * 0.33
+        #     log.dbg(
+        #         f"  [history] Estimated tokens for tools: {tokens_tools_est}")
+        #     result = result_no_tools + tokens_tools_est
+
+        #     return result
 
     def trim_tokens(
             self,
