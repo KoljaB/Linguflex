@@ -1,8 +1,9 @@
 # Linguflex
 
 >  
-> 🌟 Linguflex 2.0 Preview [here](https://github.com/KoljaB/Linguflex/tree/lingu-2.0-preview) 🌟 
->  
+> **[🌟 Linguflex 2.0 Preview 🌟](https://github.com/KoljaB/Linguflex/tree/lingu-2.0-preview)**  
+> **[🎥 Linguflex 2.0 Installation Guide](https://www.youtube.com/watch?v=KJ4HQ5Ud9L8)**  
+> 
 
 
 *A humble attempt to bring sci-fi dreams of capable Jarvis-style AI companions closer to reality, albeit in an early and not yet mature state*
