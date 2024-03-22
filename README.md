@@ -1,6 +1,10 @@
 # Linguflex 2.0
 
 *Bringing the sci-fi dream of a Jarvis-style AI companion into reality. Presenting Linguflex 2.0 – an evolving journey towards an advanced AI assistant.*
+>
+> **[🎥 Linguflex 2.0 Installation](./docs/installation.md)**  
+> **[🎥 Linguflex 2.0 Installation Guide](https://www.youtube.com/watch?v=KJ4HQ5Ud9L8)**  
+
 
 ## Introduction
 
@@ -37,7 +41,5 @@ Linguflex 2.0 emerges from a deep-rooted passion for science fiction, aspiring t
 - **Create:** Image generation using DALL-E API, turning text prompts into vivid images.
 
 ## Getting Started
-
-Follow the [Installation Guide](./docs/installation.md) for step-by-step instructions about how to set up the Linguflex core.
 
 Follow the [Modules Guide](./docs/modules.md) for step-by-step instructions about how to set up and configure the Linguflex modules.
