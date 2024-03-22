@@ -1,77 +1,94 @@
-
 # Linguflex Installation Guide
 
-Welcome to the linguflex installation guide that helps you set up your environment for our project.  
+Welcome to the Linguflex installation guide. Try to keep close to the recommended environment to enhance the likelihood of a successful installation and smooth operation.
 
-Adhering closely to the recommended setup will greatly enhance the likelihood of a successful and smooth operation.
+## Table of Contents
+1. [Prerequisites](#prerequisites)
+2. [Windows Installation](#windows-installation)
+   - [For Windows Users](#for-windows-users)
+   - [For Other Platforms](#for-other-platforms)
+3. [Adjust Settings](#adjust-settings)
+4. [Environment Variables](#environment-variables)
+   - [Temporary Setting](#temporary-setting)
+   - [Permanent Setting](#permanent-setting)
+5. [Starting the Application](#starting-the-application)
 
 ## Prerequisites
-- Windows 10 or 11  
-  (Linux may work but will probably require some experience installing complex projects)
-- Nvidia Graphics Card recommended  
-  (otherwise you might be restricted to only using APIs for LLM and TTS)
-- Python 3.10.9  
-  https://www.python.org/downloads/release/python-3109/
-- NVIDIA CUDA Toolkit installed (11.8 STRONGLY recommended)  
-  https://developer.nvidia.com/cuda-11-8-0-download-archive
-- NVIDIA cuDNN installed (8.7.0 for CUDA 11.x recommended)  
-  https://developer.nvidia.com/rdp/cudnn-archive
-- ffmpeg installed  
-  https://ffmpeg.org/download.html
+Before you begin, ensure you have the following:
+- Operating System: Windows 10 or 11 (Linux may work but requires additional experience)
+- Graphics Card: Nvidia (recommended for full feature access)
+- Python Version: [3.10.9](https://www.python.org/downloads/release/python-3109/)
+- [NVIDIA CUDA Toolkit 11.8](https://developer.nvidia.com/cuda-11-8-0-download-archive) (STRONGLY recommended)
+- [NVIDIA cuDNN 8.7.0 for CUDA 11.x](https://developer.nvidia.com/rdp/cudnn-archive) (recommended)
+- [ffmpeg](https://ffmpeg.org/download.html)
 
-## Windows-Installation
+## Windows Installation
 
-1. **Clone the project**:
-
+### For Windows Users
+#### 1. Clone the Project:
    ```bash
    git clone -b lingu-2.0-preview https://github.com/KoljaB/Linguflex.git
    cd Linguflex
    ```
 
-2. **Installation Process**:
+#### 2. Installation Process:
+   - **If Python 3.10.9 is your main Python environment:**
+     - Proceed directly to running the installation script.
 
-   - **For Windows Users**:
-
-     **If Python 3.10.9 is your main Python environment:**
-     - You can skip to running the installation script.
-
-     **If Python 3.10.9 is not your main Python environment:**
-     - Open the installation script file `_install_win.bat`.
-     - Enter the path to the .exe of your Python 3.10.9 environment in the second line. For example:
+   - **If Python 3.10.9 is not your main Python environment:**
+     - Open `_install_win.bat`.
+     - Enter the path to Python 3.10.9 `.exe` on the second line, e.g.,
        ```bash
        set PYTHON_EXE=D:\Programme\miniconda3\envs\textgen\python.exe
        ```
      - Save the file.
 
-     **Run the installation script:**
-     - Execute the following command:
-       ```bash
-       _install_win.bat
-       ```
+   - **Run the Installation Script:**
+     ```bash
+     _install_win.bat
+     ```
 
-   - **For Other Platforms (Linux, Mac, etc.)**:
-     - These platforms are less recommended and may require additional expertise.
-     - Install the requirements and dependencies:
-       ```bash
-       pip install -r requirements.txt
-       pip install torch==2.1.2+cu118 torchaudio==2.1.2+cu118 --index-url https://download.pytorch.org/whl/cu118
-       pip install deepspeed
-       pip install llama-cpp-python
-       python download_models.py   
-       ```
+### For Other Platforms
+(Linux, Mac, etc. - Note: These require additional expertise)
+- Install the requirements and dependencies:
+  ```bash
+  pip install -r requirements.txt
+  pip install torch==2.1.2+cu118 torchaudio==2.1.2+cu118 --index-url https://download.pytorch.org/whl/cu118
+  pip install deepspeed
+  pip install llama-cpp-python
+  python download_models.py   
+  ```
 
-3. **Adjust settings**:
+## Adjust Settings
+Edit the `lingu/settings.yaml` file to tailor Linguflex to your setup requirements. For the mail module to function properly, you must configure the IMAP server, username, and password in this settings file.  
 
-   - Modify `lingu/settings.yaml` to suit your setup.
-   - Set the required environment variables:
-     - `OPENAI_API_KEY` for GPT API usage.
-     - `AZURE_SPEECH_KEY` and `AZURE_SPEECH_REGION` for Azure TTS.
-     - `ELEVENLABS_API_KEY` for Elevenlabs TTS.
-     - `GOOGLE_API_KEY` for Music Playout.
-     - `OPENWEATHERMAP_API_KEY` for the Weather module.
+To use the project's default language model, you need to set the OPENAI_API_KEY. Alternatively, to switch to a local language model, adjust the use_local_llm parameter in the local_llm section of settings.yaml to true.
 
-4. **Starting the Application**:
+## Environment Variables
+### Setting Environment Variables:
 
-   Either run `run.bat` or use the command:
-   ```bash
-   python -m lingu.core.run
+#### Temporary Setting (Session-only):
+For temporary usage (lasts until the Command Prompt session is closed):
+```cmd
+set OPENAI_API_KEY=your_openai_api_key_here
+```
+
+#### Permanent Setting:
+For permanent usage (persists across sessions and reboots):
+```cmd
+setx OPENAI_API_KEY "your_openai_api_key_here"
+```
+
+Required Variables:
+- `OPENAI_API_KEY` (for GPT API)
+- `AZURE_SPEECH_KEY` and `AZURE_SPEECH_REGION` (for Azure TTS)
+- `ELEVENLABS_API_KEY` (for Elevenlabs TTS)
+- `GOOGLE_API_KEY` (for Music Playout)
+- `OPENWEATHERMAP_API_KEY` (for Weather module)
+
+## Starting the Application
+Run the application using:
+```bash
+python -m lingu.core.run
+```
+Or execute `run.bat`.
