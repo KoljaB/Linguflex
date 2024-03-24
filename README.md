@@ -2,8 +2,8 @@
 
 *Bringing the sci-fi dream of a Jarvis-style AI companion into reality. Presenting Linguflex 2.0 – an evolving journey towards an advanced AI assistant.*
 >
-> **[🎥 Linguflex 2.0 Installation](./docs/installation.md)**  
-> **[🎥 Linguflex 2.0 Installation Guide](https://www.youtube.com/watch?v=KJ4HQ5Ud9L8)**  
+> **[📓 Linguflex 2.0 installation ](./docs/installation.md)**  
+> **[🎥 Video guide ](https://www.youtube.com/watch?v=KJ4HQ5Ud9L8)**  
 
 
 ## Introduction
