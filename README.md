@@ -24,12 +24,12 @@ Linguflex 2.0 emerges from a deep-rooted passion for science fiction, aspiring t
 - **Brain (Cognitive Processing Module):** At the heart of Linguflex, this module processes user input, powered by either a local language model or OpenAI's technology.
 - **Speech (Audio Output Module):** A versatile speech engine offering customizable TTS options, various provider choices, and advanced voice tuning capabilities, including Realtime Voice Cloning (RVC).
 
-### Current Expansion Modules
+### Current [Expansion Modules](./docs/modules.md)
 - **Mimic:** This creative tool allows users to design custom AI characters, assign unique voices created with the Speech module, and switch between them.
-- **Music:** A voice-command module for playing selected songs or albums, enhancing the user experience with musical integration.
-- **Mail:** Retrieves emails via IMAP, integrating with your digital correspondence.
-- **Weather:** Provides current weather data and forecasts, adapting to your location.
-- **House:** Smart Home control for Tuya-compatible devices, enhancing your living experience.
+- **[Music](./docs/music.md):** A voice-command module for playing selected songs or albums, enhancing the user experience with musical integration.
+- **[Mail](./docs/mail.md):** Retrieves emails via IMAP, integrating with your digital correspondence.
+- **[Weather](./docs/weather.md):** Provides current weather data and forecasts, adapting to your location.
+- **[House](./docs/house.md):** Smart Home control for Tuya-compatible devices, enhancing your living experience.
 
 ### Modules Coming Soon
 - **See:** Empower the assistant with visual capabilities using the GPT Vision API. Enables processing of webcam pictures and desktop screenshots.
