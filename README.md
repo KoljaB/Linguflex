@@ -19,13 +19,15 @@ Linguflex 2.0 emerges from a deep-rooted passion for science fiction, aspiring t
 - **Enhanced Functionality:** Streamlined function selection allows Linguflex to quickly adapt and respond to a wide range of text-based commands and queries.
 - **Developer-Friendly:** Building new modules is more intuitive and efficient, thanks to the minimalistic and clear coding framework.
 
+## [Modules](./docs/modules.md)
+
 ### Core Features
 - **Listen (Audio Input Module):** Serving as Linguflex's auditory system, this module captures spoken instructions via the microphone with precision.
-- **Brain (Cognitive Processing Module):** At the heart of Linguflex, this module processes user input, powered by either a local language model or OpenAI's technology.
-- **Speech (Audio Output Module):** A versatile speech engine offering customizable TTS options, various provider choices, and advanced voice tuning capabilities, including Realtime Voice Cloning (RVC).
+- **[Brain](./docs/brain.md):** Cognitive Processing Module. Heart of Linguflex, processes user input, either with a local language model or OpenAI GPT API.
+- **Speech (Audio Output Module):** Offers realtime TTS with various provider options, and advanced voice tuning capabilities, including Realtime Voice Cloning (RVC).
 
-### Current [Expansion Modules](./docs/modules.md)
-- **Mimic:** This creative tool allows users to design custom AI characters, assign unique voices created with the Speech module, and switch between them.
+### Current Expansion Modules
+- **[Mimic](./docs/mimic.md):** This creative tool allows users to design custom AI characters, assign unique voices created with the Speech module, and switch between them.
 - **[Music](./docs/music.md):** A voice-command module for playing selected songs or albums, enhancing the user experience with musical integration.
 - **[Mail](./docs/mail.md):** Retrieves emails via IMAP, integrating with your digital correspondence.
 - **[Weather](./docs/weather.md):** Provides current weather data and forecasts, adapting to your location.

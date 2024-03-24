@@ -1,8 +1,13 @@
 # Modules
 
-[Music](./music.md)
-[Weather](./weather.md)
-[Mail](./mail.md)
+## Module docs
+
+- [Brain](./docs/brain.md)
+- [Mimic](./docs/mimic.md)
+- [Music](./music.md)
+- [Weather](./weather.md)
+- [Mail](./mail.md)
+- [House](./docs/house.md)
 
 ## Sorting modules
 
