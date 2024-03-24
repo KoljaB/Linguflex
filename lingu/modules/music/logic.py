@@ -125,12 +125,20 @@ class MusicLogic(Logic):
 
         return song_name
 
+    def get_seconds_left(self):
+        return self.player.get_seconds_left()
+
     def get_duration_string(self, audio_information):
         seconds_left = audio_information["seconds_left"]
         if seconds_left > 1:
             return self.format_duration(seconds_left)
         else:
             return ""
+
+    def set_song_position(self, position):
+        if not self.player:
+            return no_api_key_msg
+        self.player.set_song_position(position)
 
     def on_playback_start(self):
         self.state.set_active(True)

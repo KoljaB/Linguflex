@@ -208,18 +208,26 @@ class History:
         """
         Get the number of tokens in the messages.
         """
-        result_no_tools = openai_token_counter(
-            messages=messages,
-            model=model,
-            functions=None,
-            function_call="auto"
-        )
+        # both openai_function_tokens and openai_token_counter libraries fail
+        # to count tokens in some cases, so we just estimate
+        estimation_factor = 0.33
+
+        try:
+            result_no_tools = openai_token_counter(
+                messages=messages,
+                model=model,
+                functions=None,
+                function_call="auto"
+            )
+        except Exception as e:
+            log.wrn(f"  [history] Error in token counting: {e}")
+            result_no_tools = int(len(str(messages)) * estimation_factor)
         tokens_tools_est = 0
         if functions:
             for fct in functions:
                 # print(fct)
                 tokens_tools_est += len(str(fct))
-        tokens_tools_est = int(tokens_tools_est * 0.33)
+        tokens_tools_est = int(tokens_tools_est * estimation_factor)
         # log.dbg(
         #     f"  [history] Estimated tokens for tools: {tokens_tools_est}")
         result = result_no_tools + tokens_tools_est

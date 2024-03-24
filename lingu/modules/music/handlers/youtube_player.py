@@ -426,6 +426,55 @@ class YoutubePlayer:
                 "reason": str(e),
             }
 
+    def set_song_position(self, position):
+        """
+        Set the current position in the playing song.
+        :param position: The position in seconds where to jump in the song.
+        """
+        try:
+            # total length in seconds
+            total_length = self.player.get_length() / 1000
+
+            if 0 <= position <= total_length:
+                log.dbg(f"  [music] setting song position to {position}")
+
+                # VLC expects milliseconds
+                self.player.set_time(int(position * 1000))
+                return {
+                    "result": "success",
+                    "state": f"song position set to {position} seconds",
+                }
+            else:
+                log.wrn(f"  [music] position {position} out of range "
+                        f"(0 - {total_length})")
+                return {
+                    "result": "error",
+                    "state": "position out of range",
+                    "reason": f"Provided position ({position}) exceeds song duration ({total_length} seconds).",
+                }
+        except Exception as e:
+            log.err(f"  [music] error: {str(e)}")
+            return {
+                "result": "error",
+                "state": "could not set song position",
+                "reason": str(e),
+            }
+    # def set_song_position(self, position):
+    #     log.inf(f"  [music] setting song position to {position}")
+    #     try:
+    #         self.player.set_time(position)
+    #         return {
+    #             "result": "success",
+    #             "state": "song position set",
+    #         }
+    #     except Exception as e:
+    #         log.err(f"  [music] error: {str(e)}")
+    #         return {
+    #             "result": "error",
+    #             "state": "song position could not be set",
+    #             "reason": str(e),
+    #         }
+
     def shutdown(self):
         if not self.player or not self.instance:
             return

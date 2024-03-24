@@ -8,6 +8,7 @@ import llama_cpp
 import itertools
 import json
 import time
+import os
 
 gpu_layers = int(cfg("local_llm", "gpu_layers", default=17))
 model_path = cfg("local_llm", "model_path", default="models/")
@@ -57,7 +58,10 @@ class LocalLLMInterface(LLM_Base):
         self.history = history
         self.model_path = model_path
         self.model_name = model_name
-        self.model_full_path = f"{model_path}{model_name}"
+
+        self.model_full_path = os.path.join(
+            self.model_path, self.model_name)
+
         self.llama = llama_cpp.Llama(
             model_path=self.model_full_path,
             n_gpu_layers=gpu_layers,
