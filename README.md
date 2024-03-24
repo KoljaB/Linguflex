@@ -29,9 +29,9 @@ Linguflex 2.0 emerges from a deep-rooted passion for science fiction, aspiring t
 - **Music:** A voice-command module for playing selected songs or albums, enhancing the user experience with musical integration.
 - **Mail:** Retrieves emails via IMAP, integrating with your digital correspondence.
 - **Weather:** Provides current weather data and forecasts, adapting to your location.
+- **House:** Smart Home control for Tuya-compatible devices, enhancing your living experience.
 
 ### Modules Coming Soon
-- **House:** Smart Home control for Tuya-compatible devices, enhancing your living experience.
 - **See:** Empower the assistant with visual capabilities using the GPT Vision API. Enables processing of webcam pictures and desktop screenshots.
 - **Calendar:** Manages personal calendars and appointments, including Google Calendar integration.
 - **Search:** Performs text and image searches using the Google Search API.
