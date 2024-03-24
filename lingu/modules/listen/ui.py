@@ -120,7 +120,7 @@ class ListenUI(UI):
         self.pegel = ProgressBar(self)
         self.pegel.setOrientation(Qt.Orientation.Horizontal)
         self.pegel.setMinimum(0)
-        self.pegel.setMaximum(10000)
+        self.pegel.setMaximum(20000)
         self.pegel.setTextVisible(False)
         self.add(self.pegel)
 

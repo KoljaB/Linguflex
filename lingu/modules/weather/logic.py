@@ -3,6 +3,8 @@ from lingu import cfg, log, Logic, repeat
 from .state import state
 
 api_key = cfg("weather", "api_key", env_key="OPENWEATHERMAP_API_KEY")
+no_api_key_msg = \
+    "Can't perform that action, OpenWeatherMap API Key is needed."
 
 
 class WeatherLogic(Logic):
@@ -10,8 +12,10 @@ class WeatherLogic(Logic):
         if not api_key:
             log.err(
                 "[weather] Missing OpenWeatherMap API key.\n"
-                "  Please open the 'settings.yaml' file and "
-                "provide the API key.")
+                "  Create a key at https://openweathermap.org/api.\n"
+                "  Write this key into the 'settings.yaml' file or "
+                "set 'OPENWEATHERMAP_API_KEY' environment variable."
+            )
             self.state.set_disabled(True)
         self.ready()
 
@@ -30,6 +34,9 @@ class WeatherLogic(Logic):
         state.bottom_info = info + "°"
 
     def get_weather(self, city):
+        if not api_key:
+            return no_api_key_msg
+
         self.data, text, info, symbol = get_weather_data(city)
         return self.data
 

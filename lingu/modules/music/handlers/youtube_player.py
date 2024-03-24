@@ -343,32 +343,88 @@ class YoutubePlayer:
             return "Error: no playlist active"
 
         self.audio_index += skip_count
-        return self.play_audio_at_playlist_index(self.audio_index)        
+        return self.play_audio_at_playlist_index(self.audio_index)
 
     def pause(self):
         log.inf("  [music] pause player")
-        was_playing = self.player.is_playing() 
-        self.player.pause()
-        if was_playing and self.on_playback_stop:
-            self.on_playback_stop()        
-        if not was_playing and self.on_playback_start:
-            self.on_playback_start()
+        was_playing = True
+        try:
+            was_playing = self.player.is_playing()
+            self.player.pause()
+            if was_playing and self.on_playback_stop:
+                self.on_playback_stop()
+            if not was_playing and self.on_playback_start:
+                self.on_playback_start()
+            act_str = "paused" if was_playing else "resumed"
+            return {
+                "result": "success",
+                "state": f"playback {act_str}",
+            }
+        except Exception as e:
+            log.err(f"  [music] error: {str(e)}")
+            act_str = "paused" if was_playing else "resumed"
+            return {
+                "result": "error",
+                "state": f"playback pause could not be {act_str}",
+                "reason": str(e),
+            }
 
     def stop(self):
         log.inf("  [music] stop player and rewind to start")
-        self.player.set_time(0)  
-        if self.player.is_playing(): 
-            self.player.pause()  
-            if self.on_playback_stop:
-                self.on_playback_stop()        
+        try:
+            self.player.set_time(0)
+            if self.player.is_playing():
+                self.player.pause()
+                if self.on_playback_stop:
+                    self.on_playback_stop()
+                return {
+                    "result": "success",
+                    "state": "playback stopped",
+                }
+            return {
+                "result": "error",
+                "state": "playback could not be stopped",
+                "reason": "was not playing",
+            }
+        except Exception as e:
+            log.err(f"  [music] error: {str(e)}")
+            return {
+                "result": "error",
+                "state": "playback could not be stopped",
+                "reason": str(e),
+            }
 
     def volume_up(self, increment=20):
         log.inf("  [music] volume up player")
-        self.player.audio_set_volume(min(self.player.audio_get_volume() + increment, 100))
+        try:
+            self.player.audio_set_volume(min(self.player.audio_get_volume() + increment, 100))
+            return {
+                "result": "success",
+                "state": "volume up",
+            }
+        except Exception as e:
+            log.err(f"  [music] error: {str(e)}")
+            return {
+                "result": "error",
+                "state": "volume could not be increased",
+                "reason": str(e),
+            }
 
     def volume_down(self, decrement=20):
         log.inf("  [music] volume down player")
-        self.player.audio_set_volume(max(self.player.audio_get_volume() - decrement, 0))
+        try:
+            self.player.audio_set_volume(max(self.player.audio_get_volume() - decrement, 0))
+            return {
+                "result": "success",
+                "state": "volume down",
+            }
+        except Exception as e:
+            log.err(f"  [music] error: {str(e)}")
+            return {
+                "result": "error",
+                "state": "volume could not be decreased",
+                "reason": str(e),
+            }
 
     def shutdown(self):
         if not self.player or not self.instance:

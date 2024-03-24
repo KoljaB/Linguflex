@@ -24,23 +24,21 @@ class stop_music_playback(Populatable):
     "Stops playback of music"
 
     def on_populated(self):
-        logic.player.stop()
-        return "playback stopped"
+        return logic.stop()
 
 
 class pause_or_continue_music(Populatable):
     "Switches between music playback pause mode or continue play mode"
 
     def on_populated(self):
-        logic.player.pause()
-        return "music pause mode switched"
+        return logic.pause()
 
 
 class get_playlist_information(Populatable):
     "FIRST call start_music_playback with single_song=False before you call this; ONLY THEN you may retrieve information about that playlist"
 
     def on_populated(self):
-        return logic.player.get_playlist_information()
+        return logic.get_playlist_information()
 
 # @Invokable
 # def stop_music_playback():
@@ -76,7 +74,7 @@ class play_music_by_playlist_index(Populatable):
     audio_index: int = Field(None, description="Index of audio in playlist to be played")
 
     def on_populated(self):
-        return logic.player.play_audio_at_playlist_index(self.audio_index)
+        return logic.play_audio_at_playlist_index(self.audio_index)
 
 
 class skip_audio(Populatable):
@@ -84,7 +82,7 @@ class skip_audio(Populatable):
     skip_count: int = Field(None, description="Specifies number of tracks to skip, can be positive or negative integer, indicating direction and magnitude.")
 
     def on_populated(self):
-        return logic.player.skip_audio(self.skip_count)
+        return logic.skip_audio(self.skip_count)
 
 
 class change_music_volume(Populatable):
@@ -93,10 +91,8 @@ class change_music_volume(Populatable):
 
     def on_populated(self):
         if self.type == 'up':
-            logic.player.volume_up()
+            return logic.volume_up()
         elif self.type == 'down':
-            logic.player.volume_down()
+            return logic.volume_down()
         else:
             return "ERROR: type must be either up or down"
-
-        return "music volume successfully changed"

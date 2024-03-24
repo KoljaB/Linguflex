@@ -19,6 +19,8 @@ summary_prompt = cfg(
     default="Summarize this email content.")
 importance_threshold = int(cfg("mail", "importance_threshold", default=5))
 summarize_model = cfg("mail", "summarize_model", default="gpt-3.5-turbo-1106")
+no_api_key_msg = \
+    "Can't perform that action, missing IMAP server, username, or password."
 
 
 class MailLogic(Logic):
@@ -72,6 +74,9 @@ class MailLogic(Logic):
         Returns:
             list: A list of filtered email details.
         """
+        if not self.fetcher or state.is_disabled:
+            return no_api_key_msg
+
         mails = state.processed_mails
 
         # filter for last x hou

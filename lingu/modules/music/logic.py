@@ -1,38 +1,76 @@
-from lingu import log, Logic, repeat
+from lingu import cfg, log, Logic, repeat
 from .handlers.youtube_player import YoutubePlayer
 from .state import state
 import re
-import os
+
+api_key = cfg("music", "google_api_key", env_key="GOOGLE_API_KEY")
+no_api_key_msg = \
+    "Can't perform that action, Google API Credentials Key is needed."
 
 
 class MusicLogic(Logic):
     def init(self):
-        self.player = YoutubePlayer(
-            os.environ.get("GOOGLE_API_KEY"),
-            on_playback_start=self.on_playback_start,
-            on_playback_stop=self.on_playback_stop
+        self.player = None
+        if not api_key:
+            log.err(
+                "[music] Missing Google Google API Credentials Key.\n"
+                "  Create a key at https://console.developers.google.com/ and "
+                "enable YouTube Data API v3.\n"
+                "  Write this key into the 'settings.yaml' file or "
+                "set 'GOOGLE_API_KEY' environment variable."
             )
+            self.state.set_disabled(True)
+        else:
+            self.player = YoutubePlayer(
+                api_key,
+                on_playback_start=self.on_playback_start,
+                on_playback_stop=self.on_playback_stop
+                )
         self.ready()
 
+    def get_playlist_information(self):
+        if not self.player:
+            return no_api_key_msg
+        return self.player.get_playlist_information()
+
+    def skip_audio(self):
+        if not self.player:
+            return no_api_key_msg
+        self.player.skip_audio()
+
     def next_song(self):
+        if not self.player:
+            return no_api_key_msg
         self.player.skip_audio()
 
     def prev_song(self):
+        if not self.player:
+            return no_api_key_msg
         self.player.skip_audio(-1)
 
     def pause(self):
-        self.player.pause()
+        if not self.player:
+            return no_api_key_msg
+        return self.player.pause()
 
     def stop(self):
-        self.player.stop()
+        if not self.player:
+            return no_api_key_msg
+        return self.player.stop()
 
     def volume_up(self):
+        if not self.player:
+            return no_api_key_msg
         self.player.volume_up()
 
     def volume_down(self):
+        if not self.player:
+            return no_api_key_msg
         self.player.volume_down()
 
     def play_audio_at_playlist_index(self, index):
+        if not self.player:
+            return no_api_key_msg
         self.player.play_audio_at_playlist_index(index)
 
     def get_audio_information(self):
@@ -43,7 +81,7 @@ class MusicLogic(Logic):
 
     @repeat(1)
     def update_ui(self):
-        if not self.player.is_playing:
+        if not self.player or not self.player.is_playing:
             state.info_text = ""
             state.top_info = ""
             state.bottom_info = ""
@@ -107,6 +145,9 @@ class MusicLogic(Logic):
         state.bottom_info = ""
 
     def load_and_play(self, query_or_url, only_playlists=False):
+        if not self.player:
+            return no_api_key_msg
+
         return self.player.load_and_play(query_or_url, only_playlists)
 
     def format_duration(self, seconds):
