@@ -2,12 +2,12 @@
 
 ## Module docs
 
-- [Brain](./docs/brain.md)
-- [Mimic](./docs/mimic.md)
+- [Brain](./brain.md)
+- [Mimic](./mimic.md)
 - [Music](./music.md)
 - [Weather](./weather.md)
 - [Mail](./mail.md)
-- [House](./docs/house.md)
+- [House](./house.md)
 
 ## Sorting modules
 
