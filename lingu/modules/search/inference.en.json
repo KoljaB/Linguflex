@@ -1,0 +1,16 @@
+{
+    "SearchWorldWideWeb": 
+		{
+			"keywords": ["search*", "internet", "*web*", "find*", "www"],
+			"init_prompt": "",
+			"success_prompt": "Analyze the search results and summarize the necessary information for the answer. Do NOT include HTML in the output!",
+			"fail_prompt": ""
+		},
+	"SearchForPicture": 
+		{
+			"keywords": ["pictur*", "show*", "search*", "photo*", "photo*", "display*", "present*", "graphi*", "graphi*", "photogra*", "photogra*", "illustrat*", "visual*", "imag*", "pic*", "capture*"],
+			"init_prompt": "",
+			"success_prompt": "Confirm the successful finding and display of the picture.",
+			"fail_prompt": ""
+		}
+}

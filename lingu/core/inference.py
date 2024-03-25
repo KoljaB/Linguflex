@@ -3,6 +3,7 @@ from .log import log
 from .exc import exc
 from .events import events
 import instructor
+from instructor import patch
 
 MAX_RETRY = 3
 
@@ -22,6 +23,8 @@ class InferenceManager:
         """
         self.client = OpenAI()
         self.instructor = None
+        client = patch(OpenAI())
+        self.openai_instructor = client.chat.completions.create
         self.inference_allowed = True
 
         events.add_listener(
@@ -119,7 +122,8 @@ class InferenceManager:
                         response_model=instructor.Partial[inf_obj.instance],
                         max_retries=MAX_RETRY,
                         messages=messages,
-                        max_tokens=500,
+                        temperature=0,
+                        max_tokens=1000,
                         stream=True,
                     )
                     log.dbg("  [inference] perform extraction")
@@ -176,6 +180,84 @@ class InferenceManager:
             content,
             model="gpt-3.5-turbo-1106"):
         """
+        Perform inference using the specified object, prompt, and content.
+
+        Args:
+            inference_object (str): The name of the inference object to use.
+            prompt (str): The prompt to be used for the inference.
+            content (str): The content to be analyzed or processed.
+            model (str): The model to use for the inference.
+
+        Raises:
+            Exception: If the inference object is not found or if the maximum
+                       number of retries is reached without success.
+
+        Returns:
+            Any: The result of the inference process.
+        """
+
+        for inf_obj in self.inf_objs:
+            if inf_obj.name == inference_object and inf_obj.is_internal:
+
+                content_string = f"Content:\n```{content}```"
+                messages = [{"role": "user", "content": prompt}]
+                messages.append({"role": "user", "content": content_string})
+
+                try:
+                    inf_obj.module["state"] = "executing"
+
+                    log.dbg("  [inference] calling local with messages "
+                            f"{messages}")
+                    events.trigger("inference_start", "inference")
+                    extraction_stream = self.openai_instructor(
+                        model=model,
+                        response_model=instructor.Partial[inf_obj.instance],
+                        max_retries=MAX_RETRY,
+                        messages=messages,
+                        temperature=0,
+                        max_tokens=1000,
+                        stream=True,
+                    )
+                    log.dbg("  [inference] perform extraction")
+                    inf_obj.module["state"] = "normal"
+
+                    # obj = None
+                    final_extraction = None
+
+                    print("  [inference] extracting ", end="", flush=True)
+                    inference_started = False
+                    for extraction in extraction_stream:
+                        if not inference_started:
+                            events.trigger("inference_processing", "inference")
+                        inference_started = True
+                        if not self.inference_allowed:
+                            log.inf("  [inference] local inference stopped "
+                                    "(maybe due to recording start event).")
+                            final_extraction = None
+                            break
+                        final_extraction = extraction
+                        # obj = extraction.model_dump()
+                        # log.dbg(f"  [inference] streaming result: {obj}")
+                        print(".", end="", flush=True)
+
+                    events.trigger("inference_end", "inference")
+                    print("\n  [inference] extraction done")
+                    return final_extraction
+                except Exception as e:
+                    log.err("  [inference] error performing local inference "
+                            f"{inf_obj.instance}: {e}")
+                    exc(e)
+                    raise e
+
+    def _inference_openai_OLD(
+            self,
+            inference_object,
+            prompt,
+            content,
+            model="gpt-3.5-turbo-1106"):
+        """
+        IMPLEMENTATION WITHOUT INSTRUCTOR LIBRARY (OLD IMPLEMENTATION)
+
         Perform inference using the specified object, prompt, and content.
 
         Args:
