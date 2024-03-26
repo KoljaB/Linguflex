@@ -15,6 +15,7 @@
 - [Weather](./weather.md)
 - [Mail](./mail.md)
 - [House](./house.md)
+- [Calendar](./calendar.md)
 - [Search](./search.md)
 
 ## Module Symbol Order
