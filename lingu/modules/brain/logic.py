@@ -6,6 +6,12 @@ from .state import state
 import datetime
 
 
+max_history_messages = int(cfg("max_history_messages", default=12))
+max_tokens_per_msg = int(cfg("max_tokens_per_msg", default=1000))
+max_history_tokens = int(cfg("max_history_tokens", default=7000))
+use_local_llm = bool(cfg("local_llm", "use_local_llm", default=False))
+
+
 class BrainLogic(Logic):
     """
     Handles the core logic of the brain interface, including
@@ -18,11 +24,13 @@ class BrainLogic(Logic):
         """
         super().__init__()
 
-        self.history = History(int(cfg("max_history_messages")))
-        self.use_local_llm = bool(
-            cfg("local_llm", "use_local_llm", default=False))
+        self.history = History(
+            max_history_messages,
+            max_tokens_per_msg,
+            max_history_tokens
+            )
 
-        if self.use_local_llm:
+        if use_local_llm:
             log.inf("  [brain] using local language model")
             self.llm = LocalLLMInterface(self.history)
         else:
@@ -223,8 +231,6 @@ class BrainLogic(Logic):
         self.abort = False
         self.state.set_active(True)
 
-        self.trigger("assistant_text_start")
-
         log.dbg("  [brain] creating assistant answer")
         assistant_response_stream = self.generate(
             user_text,
@@ -237,6 +243,11 @@ class BrainLogic(Logic):
             for chunk in assistant_response_stream:
                 if self.abort:
                     break
+                if not assistant_text and not chunk:
+                    continue
+                if not assistant_text and chunk:
+                    self.trigger("assistant_text_start")
+
                 assistant_text += chunk
                 self.trigger("assistant_text", assistant_text)
                 self.trigger("assistant_chunk", chunk)
@@ -246,10 +257,10 @@ class BrainLogic(Logic):
 
         if assistant_text:
             self.history.assistant(assistant_text)
+            self.trigger("assistant_text_complete", assistant_text)
         else:
-            log.err("  [brain] no assistant text generated")
+            log.inf("  [brain] no assistant text generated")
 
-        self.trigger("assistant_text_complete", assistant_text)
         self.state.set_active(False)
 
     def create_assistant_image_answer(

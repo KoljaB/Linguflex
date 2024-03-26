@@ -1,38 +1,3 @@
-# Modules
-
-## Contents
-
-1. [Module Documentation](#module-documentation)
-2. [Module Symbol Order](#module-symbol-order)
-3. [Disabling a Module](#disabling-a-module)
-4. [Components of a Module](#components-of-a-module)
-
-## Module Documentation
-
-- [Brain](./brain.md)
-- [Mimic](./mimic.md)
-- [Music](./music.md)
-- [Weather](./weather.md)
-- [Mail](./mail.md)
-- [House](./house.md)
-- [Search](./search.md)
-
-## Module Symbol Order
-
-In the settings.yaml in the "Linguflex/lingu" folder there is a section "modules".  
-The icons displayed in the top right of Linguflex will be shown in the order defined under this section
-
-## Disable a module
-
-Every module whose directory folder starts with an underscore ("_") will be ignored at the start of Linguflex.
-
-You can disable any linguflex module by preceding a underscore before the module directory name:  
-- navigate to the folder "Linguflex/lingu/modules"
-- select a module (for example, say "weather" module)
-- disable the module by renaming the directory (rename "weather" to "_weather") and add an underscore at the beginning
-
-## Components of a Module
-
 Linguflex modules are designed to provide a clear framework for development for and interaction with LLM and to clearly separate business logic from system-specific code. The module structure ensures that each critical aspect of the module's inference process is encapsulated in its respective file, providing a comprehensive and efficient framework for development within the Linguflex ecosystem.
 
 1. **Handlers Folder**: 
@@ -69,4 +34,3 @@ Linguflex modules are designed to provide a clear framework for development for 
 6. **UI.py**:
    - Defines the user interface (window that opens when the user clicks the module symbol)
    - Offers on-the-fly module configurations and runtime adjustments.
-

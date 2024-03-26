@@ -16,8 +16,8 @@ class History:
     def __init__(
             self,
             max_history_messages: int = 12,
-            max_tokens_per_msg: int = 500,
-            max_history_tokens: int = 3500
+            max_tokens_per_msg: int = 1000,
+            max_history_tokens: int = 7000
             ):
         """
         Initializes the History object
@@ -298,8 +298,8 @@ class History:
                         message_tokens = self.get_tokens(
                             [message], None, model)
 
-        # First loop: Trim each message independently
-        for message in self.history:
+        # First loop: Trim each message independently, excluding the last two
+        for message in self.history[:-2]:
             iteration_count = 0
 
             # Calculate tokens for the current message
@@ -309,7 +309,10 @@ class History:
                     and iteration_count < MAX_ITERATIONS):
 
                 # Reduce message content incrementally
-                message['content'] = message['content'][:-10]
+                if not message or not message['content']:
+                    break
+
+                message['content'] = message['content'][:-20]
                 message_tokens = self.get_tokens([message], functions, model)
                 iteration_count += 1
 

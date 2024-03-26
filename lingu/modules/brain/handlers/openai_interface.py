@@ -161,5 +161,5 @@ class OpenaiInterface(LLM_Base):
                             })
                             add_fct(fct)
 
-        print(f"Recovered pieces: {self.tool_calls_message}")
+        # print(f"Recovered pieces: {self.tool_calls_message}")
         events.trigger("answer_finished", "brain", fct)

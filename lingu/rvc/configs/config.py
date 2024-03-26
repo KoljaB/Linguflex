@@ -70,6 +70,24 @@ class Config:
 
     @staticmethod
     def arg_parse() -> tuple:
+
+        # Set default values for each argument
+        default_port = 7865
+        default_pycmd = sys.executable or "python"
+        default_colab = False
+        default_noparallel = False
+        default_noautoopen = False
+        default_dml = False
+
+        # Return the default values instead of parsing actual command line arguments
+        return (
+            default_pycmd,
+            default_port,
+            default_colab,
+            default_noparallel,
+            default_noautoopen,
+            default_dml,
+        )        
         exe = sys.executable or "python"
         parser = argparse.ArgumentParser()
         parser.add_argument("--port", type=int, default=7865, help="Listen port")

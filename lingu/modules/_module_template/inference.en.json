@@ -1,0 +1,9 @@
+{
+    "RetrieveCamelFact": 
+		{
+			"keywords": ["*camel*"],
+			"init_prompt": "",
+			"success_prompt": "",
+			"fail_prompt": ""
+		}
+}
