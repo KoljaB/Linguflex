@@ -5,9 +5,7 @@
 > **[📓 Linguflex 2.0 installation ](./docs/installation.md)**  
 > **[🎥 Video guide ](https://www.youtube.com/watch?v=KJ4HQ5Ud9L8)**  
 
-<p align="center">
 [![Discord](https://img.shields.io/discord/1223234851914911754)](https://discord.gg/f556hqRjpv)
-</p>
 
 ## Introduction
 
