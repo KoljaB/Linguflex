@@ -7,7 +7,7 @@
 
 <p align="center">
 
-[![Discord](https://img.shields.io/discord/759872564649607220?label=Join%20us%20on%20Discord&logo=discord&style=flat-square)](https://discord.gg/f556hqRjpv)
+[![Discord](https://img.shields.io/discord/1223234851914911754?label=Join%20us%20on%20Discord&logo=discord&style=flat-square)](https://discord.gg/f556hqRjpv)
 
 </p>
 
