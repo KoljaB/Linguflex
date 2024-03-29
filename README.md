@@ -4,7 +4,7 @@
 
 [![Discord](https://img.shields.io/discord/1223234851914911754)](https://discord.gg/f556hqRjpv)
 [![YouTube](https://img.shields.io/youtube/channel/subscribers/UCLeuwdsZO8txzFSSAeLjGlQ?style=social&label=Subscribe%20on%20YouTube)](https://www.youtube.com/channel/UCLeuwdsZO8txzFSSAeLjGlQ)
-[![Twitter](https://img.shields.io/twitter/follow/yourtwitterhandle?style=social)](https://twitter.com/LonLigrin)
+[![Twitter](https://img.shields.io/twitter/follow/LonLigrin?style=social)](https://twitter.com/LonLigrin)
 
 > **[📓 Linguflex 2.0 installation ](./docs/installation.md)**  
 > **[🎥 Video guide ](https://www.youtube.com/watch?v=KJ4HQ5Ud9L8)**  
