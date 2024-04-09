@@ -49,3 +49,31 @@ Linguflex 2.0 emerges from a deep-rooted passion for science fiction, aspiring t
 ## Getting Started
 
 Follow the [Modules Guide](./docs/modules.md) for step-by-step instructions about how to set up and configure the Linguflex modules.
+
+
+## License
+
+The codebase is under MIT License and the TTS model weights are under the individual TTS engine licenses listed below:
+
+#### CoquiEngine
+- **License**: Open-source only for noncommercial projects.
+- **Commercial Use**: Requires a paid plan.
+- **Details**: [CoquiEngine License](https://coqui.ai/cpml)
+
+#### ElevenlabsEngine
+- **License**: Open-source only for noncommercial projects.
+- **Commercial Use**: Available with every paid plan.
+- **Details**: [ElevenlabsEngine License](https://help.elevenlabs.io/hc/en-us/articles/13313564601361-Can-I-publish-the-content-I-generate-on-the-platform-)
+
+#### AzureEngine
+- **License**: Open-source only for noncommercial projects.
+- **Commercial Use**: Available from the standard tier upwards.
+- **Details**: [AzureEngine License](https://learn.microsoft.com/en-us/answers/questions/1192398/can-i-use-azure-text-to-speech-for-commercial-usag)
+
+#### SystemEngine
+- **License**: Mozilla Public License 2.0 and GNU Lesser General Public License (LGPL) version 3.0.
+- **Commercial Use**: Allowed under this license.
+- **Details**: [SystemEngine License](https://github.com/nateshmbhat/pyttsx3/blob/master/LICENSE)
+
+#### OpenAIEngine
+- **License**: please read [OpenAI Terms of Use](https://openai.com/policies/terms-of-use)

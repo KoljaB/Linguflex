@@ -36,14 +36,14 @@ class HouseLogic(Logic):
         self.bulb_names = [
             d["name"].replace(" ", "_")
             for d in self.devices
-            if d["type"] == "Bulb"
+            if d["type"].lower() == "bulb"
         ]
         self.bulb_names_string = ', '.join(self.bulb_names)
 
         self.outlet_names = [
             d["name"].replace(" ", "_")
             for d in self.devices
-            if d["type"] == "Outlet"
+            if d["type"].lower() == "outlet"
         ]
         self.outlet_names_string = ', '.join(self.outlet_names)
 
@@ -52,15 +52,18 @@ class HouseLogic(Logic):
         )
 
     def wait_for_lights(self):
-        log.dbg("  [house] waiting for lights and outlets to be ready")
-        self.light.wait_ready()
-        self.lights_ready = True
-        log.dbg("  [house] lights ready")
-        self.outlet.wait_ready()
-        self.outlets_ready = True
-        log.dbg("  [house] outlet ready")
-        self.colors_changed()
-
+        try:
+            log.dbg("  [house] waiting for lights and outlets to be ready")
+            self.light.wait_ready()
+            self.lights_ready = True
+            log.dbg("  [house] lights ready")
+            self.outlet.wait_ready()
+            self.outlets_ready = True
+            log.dbg("  [house] outlet ready")
+            self.colors_changed()
+        except Exception as e:
+            log.err(f"  [house] error waiting for lights and outlets to be ready: {e}")
+            
     def init(self):
         log.inf("  [house] initializing")
         self.light = LightManager([
@@ -102,7 +105,6 @@ class HouseLogic(Logic):
                 "is_error": is_error,
                 "color": color
             }
-        # print(f"  [house] 💡💡💡 bulb_states:\n{bulb_states}")
         return bulb_states
 
     def _fetch_outlet_states(self):
@@ -110,8 +112,6 @@ class HouseLogic(Logic):
         for outlet_name in self.outlet_names:
             is_on = self.outlet.get_state(outlet_name)
             watt = self.outlet.get_power(outlet_name)
-            #print(f"  [house] outlet {outlet_name} state: {is_on}")
-            #is_on = state["state"]
             outlet_states[outlet_name] = {
                 "is_on": is_on,
                 "power": watt
@@ -154,13 +154,9 @@ class HouseLogic(Logic):
         return self.outlet.get_state(outlet_name)
 
     def colors_changed(self):
-        # print("  [house] calling light.get_colors()")
         self.light.get_colors()
-        # print("  [house] calling wled.bulb_colors_changed()")
         colors = self.light.get_colors_json_rgb()
-        # print("  [house] calling wled.bulb_colors_changed()")
         self.wled.bulb_colors_changed(colors)
-        # print("  [house] finished colors_changed()")
 
 
 logic = HouseLogic()
