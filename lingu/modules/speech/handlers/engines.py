@@ -20,15 +20,22 @@ startvoice_elevenlabs = cfg(
 startvoice_system = cfg(
     "speech", "startvoice_system", default="Katja")
 model_path = cfg("speech", "xtts_model_path")
-# model_path = os.environ.get(
-#     "COQUI_MODEL_PATH",
-#     default=cfg("speech", "xtts_model_path"))
 coqui_use_deepspeed = bool(cfg("speech", "coqui_use_deepspeed", default=True))
+
+# coqui default temp is 0.75, we raise to 0.9 to get it more emotional
 coqui_temperature = float(cfg("speech", "coqui_temperature", default=0.9))
+
+# coqui default lenght penalty is 1 - unchanged
 coqui_length_penalty = float(cfg("speech", "coqui_length_penalty", default=1))
+
+# coqui default repetition penalty is 5, we raise to 10
 coqui_repetition_penalty = float(
     cfg("speech", "coqui_repetition_penalty", default=10))
+
+# coqui default top_k is 50, we raise to 70
 coqui_top_k = int(cfg("speech", "coqui_top_k", default=70))
+
+# coqui default top_p is 0.85, we raise to 0.9
 coqui_top_p = float(cfg("speech", "coqui_top_p", default=0.9))
 coqui_pretrained = bool(cfg(
     "speech", "coqui_use_pretrained_model", default=True))
@@ -104,7 +111,10 @@ class Engines():
                     top_p=coqui_top_p,
                     add_sentence_filter=True,
                     use_deepspeed=coqui_use_deepspeed,
-                    pretrained=coqui_pretrained)
+                    pretrained=coqui_pretrained,
+                    comma_silence_duration=0.3,
+                    sentence_silence_duration=0.6,
+                    default_silence_duration=0.3)
                 denotify()
             else:
                 self.set_coqui_model(self.state.coqui_model)

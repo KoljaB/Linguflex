@@ -6,6 +6,19 @@ from .handlers.voices import Voices
 import threading
 import os
 
+force_first_fragment_after_words = \
+    int(cfg("speech", "force_first_fragment_after_words", default=12))
+
+# speed-optimized:
+# min_sentence_length = 5
+# min_first_fragment_length = 5
+# fast_sentence_fragment = True
+
+# quality-optimized:
+min_sentence_length = 25
+min_first_fragment_length = 25
+fast_sentence_fragment = False
+
 
 class SpeechLogic(Logic):
     """
@@ -137,26 +150,26 @@ class SpeechLogic(Logic):
         if not self.engines.stream.is_playing():
             if state.rvc_enabled:
                 self.engines.stream.play_async(
-                    fast_sentence_fragment=True,
-                    minimum_sentence_length=5,
-                    minimum_first_fragment_length=5,
+                    fast_sentence_fragment=fast_sentence_fragment,
+                    minimum_sentence_length=min_sentence_length,
+                    minimum_first_fragment_length=min_first_fragment_length,
                     # log_synthesized_text=True,
                     on_audio_chunk=self.feed_to_rvc,
                     context_size=4,
                     muted=True,
                     sentence_fragment_delimiters=".?!;:,\n()[]{}。-“”„”—…/|《》¡¿\"",
-                    force_first_fragment_after_words=5,
+                    force_first_fragment_after_words=force_first_fragment_after_words,
                     )
             else:
                 self.engines.stream.play_async(
-                    fast_sentence_fragment=True,
-                    minimum_sentence_length=5,
-                    minimum_first_fragment_length=5,
+                    fast_sentence_fragment=fast_sentence_fragment,
+                    minimum_sentence_length=min_sentence_length,
+                    minimum_first_fragment_length=min_first_fragment_length,
                     # log_synthesized_text=True,
                     context_size=4,
                     muted=muted,
                     sentence_fragment_delimiters=".?!;:,\n()[]{}。-“”„”—…/|《》¡¿\"",
-                    force_first_fragment_after_words=5,
+                    force_first_fragment_after_words=force_first_fragment_after_words,
                     )
 
         # if not self.engines.stream.is_playing():

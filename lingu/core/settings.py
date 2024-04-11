@@ -41,8 +41,9 @@ class SettingsManager:
         """
         if len(sys.argv) > 1:
             yaml_file_path = sys.argv[1]
-            log.dbg("  [settings] Using file from command line: "
-                    f"{yaml_file_path}")
+            if __name__ == '__main__':
+                log.dbg("  [settings] Using file from command line: "
+                        f"{yaml_file_path}")
             return yaml_file_path
         return None
 
@@ -68,7 +69,8 @@ class SettingsManager:
     def get(self,
             *keys: str,
             env_key: str = "",
-            default: Optional[Any] = None) -> Any:
+            default: Optional[Any] = None,
+            debug: bool = False) -> Any:
         """
         Retrieves a setting value based on a sequence of keys.
 
@@ -79,12 +81,15 @@ class SettingsManager:
               use as a fallback.
             default (Optional[Any], optional): The default value to return if
               the keys are not found and the environment variable is not set.
+            debug (bool, optional): Whether to log debug messages.
 
         Returns:
             Any: The value of the setting or the default value if not found.
         """
 
         current_level = self.settings
+        if debug:
+            log.dbg(f"  [settings] Getting: {keys}")
         for key in keys:
             if isinstance(current_level, dict) and key in current_level:
                 current_level = current_level[key]

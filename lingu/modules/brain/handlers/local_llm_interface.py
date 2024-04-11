@@ -84,6 +84,10 @@ class LocalLLMInterface(LLM_Base):
             "escape_key_pressed",
             "*",
             self.abort_immediately)
+        events.add_listener(
+            "volume_interrupt",
+            "*",
+            self.abort_immediately)
 
         events.add_listener(
             "inference_start",
@@ -185,12 +189,20 @@ class LocalLLMInterface(LLM_Base):
 
         self.wait_wake()
         extraction_stream = self.create(
-            response_model=FunctionName,
+            response_model=instructor.Partial[FunctionName],
             max_retries=max_retries,
             messages=messages_decide,
             max_tokens=500,
+            stream=True,
         )
 
+        for extraction in extraction_stream:
+            obj = extraction.model_dump()
+            print(obj)
+            final_extraction = extraction
+
+        extraction_stream = final_extraction
+                
         fct_call = extraction_stream.name_of_function_to_call
         fct_call_stripped = fct_call.strip().lower()
 
@@ -292,8 +304,16 @@ Focus on providing a short, concise, and direct response to the user's query, ra
 
         self.prompt.start()
 
-        was_tool_called, return_value = \
-            self.decide_for_tool_to_call(messages, tools)
+        try:
+            log.dbg("  [brain] deciding for tool call")
+
+            was_tool_called, return_value = \
+                self.decide_for_tool_to_call(messages, tools)
+        except Exception as e:
+            log.err(f"  [brain] {self.model_name} tool"
+                    f" decision failed: {e}")
+            exc(e)
+            was_tool_called = False
 
         prompt.add(self.prompt.get(), prioritize=True)
 

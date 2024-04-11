@@ -18,9 +18,13 @@ vision_max_tokens = cfg("see", "max_tokens", default=1000)
 class OpenaiInterface(LLM_Base):
 
     def __init__(self, model=openai_model):
-        super().__init__()        
+        super().__init__()
 
         self.model = model
+        print(f"  [brain] using model {self.model}")
+        # import traceback
+        # traceback.print_stack()
+
         self.client = OpenAI()
         self.fct_calls = []
         self.assistant_call = ""
@@ -28,6 +32,10 @@ class OpenaiInterface(LLM_Base):
         self.abort = False
         events.add_listener(
             "escape_key_pressed",
+            "*",
+            self.abort_immediately)
+        events.add_listener(
+            "volume_interrupt",
             "*",
             self.abort_immediately)
 
@@ -40,6 +48,9 @@ class OpenaiInterface(LLM_Base):
 
     def set_model(self, model_name):
         self.model = model_name
+        print(f"  [brain] setting model to {self.model}")
+        # import traceback
+        # traceback.print_stack()
         return self.model
 
     def generate_image(
@@ -82,6 +93,7 @@ class OpenaiInterface(LLM_Base):
             self.fct_calls.append(fct)
             events.trigger("function_call_request", "brain", fct)
 
+        print(f"  [brain] generating with model {self.model}")
         params = {
             "model": self.model,
             "temperature": self.temperature,
