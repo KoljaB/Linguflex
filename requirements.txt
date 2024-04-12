@@ -73,7 +73,7 @@ gruut-lang-fr==2.0.2
 hangul-romanize==0.1.0
 html2text==2024.2.26
 inflect==7.0.0
-instructor==0.6.4
+instructor==1.1.0
 jieba==0.42.1
 json5==0.9.22
 langcodes==3.3.0
@@ -97,7 +97,6 @@ praat-parselmouth==0.4.3
 preshed==3.0.9
 PyAutoGUI==0.9.54
 pycryptodomex==3.20.0
-pydantic==2.6.3
 pynndescent==0.5.11
 pynput==1.7.6
 pypinyin==0.51.0
