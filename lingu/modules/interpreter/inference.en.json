@@ -1,0 +1,9 @@
+{
+    "RunComputerInterpreterCommand": 
+		{
+			"keywords": ["openinterpreter", "interpret*", "computer", "code", "run"],
+			"init_prompt": "",
+			"success_prompt": "",
+			"fail_prompt": ""
+		}
+}
