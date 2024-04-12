@@ -133,4 +133,5 @@ modules:
   - house 
   - search
   - calendar
+  - interpreter
   - speech
