@@ -10,9 +10,12 @@
       Linguflex 2.0
 </h2>
 <img align="right" width="30%" src="https://github.com/KoljaB/Linguflex/assets/7604638/f4fa4601-ad7c-4541-8788-b24706389197" /> 
-Born out of my passion for science fiction, this project aims to simulate engaging, authentic, human-like interaction with AI personalities.
+Born out of my passion for science fiction, this project aims to simulate engaging, authentic, human-like interaction with AI personalities.  
 
-It offers voice-based conversation with custom characters, alongside an array of practical features: controlling smart home devices, playing music, searching the internet, fetching emails, displaying current weather information and news, assisting in scheduling, and searching or generating images.
+<br>  
+<br>  
+
+It offers voice-based conversation with custom characters, alongside an array of practical features: controlling smart home devices, playing music, searching the internet, fetching emails, displaying current weather information and news, assisting in scheduling, and searching or generating images.  
 
 I invite you to explore the framework, whether you're a user seeking an innovative AI experience or a fellow developer interested in the project. All insights, suggestions, and contributions are appreciated. I want to bring this personal passion project towards its full potential, hopefully with the community's assistance, to collectively contribute to the evolution of AI.
 
