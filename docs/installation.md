@@ -1,6 +1,6 @@
 # Linguflex Installation Guide
 
-Welcome to the Linguflex installation guide. Try to keep close to the recommended environment to enhance the likelihood of a successful installation and smooth operation.
+Welcome to the Linguflex installation guide. Try to keep close to the recommended environment to enhance the likelihood of a successful installation and smooth operation. This software was developed and tested under Windows. Although primarily developed and tested for Windows, compatibility with other platforms might be possible but remains unverified. Any insights on Linux or Mac installation or operational challenges are greatly welcomed.
 
 ## Table of Contents
 1. [Prerequisites](#prerequisites)
