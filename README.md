@@ -5,11 +5,11 @@
 [![Twitter](https://img.shields.io/twitter/follow/LonLigrin?style=social)](https://twitter.com/LonLigrin)
 
 <h2>
- <img align="left" height="30%"
+ <img align="left" height="90px"
       src="https://github.com/KoljaB/Linguflex/assets/7604638/b4df4598-97c0-4262-807c-fa98a31dcb81"/>
       Linguflex 2.0
 </h2>
-<img align="right" width="300px" src="https://github.com/KoljaB/Linguflex/assets/7604638/f4fa4601-ad7c-4541-8788-b24706389197" /> 
+<img align="right" width="30%" src="https://github.com/KoljaB/Linguflex/assets/7604638/f4fa4601-ad7c-4541-8788-b24706389197" /> 
 Born out of my passion for science fiction, this project aims to simulate engaging, authentic, human-like interaction with AI personalities.
 
 It offers voice-based conversation with custom characters, alongside an array of practical features: controlling smart home devices, playing music, searching the internet, fetching emails, displaying current weather information and news, assisting in scheduling, and searching or generating images.
