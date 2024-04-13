@@ -25,8 +25,6 @@ I invite you to explore the framework, whether you're a user seeking an innovati
 > **[🎥 Installation video guide ](https://www.youtube.com/watch?v=KJ4HQ5Ud9L8)**  
 > **[🎥 See in action (short clip)](https://www.youtube.com/watch?v=w5_dA5cSeLo)**  
 
-
-<br>  
 <br> 
 
 ## Key Features
