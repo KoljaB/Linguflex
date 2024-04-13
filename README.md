@@ -1,18 +1,32 @@
-# Linguflex 2.0
-
-*Bringing the sci-fi dream of a Jarvis-style AI companion into reality. Presenting Linguflex 2.0 – an evolving journey towards an advanced AI assistant.*
+*Bringing the sci-fi dream of a Jarvis-style AI companion into reality.*
 
 [![Discord](https://img.shields.io/discord/1223234851914911754)](https://discord.gg/f556hqRjpv)
 [![YouTube](https://img.shields.io/youtube/channel/subscribers/UCLeuwdsZO8txzFSSAeLjGlQ?style=social&label=Subscribe%20on%20YouTube)](https://www.youtube.com/channel/UCLeuwdsZO8txzFSSAeLjGlQ)
 [![Twitter](https://img.shields.io/twitter/follow/LonLigrin?style=social)](https://twitter.com/LonLigrin)
 
-> **[📓 Linguflex 2.0 installation ](./docs/installation.md)**  
-> **[🎥 Video guide ](https://www.youtube.com/watch?v=KJ4HQ5Ud9L8)**  
+<h2>
+ <img align="left" height="30%"
+      src="https://github.com/KoljaB/Linguflex/assets/7604638/b4df4598-97c0-4262-807c-fa98a31dcb81"/>
+      Linguflex 2.0
+</h2>
+<img align="right" width="300px" src="https://github.com/KoljaB/Linguflex/assets/7604638/f4fa4601-ad7c-4541-8788-b24706389197" /> 
+Born out of my passion for science fiction, this project aims to simulate engaging, authentic, human-like interaction with AI personalities.
 
+It offers voice-based conversation with custom characters, alongside an array of practical features: controlling smart home devices, playing music, searching the internet, fetching emails, displaying current weather information and news, assisting in scheduling, and searching or generating images.
+
+I invite you to explore the framework, whether you're a user seeking an innovative AI experience or a fellow developer interested in the project. All insights, suggestions, and contributions are appreciated. I want to bring this personal passion project towards its full potential, hopefully with the community's assistance, to collectively contribute to the evolution of AI.
+
+<br>  
+
+> **[📓 Linguflex 2.0 installation ](./docs/installation.md)**  
+> **[🎥 Installation video guide ](https://www.youtube.com/watch?v=KJ4HQ5Ud9L8)**  
+> **[🎥 See in action (short clip)](https://www.youtube.com/watch?v=w5_dA5cSeLo)**  
+
+
+<br>  
+<br> 
 
 ## Introduction
-
-Linguflex 2.0 emerges from a deep-rooted passion for science fiction, aspiring to create voice-based, dynamic, and convincingly human-like interactions with AI. Linguflex is a solid voice based function calling framework supporting a variety of LLMs (local included). It combines relentless pursuit of minimal latency (ensuring rapid responses) with a outstanding TTS voice quality, all locally generated. This new version marks a significant stride towards realizing a versatile, yet specialized AI assistant.
 
 ## Key Advancements in 2.0
 
