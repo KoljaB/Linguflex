@@ -26,11 +26,8 @@ I invite you to explore the framework, whether you're a user seeking an innovati
 <br>  
 <br> 
 
-## Introduction
+## Key Features
 
-## Key Advancements in 2.0
-
-### Performance Focus
 - **Ultra-Low Latency:** Every aspect of Linguflex was fine-tuned to minimize response times, achieving unparalleled speed in both language model communication and text-to-speech (TTS) generation.
 - **Local Operation:** Full functionality is maintained locally, encompassing speech-to-text, TTS, and language model inference, ensuring privacy and reliability.
 - **High-Quality Audio:** Integrating advanced voice clone technology for real-time post-processing, Linguflex offers a near-Elevenlabs quality in local TTS synthesis.
@@ -39,7 +36,7 @@ I invite you to explore the framework, whether you're a user seeking an innovati
 
 ## [Modules](./docs/modules.md)
 
-### Core Features
+### Core Modules
 - **Listen (Audio Input Module):** Serving as Linguflex's auditory system, this module captures spoken instructions via the microphone with precision.
 - **[Brain](./docs/brain.md):** Cognitive Processing Module. Heart of Linguflex, processes user input, either with a local language model or OpenAI GPT API.
 - **Speech (Audio Output Module):** Offers realtime TTS with various provider options, and advanced voice tuning capabilities, including Realtime Voice Cloning (RVC).
