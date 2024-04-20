@@ -27,7 +27,7 @@ Before you begin, ensure you have the following:
 ### For Windows Users
 #### 1. Clone the Project:
    ```bash
-   git clone -b lingu-2.0-preview https://github.com/KoljaB/Linguflex.git
+   git clone https://github.com/KoljaB/Linguflex.git
    cd Linguflex
    ```
 
