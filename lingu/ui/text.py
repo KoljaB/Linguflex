@@ -4,18 +4,6 @@ from PyQt6.QtCore import Qt, QRect, QTimer
 from functools import partial
 
 
-class TextConfig:
-    """
-    Configuration class for TextWidget settings.
-    """
-    FONT_TYPE = "Arial"
-    FONT_SIZE = 12
-    PADDING = 5
-    BACKGROUND_OPACITY = 176
-    DISTANCE_TOP = 80
-    DISTANCE_RIGHT = 50
-
-
 class Text(QWidget):
     """
     A widget to display a text in a frameless window
@@ -27,7 +15,10 @@ class Text(QWidget):
         width (int): The width of the widget.
     """
 
-    def __init__(self, text: str, color: QColor, width: int, x: int, y: int):
+    def __init__(self, text: str, color: QColor, width: int, x: int, y: int,
+                 font_type="Arial", font_size=12, padding=5,
+                 background_opacity=176, background_color=QColor(0, 0, 0),
+                 distance_top=80, distance_right=50):
         """
         Initializes the TextWidget with text, color, width, and position.
 
@@ -37,12 +28,26 @@ class Text(QWidget):
             width (int): The width of the widget.
             x (int): The x-coordinate of the widget.
             y (int): The y-coordinate of the widget.
+            font_type (str): Font type for the text.
+            font_size (int): Font size for the text.
+            padding (int): Padding around the text.
+            background_opacity (int): Opacity level for the background.
+            background_color (QColor): Color for the background.
+            distance_top (int): Distance from the top for positioning.
+            distance_right (int): Distance from the right for positioning.
         """
         super().__init__()
         self.text = text
         self.color = color
         self.maxWidth = width
         self.origX = x
+        self.font_type = font_type
+        self.font_size = font_size
+        self.padding = padding
+        self.background_opacity = background_opacity
+        self.background_color = background_color
+        self.distance_top = distance_top
+        self.distance_right = distance_right
         self.initUI(x, y)
         if not text:
             self.hide()
@@ -68,14 +73,10 @@ class Text(QWidget):
         Returns:
             The height of the widget.
         """
-        font = QFont(TextConfig.FONT_TYPE, TextConfig.FONT_SIZE)
+        font = QFont(self.font_type, self.font_size)
         fm = QFontMetrics(font)
-
-        rect = fm.boundingRect(
-            QRect(0, 0, self.maxWidth - 2 * TextConfig.PADDING, 1000),
-            Qt.TextFlag.TextWordWrap, self.text)
-
-        return rect.height() + 2 * TextConfig.PADDING
+        rect = fm.boundingRect(QRect(0, 0, self.maxWidth - 2 * self.padding, 1000), Qt.TextFlag.TextWordWrap, self.text)
+        return rect.height() + 2 * self.padding
 
     def calculateWidth(self) -> int:
         """
@@ -85,11 +86,9 @@ class Text(QWidget):
         Returns:
             The calculated or maximum width of the widget.
         """
-        font = QFont(TextConfig.FONT_TYPE, TextConfig.FONT_SIZE)
+        font = QFont(self.font_type, self.font_size)
         fm = QFontMetrics(font)
-        textWidth = fm.horizontalAdvance(self.text) \
-            + 2 * TextConfig.PADDING
-
+        textWidth = fm.horizontalAdvance(self.text) + 2 * self.padding
         return min(textWidth, self.maxWidth)
 
     def initUI(self, x: int, y: int):
@@ -118,27 +117,18 @@ class Text(QWidget):
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
 
         # Set the semi-transparent background
-        painter.fillRect(
-            event.rect(),
-            QColor(0, 0, 0, TextConfig.BACKGROUND_OPACITY))
+        painter.fillRect(event.rect(), self.background_color)
+        opacity_background = QColor(
+            self.background_color.red(), self.background_color.green(),
+            self.background_color.blue(), self.background_opacity)
+        painter.fillRect(event.rect(), opacity_background)
+        painter.setPen(self.color)
+        font = QFont(self.font_type, self.font_size)
 
         # Draw the text
-        painter.setPen(self.color)
-
-        font = QFont(
-            TextConfig.FONT_TYPE,
-            TextConfig.FONT_SIZE)
         painter.setFont(font)
-
-        textRect = QRect(
-            TextConfig.PADDING,
-            TextConfig.PADDING,
-            self.width() - 2 * TextConfig.PADDING,
-            event.rect().height() - 2 * TextConfig.PADDING)
-        painter.drawText(
-            textRect,
-            Qt.TextFlag.TextWordWrap | Qt.AlignmentFlag.AlignRight,
-            self.text)
+        textRect = QRect(self.padding, self.padding, self.width() - 2 * self.padding, event.rect().height() - 2 * self.padding)
+        painter.drawText(textRect, Qt.TextFlag.TextWordWrap | Qt.AlignmentFlag.AlignRight, self.text)
 
     def setVisibility(self, visible: bool):
         """

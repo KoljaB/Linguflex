@@ -1,14 +1,15 @@
 from .symbol import Symbol, SymbolConfig
 from PyQt6.QtCore import QTimer, QPoint
+from PyQt6.QtGui import QColor
 from lingu.core.events import events
 from lingu.core.settings import cfg
-from .text import Text, TextConfig
+from .text import Text
 from .windows import Windows
 from PyQt6 import QtGui
 import time
 
-USERTEXT_COLOR = QtGui.QColor(255, 200, 61)
-ASSISTANT_COLOR = QtGui.QColor(255, 255, 255)
+USERTEXT_COLOR = QColor(255, 200, 61)
+ASSISTANT_COLOR = QColor(255, 255, 255)
 TEXTS_MAX_WIDTH = 500
 
 
@@ -34,10 +35,12 @@ class UI:
         """
         self.app = app
         self.modules = modules
+        self.sorted_modules = None
         self.symbol_widgets = {}
         self.windows = Windows()
         self.screen = QtGui.QGuiApplication.primaryScreen().availableGeometry()
         self.assistant_time = 0
+        self.symbol_texts = {}
 
         self.timer = QTimer()
         self.timer.timeout.connect(self.check_text_timeout)
@@ -68,16 +71,42 @@ class UI:
             "",
             USERTEXT_COLOR,
             TEXTS_MAX_WIDTH,
-            self.screen.width() - TextConfig.DISTANCE_RIGHT,
-            TextConfig.DISTANCE_TOP,
+            self.screen.width() - 50,
+            80,
         )
         self.assistant_text = Text(
             "",
             ASSISTANT_COLOR,
             TEXTS_MAX_WIDTH,
-            self.screen.width() - TextConfig.DISTANCE_RIGHT,
+            self.screen.width() - 50,
             self.user_text.geometry().bottom(),
         )
+
+        # create text for each module symbol
+        for module_index, module in enumerate(self.sorted_modules):
+            module_name = module["name"]
+            symbol = self.symbol_widgets[module_name]
+            x = symbol.geometry().right()
+
+            y = symbol.geometry().top() - 20
+            # if module_index % 2 == 0:
+            #     y = symbol.geometry().top() - 20
+            # else:
+            #     y = symbol.geometry().bottom() - 10
+
+            text = Text(
+                "",
+                QColor(255, 255, 255),
+                symbol.geometry().width() + 100,
+                x,
+                y,
+                font_size=10,
+                padding=2,
+                background_color=QColor(92, 26, 14),
+                background_opacity=0
+                )
+
+            self.symbol_texts[module_name] = text
 
     def add_listeners(self):
         """
@@ -144,6 +173,21 @@ class UI:
             "brain",
             self._on_module_state_enabled
         )
+        events.add_listener(
+            "module_state_text",
+            "brain",
+            self._on_module_text
+        )
+
+    def _on_module_text(self, data):
+        """
+        Called when a module text is updated.
+        """
+        module_name = data["module"]
+        text = data["text"]
+        self.symbol_texts[module_name].setText(text)
+        self.symbol_texts[module_name].setVisibility(
+            len(text) > 0)
 
     def add_symbols(self):
         """
@@ -153,22 +197,22 @@ class UI:
         modules = self.modules.values()
 
         if module_order:
-            sorted_modules = sorted(
+            self.sorted_modules = sorted(
                 modules,
                 key=lambda m: module_order.index(m["name"])
                 if m["name"] in module_order else len(module_order)
             )
         else:
             print("No module order found in settings.yaml")
-            sorted_modules = modules
+            self.sorted_modules = modules
 
         gap = SymbolConfig.SIZE + \
             SymbolConfig.DISTANCE_BETWEEN_SYMBOLS
 
-        x_offset = self.screen.width() - len(sorted_modules) * gap - \
+        x_offset = self.screen.width() - len(self.sorted_modules) * gap - \
             SymbolConfig.DISTANCE_RIGHT
 
-        for module_index, module in enumerate(sorted_modules):
+        for module_index, module in enumerate(self.sorted_modules):
 
             # Create and show the symbol widget
             symbol_widget = Symbol(
@@ -193,6 +237,7 @@ class UI:
         """
         Called when a symbol is left clicked.
         """
+        events.trigger("module_clicked", symbol_widget.module["name"])
         pos = QPoint(
             symbol_widget.geometry().right(),
             symbol_widget.geometry().bottom() - 1)

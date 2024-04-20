@@ -410,9 +410,15 @@ class RealtimeRVCBase:
 
 
 class RealtimeRVC:
-    def __init__(self, stop_callback=None) -> None:
+    def __init__(
+        self,
+        stop_callback=None,
+        yield_chunk_callback=None) -> None:
+
         self.rvc = None
         self.stop_callback = stop_callback
+        self.yield_chunk_callback = yield_chunk_callback
+        self.chunk_callback_only = False
         self.is_active = True
         self.stream_play_chunk_queue = mp.Queue()
         self.shutdown_event = mp.Event()
@@ -475,7 +481,7 @@ class RealtimeRVC:
         self.accumulated_chunk = []
         self.accumulated_length = 0
 
-    def feed(self, audio_chunk, samplerate=24000):
+    def feed(self, audio_chunk, samplerate=24000, targetrate=40000):
         import librosa
         # Step 1: Convert to float32
         audio_chunk = np.frombuffer(
@@ -483,11 +489,11 @@ class RealtimeRVC:
             dtype=np.int16
         ).astype(np.float32) / 32768.0
 
-        # Step 2: Resample from 24000 Hz to 40000 Hz
+        # Step 2: Resample from original sample rate to 40000 Hz
         audio_chunk = librosa.resample(
             audio_chunk,
             orig_sr=samplerate,
-            target_sr=40000
+            target_sr=targetrate
         )
 
         # Step 3: Accumulate chunks
@@ -520,7 +526,12 @@ class RealtimeRVC:
 
             outdata_list = outdata[:, 0].tolist()
             write_data = np.array(outdata_list, dtype='float32').tobytes()
-            self.stream_play_chunk_queue.put(("play", write_data))
+
+            if not self.chunk_callback_only:
+                self.stream_play_chunk_queue.put(("play", write_data))
+            else:
+                if self.yield_chunk_callback:
+                    self.yield_chunk_callback(write_data)
 
     def is_playing(self):
         # check stream_play_chunk_queue for data

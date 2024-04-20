@@ -67,19 +67,31 @@ class ListenLogic(Logic):
             "stop_recorder",
             "speech",
             self._on_stop_recorder)
-        # self.add_listener(
-        #     "inference_start",
-        #     "inference",
-        #     self.sleep)
-        # self.add_listener(
-        #     "inference_processing",
-        #     "inference",
-        #     self.wakeup)
-        # self.add_listener(
-        #     "inference_end",
-        #     "inference",
-        #     self.wakeup)
+        self.add_listener(
+            "client_connected",
+            "server",
+            self._disable_recording)
+        self.add_listener(
+            "client_disconnected",
+            "server",
+            self._enable_recording)
+        self.add_listener(
+            "client_chunk_received",
+            "server",
+            self._client_chunk_received)
 
+    def _client_chunk_received(self, data):
+        self.recorder.feed_audio(data)
+
+    def _disable_recording(self):
+        self.state.set_text("🌐")
+        log.inf("  [listen] client connected, disabling server microphone")
+        self.recorder.set_microphone(False)
+
+    def _enable_recording(self):
+        self.state.set_text("")
+        log.inf("  [listen] client disconnected, enabling server microphone")
+        self.recorder.set_microphone(True)
     def sleep(self):
         self.start_listen_event.clear()
         self.recorder.abort()

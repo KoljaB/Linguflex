@@ -33,6 +33,20 @@ class State():
         # self.top_info_offset_y = 0
         # self.tooltip = "no tooltip provided"
 
+    def set_text(self, text: str):
+        """
+        Sets the information text of the state.
+
+        Args:
+            text (str): The text to set.
+        """
+        self.info_text = text
+        data = {
+            "module": self.module_name,
+            "text": text
+        }
+        events.trigger("module_state_text", "brain", data)
+
     def set_active(self, is_active: bool):
         """
         Sets the active status of the state.
