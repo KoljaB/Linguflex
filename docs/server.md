@@ -1,6 +1,6 @@
 # Server Module for Linguflex
 
-The Server module for Linguflex creates a HTTPS Webserver on Port 8000 and a Websocket SSL Server on Port 8001.
+The Server module for Linguflex creates a HTTPS Webserver on Port 443 and a Websocket SSL Server on Port 8001.
 
 > **Note**: *Serving Elevenlabs TTS currently doesn't work. Serving RVC postprocessed chunks currently result in slightly higher pitched voice.*
 
@@ -16,7 +16,7 @@ The Server module for Linguflex creates a HTTPS Webserver on Port 8000 and a Web
 
 ## Installation
 
-### Open ports 8000 and 8001 for local network TCP communication on your Firewall
+### Open ports 443 and 8001 for local network TCP communication on your Firewall (443 should be open already)
 
 To open firewall settings for a specific port in Windows, follow these steps:
 
@@ -28,7 +28,7 @@ To open firewall settings for a specific port in Windows, follow these steps:
 6. Choose the protocol (usually TCP for servers) and enter "8000" for "Specific local ports".
 7. Choose "Allow the connection" and click "Next".
 8. Select the appropriate profiles (usually "Private" for home networks).
-9. Name the rule (e.g., "Port 8000 for Python Server") and click "Finish".
+9. Name the rule (e.g., "Port 443 for Python Server") and click "Finish".
 
 Repeat for Inbound and Outbound Rules for ports 8000 and 8001.
 
@@ -69,7 +69,7 @@ Repeat for Inbound and Outbound Rules for ports 8000 and 8001.
 
 ### Configuring Your Server
 4. **Reference the PEM files in your server configuration:**
-   - Add the paths to the `mycertificate.pem` and `mycertificate-key.pem` files in your server's `settings.yaml` file. This step depends on your specific application and setup.
+   - Add the paths to the `mycertificate.pem` and `mycertificate-key.pem` files in your server's `settings.yaml` file. 
 
 ### Update Client-Side Configuration
 5. **Modify the Client JavaScript to Connect via SSL:**

@@ -115,6 +115,13 @@ mail:
   importance_threshold: 5
   summarize_model: gpt-3.5-turbo-1106
 
+server:
+  host: 192.168.178.1
+  port_ssl: 443
+  port_websocket: 8001
+  ssl_certfile: 
+  ssl_keyfile: 
+
 # Logging settings
 logging:
   level: INFO
