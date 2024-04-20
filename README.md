@@ -50,6 +50,7 @@ I invite you to explore the framework, whether you're a user seeking an innovati
 - **[House](./docs/house.md):** Smart Home control for Tuya-compatible devices, enhancing your living experience.
 - **[Calendar](./docs/calendar.md):** Manages personal calendars and appointments, including Google Calendar integration.
 - **[Search](./docs/search.md):** Performs text and image searches using the Google Search API.
+- **[Server](./docs/server.md):** Webserver functionality to connect external devices like smartphones etc.
 
 ### Modules Coming Soon
 - **See:** Empower the assistant with visual capabilities using the GPT Vision API. Enables processing of webcam pictures and desktop screenshots.
