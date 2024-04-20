@@ -17,6 +17,7 @@ class Logic:
         self.inference_manager = None
         self.server = None
         self.module_name = "Unknown"
+        self.abort = False
 
     def inference(
             self,
@@ -108,3 +109,28 @@ class Logic:
         Can be overridden by subclasses.
         """
         pass
+
+    def process_response_stream(self, stream):
+        """
+        Answer processing logic.
+        Consumes the assistant response stream, triggers events,
+        and returns the assistant text.
+        """
+        assistant_text = ""
+
+        if not self.abort:
+            for chunk in stream:
+                if not chunk or len(chunk) == 0:
+                    # happens sometimes
+                    continue
+
+                if self.abort:
+                    break
+                if not assistant_text:
+                    self.trigger("assistant_text_start")
+
+                assistant_text += chunk
+                self.trigger("assistant_text", assistant_text)
+                self.trigger("assistant_chunk", chunk)
+
+        return assistant_text
