@@ -117,7 +117,7 @@ mail:
 
 server:
   host: 192.168.178.1
-  port_ssl: 443
+  port_ssl: 8000
   port_websocket: 8001
   ssl_certfile: 
   ssl_keyfile: 
