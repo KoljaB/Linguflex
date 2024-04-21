@@ -1,6 +1,6 @@
 # Server Module for Linguflex
 
-The Server module for Linguflex creates a HTTPS Webserver on Port 443 and a Websocket SSL Server on Port 8001.
+The Server module for Linguflex creates a HTTPS Webserver on Port 8000 and a Websocket SSL Server on Port 8001.
 
 > **Note**: *Serving Elevenlabs TTS currently doesn't work. Serving RVC postprocessed chunks currently result in slightly higher pitched voice.*
 
@@ -16,7 +16,7 @@ The Server module for Linguflex creates a HTTPS Webserver on Port 443 and a Webs
 
 ## Installation
 
-### Open ports 443 and 8001 for local network TCP communication on your Firewall (443 should be open already)
+### Open ports 8000 and 8001 for local network TCP communication on your Firewall
 
 To open firewall settings for a specific port in Windows, follow these steps:
 
@@ -28,7 +28,7 @@ To open firewall settings for a specific port in Windows, follow these steps:
 6. Choose the protocol (usually TCP for servers) and enter "8000" for "Specific local ports".
 7. Choose "Allow the connection" and click "Next".
 8. Select the appropriate profiles (usually "Private" for home networks).
-9. Name the rule (e.g., "Port 443 for Python Server") and click "Finish".
+9. Name the rule (e.g., "Port 8000 for Python Server") and click "Finish".
 
 Repeat for Inbound and Outbound Rules for ports 8000 and 8001.
 
