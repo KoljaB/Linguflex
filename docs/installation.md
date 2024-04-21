@@ -19,9 +19,9 @@ Before you begin, ensure you have the following:
 - Graphics Card: Nvidia (recommended for full feature access)
 - Python Version: [3.10.9](https://www.python.org/downloads/release/python-3109/)
 - [NVIDIA CUDA Toolkit 11.8](https://developer.nvidia.com/cuda-11-8-0-download-archive) (STRONGLY recommended)
-- [NVIDIA cuDNN 8.7.0 for CUDA 11.x](https://developer.nvidia.com/rdp/cudnn-archive) (recommended)
+- [NVIDIA cuDNN 8.7.0 for CUDA 11.x](https://developer.nvidia.com/rdp/cudnn-archive) (recommended)  
   [Setup Tutorial for CUDA + cuDNN](https://www.youtube.com/watch?v=OEFKlRSd8Ic)
-- [ffmpeg](https://ffmpeg.org/download.html)
+- [ffmpeg](https://ffmpeg.org/download.html)  
   [Setup Tutorial for ffmpeg](https://www.youtube.com/watch?v=jZLqNocSQDM)
   
 
