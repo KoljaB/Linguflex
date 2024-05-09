@@ -49,7 +49,7 @@ encodec==0.1.1
 enum34==1.1.10
 fairseq==0.12.2
 faiss-cpu==1.7.3
-fastapi==0.88.0
+fastapi==0.110.2
 ffmpeg-python==0.2.0
 ffmpy==0.3.1
 Flask==3.0.2
