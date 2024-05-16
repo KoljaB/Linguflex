@@ -1,4 +1,17 @@
-let socket_adress = "wss://192.168.178.22:8001";
+var s, pw;
+
+var xhr_1 = new XMLHttpRequest();
+xhr_1.open("GET", "/credentials", false);
+xhr_1.onreadystatechange = function() {
+    if (xhr_1.readyState == 4 && xhr_1.status == 200) {
+        var response = JSON.parse(xhr_1.responseText);
+        s = response.host;
+        pw = response.port;
+    }
+}
+xhr_1.send();
+
+let socket_adress = "wss://" + s + ":" + pw;
 let socket = null;
 let displayDiv = document.getElementById('textDisplay');
 let server_available = false;
