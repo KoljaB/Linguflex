@@ -1,3 +1,5 @@
+<h1>WARNING! You are on the SLICK branch.</h1>
+<h3>This branch is where Slick (@cosmosai) will commit his changes to. It's not very stable and we don't recommend using it unless you know what you're doing!</h3>
 *Bringing the sci-fi dream of a Jarvis-style AI companion into reality.*
 
 [![Discord](https://img.shields.io/discord/1223234851914911754)](https://discord.gg/f556hqRjpv)
