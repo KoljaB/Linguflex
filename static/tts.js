@@ -203,6 +203,29 @@ function disconnectFromServer() {
         .catch(error => console.error('Error disconnecting:', error));
 }
 
+//When the user tabs out, give the PC back priority. When they return, give priority back.
+function onVisibilityChange() {
+    if (document.visibilityState === 'visible') {
+        connectToServer();
+    } else {
+        disconnectFromServer();
+    }
+}
+  
+document.addEventListener('visibilitychange', onVisibilityChange);
+
+//keepalive pings to give the PC back priority.
+function sendKeepAlive() {
+    xhr = new XMLHttpRequest();
+    xhr.open("GET", "/keep_alive", true);
+    xhr.send();
+    console.log("Keep alive sent");
+}
+
+setInterval(function() {
+    sendKeepAlive();
+}, 1000);
+
 function displayRealtimeText(realtimeText, displayDiv, isAssistant = false) {
     let combinedSentences = [];
     let maxLength = Math.max(fullUserSentences.length, fullAssistantSentences.length);
