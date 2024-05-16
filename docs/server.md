@@ -71,19 +71,10 @@ Repeat for Inbound and Outbound Rules for ports 8000 and 8001.
 4. **Reference the PEM files in your server configuration:**
    - Add the paths to the `mycertificate.pem` and `mycertificate-key.pem` files in your server's `settings.yaml` file. 
 
-### Update Client-Side Configuration
-5. **Modify the Client JavaScript to Connect via SSL:**
-   - Open the file `static/tts.js`.
-   - Change the line containing the socket address to use the IP address of your server:
-     ```javascript
-     let socket_address = "wss://YOUR_SERVER_IP:8001";
-     ```
-   - Replace `YOUR_SERVER_IP` with the actual IP address your server is running on.
-
 ### Documentation for Users
-6. **Provide this documentation to users who need to install the certificate on their client devices (e.g., phones).**
+5. **Provide this documentation to users who need to install the certificate on their client devices (e.g., phones).**
    - They should install the `mycertificate.pfx` on their devices to trust the SSL connection.
 
 ## Configuration
 
-- You can change the ports linguflex is running on by changing port_ssl and port_websocket in the settings.yaml (remember to also adjust static/tts.js)
+- You can change the ports linguflex is running on by changing port_ssl and port_websocket in the settings.yaml
