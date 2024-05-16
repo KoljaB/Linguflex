@@ -18,6 +18,7 @@ import json
 import time
 import ssl
 import io
+import os
 
 host = cfg("server", "host")
 ssl_certfile = cfg("server", "ssl_certfile")
@@ -36,6 +37,11 @@ audiochunk_generator_lock = threading.Lock()
 play_text_to_speech_semaphore = threading.Semaphore(1)
 current_speaking = {}
 
+def set_connected(connected):
+    with open("client_connected", "w+") as f:
+        f.write("true" if connected else "false")
+
+keep_alive_status = False
 
 class WebserverLogic(Logic):
     """
@@ -85,6 +91,7 @@ class WebserverLogic(Logic):
             self.trigger("client_disconnected")
         self.state.set_text("")
         self.state.set_active(False)
+        set_connected(False)
 
     async def send_to_client(self, message):
         if self.client_websocket:
@@ -202,6 +209,7 @@ class WebserverLogic(Logic):
         self.client_websocket = websocket
         self.trigger("client_connected")
         self.state.set_active(True)
+        set_connected(True)
 
         async for message in websocket:
             metadata_length = int.from_bytes(message[:4], byteorder='little')
@@ -240,6 +248,7 @@ class WebserverLogic(Logic):
     #     self.wav_file.setcomptype('NONE', 'Not Compressed')
 
     def init(self):
+        
         log.inf("  [server] Starting Linguflex 2.0 Webserver...")
         self.rvc_chunk = False
         self.stream_info = None
@@ -442,6 +451,21 @@ class WebserverLogic(Logic):
         @app.get("/favicon.ico")
         async def favicon():
             return FileResponse('static/favicon.ico')
+        
+        @app.get("/get_tts_file")
+        async def get_tts_file():
+            return FileResponse('output.wav')
+        
+        @app.get("/tts_last_updated")
+        async def tts_last_updated():
+            try:
+                return {"last_updated": os.path.getmtime('output.wav')}
+            except:
+                return {"last_updated": 0} #When the file is not found!
+            
+        @app.get("/credentials")
+        async def get_credentials():
+            return {"host": host, "port": port_websocket}
 
         @app.get("/tts")
         def tts(request: Request):
@@ -474,11 +498,33 @@ class WebserverLogic(Logic):
                         detail="Service unavailable, currently processing another request. Please try again shortly.",
                         headers={"Retry-After": "10"}
                     )
+                
 
         @app.post("/disconnect")
         async def async_disconnect_client():
             self.disconnect_client()
             return {"message": "Disconnected successfully"}
+
+        def keepalive_loop():
+            global keep_alive_status
+            while True:
+                time.sleep(6)
+                if keep_alive_status:
+                    keep_alive_status = False
+                else:
+                    if self.client_websocket:
+                        print("Client disconnected due to inactivity.")
+                        self.disconnect_client()
+
+        keep_alive_loop_thread = threading.Thread(target=keepalive_loop)
+        keep_alive_loop_thread.start()
+        print("Keepalive loop started.")
+        
+        @app.get("/keep_alive")
+        async def keep_alive():
+            global keep_alive_status
+            keep_alive_status = True
+            return {"success": True}
 
         @app.get("/")
         def root_page():
@@ -489,7 +535,7 @@ class WebserverLogic(Logic):
             <!DOCTYPE html>
             <html>
                 <head>
-                    <title>Linguflex 2.0</title>
+                    <title>Cosmos Server</title>
                     <meta charset="UTF-8">
                     <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
                     <style>
@@ -581,7 +627,7 @@ class WebserverLogic(Logic):
                 </head>
                 <body>
                     <div id="container">
-                        <h2>Linguflex 2.0</h2>
+                        <h2>Cosmos Web 2.1.3</h2>
                         <div id="textDisplay" style="max-width: 800px; margin: auto;">
                         </div>
                     </div>
