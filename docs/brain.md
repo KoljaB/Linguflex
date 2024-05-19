@@ -35,6 +35,20 @@ To obtain an API key:
 2. Click on the name at the top right and select "View API keys".
 3. Click on "Create new secret key" and generate a new API key.
 
+### Usage of Local LLMs
+
+To switch to a local language model instead of OpenAI's, follow these steps:
+
+1. **Enable Local LLM**: Set the parameter `local_llm/use_local_llm` to `true` in the `settings.yaml` file.
+
+2. **Choose a Provider**: Select between two providers for local models: Ollama and Llama.cpp.
+    - **Ollama**: Recommended for faster inference. Install it from [Ollama's website](https://ollama.com/).
+    - **Llama.cpp**: If you choose this provider, download the model you intend to use and place it in the directory specified under `local_llm/model_path`.
+
+3. **Configure the Provider**: 
+    - Set the provider in the `settings.yaml` file under `local_llm/model_provider`. Allowed values are `"ollama"` or `"llama.cpp"`.
+    - Specify the model name under `local_llm/model_name`. For instance, use `"Starling-LM-7B-beta-Q8_0.gguf"` for Llama.cpp or `"llama3"` for Ollama.
+
 ## Configuration
 
 ### Settings.yaml
