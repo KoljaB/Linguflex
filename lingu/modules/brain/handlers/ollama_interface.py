@@ -3,6 +3,7 @@ from .languagemodelbase import LLM_Base
 from lingu import cfg, log, exc, prompt, events, Prompt
 from pydantic import BaseModel, Field
 from .history import History
+from openai import OpenAI
 import instructor
 import llama_cpp
 import itertools
@@ -45,7 +46,7 @@ class FunctionName(BaseModel):
     )
 
 
-class LocalLLMInterface(LLM_Base):
+class OllamaInterface(LLM_Base):
     def __init__(
             self,
             history: History,
@@ -62,20 +63,12 @@ class LocalLLMInterface(LLM_Base):
         self.model_full_path = os.path.join(
             self.model_path, self.model_name)
 
-        self.llama = llama_cpp.Llama(
-            model_path=self.model_full_path,
-            n_gpu_layers=gpu_layers,
-            chat_format="chatml",
-            n_ctx=context_length,
-            n_threads=n_threads,
-            rope_freq_base=rope_freq_base,
-            rope_freq_scale=rope_freq_scale,
-            draft_model=LlamaPromptLookupDecoding(num_pred_tokens=2),
-            logits_all=True,
-            verbose=verbose
-        )
+        self.llama = OpenAI(
+            base_url="http://localhost:11434/v1",
+            api_key="ollama")
+
         self.create = instructor.patch(
-            create=self.llama.create_chat_completion_openai_v1,
+            create=self.llama.chat.completions.create,
             mode=instructor.Mode.JSON_SCHEMA
         )
         self.sleep = False
@@ -132,9 +125,21 @@ class LocalLLMInterface(LLM_Base):
                     "content": "say hi",
                 },
             ],
+            model=self.model_name,
             max_tokens=5,
             stream=True,
         )
+        # extraction_stream = self.create(
+        #     response_model=instructor.Partial[ChatAnswer],
+        #     messages=[
+        #         {
+        #             "role": "user",
+        #             "content": "say hi",
+        #         },
+        #     ],
+        #     max_tokens=5,
+        #     stream=True,
+        # )
         for token in extraction_stream:
             pass
 
@@ -192,7 +197,9 @@ class LocalLLMInterface(LLM_Base):
             response_model=instructor.Partial[FunctionName],
             max_retries=max_retries,
             messages=messages_decide,
+            model=self.model_name,
             max_tokens=500,
+            temperature=0.1,
             stream=True,
         )
 
@@ -232,10 +239,13 @@ class LocalLLMInterface(LLM_Base):
         try:
             self.wait_wake()
             extraction_stream = self.create(
-                response_model=tool.instance,
+                response_model=instructor.Partial[tool.instance],
                 max_retries=max_retries,
                 messages=messages_tool,
+                model = self.model_name,
                 max_tokens=500,
+                temperature=0.1,
+                stream=True,
             )
             print(f"  [brain] tool {fct_call} called, "
                   f"extraction_stream: {extraction_stream}")
@@ -328,14 +338,8 @@ Focus on providing a short, concise, and direct response to the user's query, ra
         # Define the llm creation parameters in a dictionary
         params = {
             "max_tokens": max_tokens,
-            "repeat_penalty": repeat_penalty,
             "temperature": temperature,
             "top_p": top_p,
-            "top_k": top_k,
-            "tfs_z": tfs_z,
-            "mirostat_mode": mirostat_mode,
-            "mirostat_tau": mirostat_tau,
-            "mirostat_eta": mirostat_eta,
         }
 
         if was_tool_called:
@@ -366,9 +370,10 @@ Focus on providing a short, concise, and direct response to the user's query, ra
         log.inf('  Messages:')
         log.inf('=>{}'.format(json.dumps(messages, indent=4)))
 
-        response = self.llama.create_chat_completion_openai_v1(
+        response = self.llama.chat.completions.create(
             messages=messages,
             stream=True,
+            model=self.model_name,
             **params
         )
 
