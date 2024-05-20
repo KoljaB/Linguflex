@@ -33,10 +33,12 @@ class MusicLogic(Logic):
             return no_api_key_msg
         return self.player.get_playlist_information()
 
-    def skip_audio(self):
+    def skip_audio(self, skip_count):
+        if not isinstance(skip_count, int):
+            raise ValueError("skip_count must be an integer")
         if not self.player:
             return no_api_key_msg
-        self.player.skip_audio()
+        self.player.skip_audio(skip_count)
 
     def next_song(self):
         if not self.player:
