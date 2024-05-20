@@ -63,7 +63,7 @@ class get_playlist_information(Populatable):
 
 
 class VolumeDirection(enum.Enum):
-    """Enumeration representing the direction of the volume change that can be performed, up for noisier und down for quieter."""
+    """Enumeration representing the direction of the volume change that can be performed, up for louder and down for quieter."""
 
     UP = "up"
     DOWN = "down"
@@ -87,7 +87,7 @@ class skip_audio(Populatable):
 
 class change_music_volume(Populatable):
     "Changes volume of music playback"
-    type: VolumeDirection = Field(None, description="Direction of volume change")
+    type: VolumeDirection = Field(None, description="Direction of volume change. Must be either 'up' or 'down'.")
 
     def on_populated(self):
         if self.type == 'up':
