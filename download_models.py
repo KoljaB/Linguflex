@@ -73,13 +73,3 @@ download_file(
      "KoljaB/XTTS_Lasinya", "speakers_xtts.pth", "models/xtts/Lasinya")
 download_file(
      "KoljaB/XTTS_Lasinya", "model.pth", "models/xtts/Lasinya")
-
-print("Downloading xtts trained model files (Samantha)")
-download_file(
-    "KoljaB/XTTS_Samantha", "config.json", "models/xtts/Samantha")
-download_file(
-    "KoljaB/XTTS_Samantha", "vocab.json", "models/xtts/Samantha")
-download_file(
-    "KoljaB/XTTS_Samantha", "speakers_xtts.pth", "models/xtts/Samantha")
-download_file(
-    "KoljaB/XTTS_Samantha", "model.pth", "models/xtts/Samantha")
