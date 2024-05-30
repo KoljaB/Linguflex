@@ -21,7 +21,6 @@ def create_directories():
     create_directory("models/rvc/models")
     create_directory("models/xtts")
     create_directory("models/xtts/Lasinya")
-    create_directory("models/xtts/Samantha")
 
 
 def download_file(
@@ -63,10 +62,6 @@ download_file(
     "KoljaB/RVC_Models", "Lasinya.pth", "models/rvc/models")
 download_file(
     "KoljaB/RVC_Models", "Lasinya.index", "models/rvc/models")
-download_file(
-    "KoljaB/RVC_Models", "Samantha.pth", "models/rvc/models")
-download_file(
-    "KoljaB/RVC_Models", "Samantha.index", "models/rvc/models")
 
 # download xtts trained model files
 print("Downloading xtts trained model files (Lasinya)")
