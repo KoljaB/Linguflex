@@ -178,13 +178,17 @@ class History:
         if len(self.history) > self.max_history_messages:
             self.history.pop(0)
 
-    def get(self, number_of_messages=-1) -> list:
+    def get(self, number_of_messages=-1, purge_images=False) -> list:
         """
         Retrieves the most recent entries in the history
-        up to the maximum limit.
+        up to the maximum limit, optionally purging image content.
+
+        Args:
+            number_of_messages (int): The number of messages to retrieve. Defaults to -1, which retrieves up to max_history_messages.
+            purge_images (bool): Whether to remove image content from the messages. Defaults to False.
 
         Returns:
-            list: A list of the most recent entries.
+            list: A list of the most recent entries, potentially purged of images.
         """
         number_of_messages = (
             number_of_messages
@@ -192,6 +196,18 @@ class History:
             else self.max_history_messages
         )
         messages = self.history[-number_of_messages:]
+
+        if purge_images:
+            purged_messages = []
+            for message in messages:
+                if 'content' in message and isinstance(message['content'], list):
+                    # Filter out the image_url type from the content
+                    message['content'] = [
+                        content for content in message['content']
+                        if content.get('type') != 'image_url'
+                    ]
+                purged_messages.append(message)
+            messages = purged_messages
 
         # Remove tool message from the history if it is the first message
         # This is because tool needs context
@@ -203,6 +219,32 @@ class History:
             messages = messages[1:]
 
         return messages
+
+    # def get(self, number_of_messages=-1) -> list:
+    #     """
+    #     Retrieves the most recent entries in the history
+    #     up to the maximum limit.
+
+    #     Returns:
+    #         list: A list of the most recent entries.
+    #     """
+    #     number_of_messages = (
+    #         number_of_messages
+    #         if number_of_messages > 0
+    #         else self.max_history_messages
+    #     )
+    #     messages = self.history[-number_of_messages:]
+
+    #     # Remove tool message from the history if it is the first message
+    #     # This is because tool needs context
+    #     while (
+    #         len(messages) > 0
+    #         and "role" in messages[0]
+    #         and messages[0]["role"] == "tool"
+    #     ):
+    #         messages = messages[1:]
+
+    #     return messages
 
     def get_tokens(self, messages, functions, model="gpt-3.5-turbo"):
         """

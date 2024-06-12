@@ -231,10 +231,13 @@ class Modules:
                                 'keywords',
                                 'init_prompt',
                                 'success_prompt',
-                                'fail_prompt'
+                                'fail_prompt',
+                                'function_name_examples',
+                                'function_argument_examples'
                             ]:
-                                value = module["lang"][inf_obj.name][key]
-                                inf_obj.language_info[key] = value
+                                if key in module["lang"][inf_obj.name]:
+                                    value = module["lang"][inf_obj.name][key]
+                                    inf_obj.language_info[key] = value
 
                 except Exception as e:
                     log.err("error occurred reading module file "

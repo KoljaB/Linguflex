@@ -47,6 +47,7 @@ prompt: >
 local_llm:
   use_local_llm: false
   gpu_layers: 10
+  model_provider: ollama  # "ollama" or "llama.cpp"
   model_path: models/llm/
   model_name: openhermes-2.5-mistral-7b.Q5_K_M.gguf
   max_retries: 3
