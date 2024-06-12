@@ -29,7 +29,7 @@ I invite you to explore the framework, whether you're a user seeking an innovati
 
 ## Key Features
 
-- **🆕NEW🆕:** Support for **Ollama** (kudos to the brilliant 🌟[Philip Ehrbright](https://github.com/SlickTorpedo)🌟 who single-handedly developed everything around ollama support and so made this wonderful thing available for us).
+- **🆕NEW🆕:** Now featuring **Ollama** support, thanks to the exceptional 🌟[Philip Ehrbright](https://github.com/SlickTorpedo)🌟 for his incredible work in developing this feature!
 - **Local Operation:** Full functionality is maintained locally, with local speech-to-text, local TTS, and local language model inference, ensuring privacy and reliability.
 - **Ultra-Low Latency:** Every aspect of Linguflex was fine-tuned to minimize response times, achieving unparalleled speed in both language model communication and text-to-speech (TTS) generation.
 - **High-Quality Audio:** Using voice clone technology and combining finetuned XTTS with finetuned RVC post-processing AI models, Linguflex offers a near-Elevenlabs quality in local TTS synthesis.
