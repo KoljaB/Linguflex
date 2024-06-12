@@ -1,4 +1,4 @@
-*Bringing the sci-fi dream of a Jarvis-style AI companion into reality.*
+*Bringing the sci-fi dream of a capable Jarvis-style AI companion into reality.*
 
 [![Discord](https://img.shields.io/discord/1223234851914911754)](https://discord.gg/f556hqRjpv)
 [![YouTube](https://img.shields.io/youtube/channel/subscribers/UCLeuwdsZO8txzFSSAeLjGlQ?style=social&label=Subscribe%20on%20YouTube)](https://www.youtube.com/channel/UCLeuwdsZO8txzFSSAeLjGlQ)
@@ -30,9 +30,9 @@ I invite you to explore the framework, whether you're a user seeking an innovati
 ## Key Features
 
 - **Ultra-Low Latency:** Every aspect of Linguflex was fine-tuned to minimize response times, achieving unparalleled speed in both language model communication and text-to-speech (TTS) generation.
-- **Local Operation:** Full functionality is maintained locally, encompassing speech-to-text, TTS, and language model inference, ensuring privacy and reliability.
-- **High-Quality Audio:** Integrating advanced voice clone technology for real-time post-processing, Linguflex offers a near-Elevenlabs quality in local TTS synthesis.
-- **Enhanced Functionality:** Streamlined function selection allows Linguflex to quickly adapt and respond to a wide range of text-based commands and queries.
+- **High-Quality Audio:** Using voice clone technology and combining finetuned XTTS with finetuned RVC post-processing AI models, Linguflex offers a near-Elevenlabs quality in local TTS synthesis.
+- **Local Operation:** Full functionality is maintained locally, with local speech-to-text, local TTS, and local language model inference, ensuring privacy and reliability.
+- **Enhanced Functionality:** Streamlined function selection allows Linguflex to quickly adapt and respond to a wide range of text-based commands and queries. We use keyword pre-parsing of user inputs to minimize the overload on the language model, making it easier to select the right functions and reducing confusion.
 - **Developer-Friendly:** Building new modules is more intuitive and efficient, thanks to the minimalistic and clear coding framework.
 
 ## [Modules](./docs/modules.md)
