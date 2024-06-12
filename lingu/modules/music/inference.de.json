@@ -4,7 +4,95 @@
 		"keywords": ["spiel*", "lied*", "song*", "album*", "alben", "musik*", "clip*", "film*", "stream*", "audio*", "sound*", "*list*", "titel*", "track*", "medien*", "künstler*", "interpret*", "band*", "youtube*", "hörb*", "podcast*", "play*", "hören*", "start*", "anfang*", "beginn*", "jams*", "beats*", "komposition*"],
 		"init_prompt": "",
 		"success_prompt": "Du bist ein Radiomoderator. Kündige die Musik in einem kurzen Satz an, der perfekt für die Ausstrahlung im Radio wäre (der Satz sollte also KEINE URLS ODER LINKS enthalten), indem du aus den Daten maximal den Künstler und überarbeiteten Songtitel (entferne überflüssige Zusätze wie zB \"remastered\") nennst und dabei Spannung aufbaust, Begeisterung weckst und neugierig auf das Stück machst.",
-		"fail_prompt": ""
+		"fail_prompt": "",
+		"function_name_examples": [
+			{
+				"role": "user",
+				"content": "User's request:\n\"Can you please play Sydney Sweeney by Ken Carson?\""
+			},
+			{
+				"role": "user",
+				"content": "Return \"NOT_APPLICABLE\" if there is no function that can help or the functions are unrelated to the query. Otherwise, pass the name of the function to call."
+			},
+			{
+				"role": "assistant",
+				"content": "name_of_function_to_call='play_music_by_name'"
+			},
+			{
+				"role": "user",
+				"content": "Fantastic, here is the next one."
+			},
+			{
+				"role": "user",
+				"content": "User's request:\n\"Play something by future.\""
+			},
+			{
+				"role": "user",
+				"content": "Return \"NOT_APPLICABLE\" if there is no function that can help or the functions are unrelated to the query. Otherwise, pass the name of the function to call."
+			},
+			{
+				"role": "assistant",
+				"content": "name_of_function_to_call='play_music_by_name'"
+			},
+			{
+				"role": "user",
+				"content": "Fantastic, here is the next one."
+			},
+			{
+				"role": "user",
+				"content": "User's request:\n\"Play Million Dollar Baby\""
+			},
+			{
+				"role": "user",
+				"content": "Return \"NOT_APPLICABLE\" if there is no function that can help or the functions are unrelated to the query. Otherwise, pass the name of the function to call."
+			},
+			{
+				"role": "assistant",
+				"content": "name_of_function_to_call='play_music_by_name'"
+			},
+			{
+				"role": "user",
+				"content": "Fantastic, here is the next one."
+			}
+		],
+		"function_argument_examples": [
+			{
+				"role": "user",
+				"content": "User's request:\n\"Can you please play Sydney Sweeney by Ken Carson?\""
+			},
+			{
+				"role": "assistant",
+				"content": "name_or_search_terms='Ken Carson - Sydney Sweeney' single_song='True'"
+			},
+			{
+				"role": "user",
+				"content": "Fantastic, here is the next one."
+			},
+			{
+				"role": "user",
+				"content": "User's request:\n\"Play something by future.\""
+			},
+			{
+				"role": "assistant",
+				"content": "name_or_search_terms='Future' single_song='False'"
+			},
+			{
+				"role": "user",
+				"content": "Fantastic, here is the next one."
+			},
+			{
+				"role": "user",
+				"content": "User's request:\n\"Play Million Dollar Baby\""
+			},
+			{
+				"role": "assistant",
+				"content": "name_or_search_terms='Million Dollar Baby' single_song='False'"
+			},
+			{
+				"role": "user",
+				"content": "Fantastic, here is the next one."
+			}
+		]
 	},
 	"play_music_by_playlist_index":
 	{
@@ -18,7 +106,95 @@
 		"keywords": ["*spring*", "skip*", "weit*", "wechsel*", "nächst*", "sprung*", "durchgeh*", "vorwärts*", "*vor", "rückwär*", "zurück", "vorig*", "spul*", "hüpf*", "letzt*"],
 		"init_prompt": "",
 		"success_prompt": "Audio wird ausgespielt. Erwähne keine URLs.",
-		"fail_prompt": ""
+		"fail_prompt": "",
+		"function_name_examples": [
+			{
+				"role": "user",
+				"content": "User's request:\n\"Skip this song.\""
+			},
+			{
+				"role": "user",
+				"content": "Return \"NOT_APPLICABLE\" if there is no function that can help or the functions are unrelated to the query. Otherwise, pass the name of the function to call."
+			},
+			{
+				"role": "assistant",
+				"content": "name_of_function_to_call='skip_audio'"
+			},
+			{
+				"role": "user",
+				"content": "Fantastic, here is the next one."
+			},
+			{
+				"role": "user",
+				"content": "User's request:\n\"Go back a song.\""
+			},
+			{
+				"role": "user",
+				"content": "Return \"NOT_APPLICABLE\" if there is no function that can help or the functions are unrelated to the query. Otherwise, pass the name of the function to call."
+			},
+			{
+				"role": "assistant",
+				"content": "name_of_function_to_call='skip_audio'"
+			},
+			{
+				"role": "user",
+				"content": "Fantastic, here is the next one."
+			},
+			{
+				"role": "user",
+				"content": "User's request:\n\"Skip ahead 3 songs.\""
+			},
+			{
+				"role": "user",
+				"content": "Return \"NOT_APPLICABLE\" if there is no function that can help or the functions are unrelated to the query. Otherwise, pass the name of the function to call."
+			},
+			{
+				"role": "assistant",
+				"content": "name_of_function_to_call='skip_audio'"
+			},
+			{
+				"role": "user",
+				"content": "Fantastic, here is the next one."
+			}			
+		],
+		"function_argument_examples": [
+			{
+				"role": "user",
+				"content": "User's request:\n\"Skip this song.\""
+			},
+			{
+				"role": "assistant",
+				"content": "skip_count=1"
+			},
+			{
+				"role": "user",
+				"content": "Fantastic, here is the next one."
+			},
+			{
+				"role": "user",
+				"content": "User's request:\n\"Go back a song.\""
+			},
+			{
+				"role": "assistant",
+				"content": "skip_count=-1"
+			},
+			{
+				"role": "user",
+				"content": "Fantastic, here is the next one."
+			},
+			{
+				"role": "user",
+				"content": "User's request:\n\"Skip ahead 3 songs.\""
+			},
+			{
+				"role": "assistant",
+				"content": "skip_count=3"
+			},
+			{
+				"role": "user",
+				"content": "Fantastic, here is the next one."
+			}			
+		]
 	},
 	"get_playlist_information": 
 	{
@@ -39,7 +215,95 @@
 		"keywords": ["leise*", "laut*", "volume*", "*stärke*", "ton*", "geräusch*", "pegel*", "sound*", "audio*", "db*", "dezibel*", "stärke*", "intensität*", "amplitude*", "kräft*", "energie*", "taub", "gehör"],
 		"init_prompt": "",
 		"success_prompt": "Bestätige das erfolgreiche Ändern der Lautstärke in ein oder zwei Worten.",
-		"fail_prompt": ""
+		"fail_prompt": "",
+		"function_name_examples": [
+			{
+				"role": "user",
+				"content": "User's request:\n\"Please turn down the volume.\""
+			},
+			{
+				"role": "user",
+				"content": "Return \"NOT_APPLICABLE\" if there is no function that can help or the functions are unrelated to the query. Otherwise, pass the name of the function to call."
+			},
+			{
+				"role": "assistant",
+				"content": "name_of_function_to_call='change_music_volume'"
+			},
+			{
+				"role": "user",
+				"content": "Fantastic, here is the next one."
+			},
+			{
+				"role": "user",
+				"content": "User's request:\n\"Turn it down a bit.\""
+			},
+			{
+				"role": "user",
+				"content": "Return \"NOT_APPLICABLE\" if there is no function that can help or the functions are unrelated to the query. Otherwise, pass the name of the function to call."
+			},
+			{
+				"role": "assistant",
+				"content": "name_of_function_to_call='change_music_volume'"
+			},
+			{
+				"role": "user",
+				"content": "Fantastic, here is the next one."
+			},
+			{
+				"role": "user",
+				"content": "User's request:\n\"Turn the music up.\""
+			},
+			{
+				"role": "user",
+				"content": "Return \"NOT_APPLICABLE\" if there is no function that can help or the functions are unrelated to the query. Otherwise, pass the name of the function to call."
+			},
+			{
+				"role": "assistant",
+				"content": "name_of_function_to_call='change_music_volume'"
+			},
+			{
+				"role": "user",
+				"content": "Fantastic, here is the next one."
+			}			
+		],
+		"function_argument_examples": [
+			{
+				"role": "user",
+				"content": "User's request:\n\"Please turn down the volume.\""
+			},
+			{
+				"role": "assistant",
+				"content": "VolumeDirection='down'"
+			},
+			{
+				"role": "user",
+				"content": "Fantastic, here is the next one."
+			},
+			{
+				"role": "user",
+				"content": "User's request:\n\"Turn it down a bit.\""
+			},
+			{
+				"role": "assistant",
+				"content": "VolumeDirection='down'"
+			},
+			{
+				"role": "user",
+				"content": "Fantastic, here is the next one."
+			},
+			{
+				"role": "user",
+				"content": "User's request:\n\"Turn the music up.\""
+			},
+			{
+				"role": "assistant",
+				"content": "VolumeDirection='up'"
+			},
+			{
+				"role": "user",
+				"content": "Fantastic, here is the next one."
+			}			
+		]
 	},
 	"pause_or_continue_music": 
 	{
