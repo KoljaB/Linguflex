@@ -4,10 +4,12 @@ from .handlers.feed2stream import BufferStream
 from .handlers.engines import Engines
 from .handlers.voices import Voices
 from .handlers.resample import Resampler
+from scipy.spatial.distance import cosine
 import numpy as np
 import threading
 import os
 import resampy
+import wave
 from scipy.signal import butter, lfilter
 
 force_first_fragment_after_words = \
@@ -83,7 +85,7 @@ class SpeechLogic(Logic):
                           self.assistant_text_complete)
         self.add_listener("set_voice",
                           "mimic",
-                          self.voices.mimic_set_voice)
+                          self.mimic_set_voice)
         self.add_listener(
             "escape_key_pressed",
             "*",
@@ -100,6 +102,10 @@ class SpeechLogic(Logic):
             "client_disconnected",
             "server",
             self._stop_yield_playout)
+        self.add_listener(
+            "user_audio_complete",
+            "listen",
+            self._user_audio)
         # Create buffer for output text stream.
         self.text_stream = BufferStream()
 
@@ -116,6 +122,12 @@ class SpeechLogic(Logic):
 
         self.ready()
 
+    def mimic_set_voice(self, voice):
+        print(f'Mimic sets voice{voice["name"]}')
+        self.voices.mimic_set_voice(voice)
+        print(f'Set rvce enabled: {state.rvc_enabled}')
+        self.set_rvc_enabled(state.rvc_enabled)
+
     def _yield_playout(self):
         self.state.set_text("🌐")
         log.inf("  [speech] client connected, disabling sound output")
@@ -125,6 +137,36 @@ class SpeechLogic(Logic):
         self.state.set_text("")
         log.inf("  [speech] client disconnected, enabling sound output")
         self.playout_yielded = False
+
+    def _user_audio(self, user_audio_bytes):
+        # print(f"Got audio bytes, len: {len(user_audio_bytes)}")
+        # print(f"current engine: {self.engines.engine.engine_name}")
+        if not self.engines.engine.engine_name == "coqui":
+            return
+        path_ref_file = "lingu/resources/user_voice/voice_example.wav"
+        if not os.path.exists(path_ref_file):
+            return
+
+        audio_int16 = np.int16(user_audio_bytes * 32767)
+
+        path_cur_file = "user_audio.wav"
+        with wave.open(path_cur_file, 'w') as wav_file:
+            wav_file.setnchannels(1)
+            wav_file.setsampwidth(2)
+            wav_file.setframerate(16000)
+            wav_file.writeframes(audio_int16.tobytes())
+
+        # speaker_embedding_cur = self.engines.engine.get_embeddings(path_cur_file)
+        # speaker_embedding_ref = self.engines.engine.get_embeddings(path_ref_file)
+
+        # speaker_embedding_cur = np.array(speaker_embedding_cur, dtype=np.float16)
+        # speaker_embedding_ref = np.array(speaker_embedding_ref, dtype=np.float16)
+
+        # # (gpt_cond_latent_cur, speaker_embedding_cur) = self.engines.engine.get_embeddings(path_cur_file)
+        # # (gpt_cond_latent_ref, speaker_embedding_ref) = self.engines.engine.get_embeddings(path_ref_file)
+        # similarity = 1 - cosine(speaker_embedding_cur, speaker_embedding_ref)
+        # print(f"Similarity: {similarity}")
+
 
     def yield_chunk_callback(self, chunk):
 
@@ -277,11 +319,12 @@ class SpeechLogic(Logic):
         # print(f"Playing text: {text}, muted: {muted}")
         self.muted = muted
         self.text_stream.add(text)
-       
+
 
         if not self.engines.stream.is_playing():
             self.engines.stream.feed(self.text_stream.gen())
             if state.rvc_enabled:
+                print("RVC ENABLED")
                 self.rvc.chunk_callback_only = self.playout_yielded
                 self.engines.stream.play_async(
                     fast_sentence_fragment=fast_sentence_fragment,
@@ -410,6 +453,7 @@ class SpeechLogic(Logic):
             enabled (bool): A boolean indicating whether RVC should
               be enabled or disabled.
         """
+        print(f"Setting RVC enabled: {enabled}")
         state.rvc_enabled = enabled
 
         if enabled and not self.rvc.started:

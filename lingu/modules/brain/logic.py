@@ -1,5 +1,6 @@
 from .handlers.openai_interface import OpenaiInterface
-from .handlers.local_llm_interface import LocalLLMInterface
+from .handlers.llama_cpp_interface import LLamaCppInterface
+from .handlers.ollama_interface import OllamaInterface
 from .handlers.history import History
 from lingu import log, cfg, prompt, Logic
 from .state import state
@@ -10,7 +11,10 @@ max_history_messages = int(cfg("max_history_messages", default=12))
 max_tokens_per_msg = int(cfg("max_tokens_per_msg", default=1000))
 max_history_tokens = int(cfg("max_history_tokens", default=7000))
 use_local_llm = bool(cfg("local_llm", "use_local_llm", default=False))
-
+model_provider = cfg("local_llm", "model_provider", default="llama.cpp")
+model_name = cfg(
+    "local_llm", "model_name",
+    default="openhermes-2.5-mistral-7b.Q5_K_M.gguf")
 
 class BrainLogic(Logic):
     """
@@ -31,8 +35,12 @@ class BrainLogic(Logic):
             )
 
         if use_local_llm:
-            log.inf("  [brain] using local language model")
-            self.llm = LocalLLMInterface(self.history)
+            if model_provider == "ollama":
+                log.inf(f"  [brain] using local language model \"{model_name}\" with ollama provider")
+                self.llm = OllamaInterface(self.history)
+            else:
+                log.inf(f"  [brain] using local language model \"{model_name}\" with llama.cpp provider")
+                self.llm = LLamaCppInterface(self.history)
         else:
             log.inf("  [brain] using openai language model")
             self.llm = OpenaiInterface()
@@ -174,7 +182,7 @@ class BrainLogic(Logic):
         log.inf(f"  history: {self.history.history}")
 
         assistant_response_stream = self.llm.generate(
-            [system_prompt_message] + self.history.get(),
+            [system_prompt_message] + self.history.get(purge_images=True),
             tools_for_usertext)
 
         return assistant_response_stream
