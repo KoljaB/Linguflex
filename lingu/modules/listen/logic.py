@@ -2,6 +2,7 @@ from RealtimeSTT import AudioToTextRecorder
 from lingu import cfg, log, Logic
 import numpy as np
 import threading
+import time
 import gc
 
 main_recorder_model = cfg(
@@ -127,7 +128,7 @@ class ListenLogic(Logic):
         self.speech_ready_event.set()
 
     def _on_wake_up(self):
-        self.recorder.wakeup()
+        self.recorder.listen_start = time.time()
 
     def _realtime_transcription(self, text: str):
         text = text.strip()
@@ -155,6 +156,10 @@ class ListenLogic(Logic):
 
     def _final_text(self, text):
         self.trigger("user_text_complete", text)
+
+        user_bytes = self.recorder.last_transcription_bytes
+        self.trigger("user_audio_complete", user_bytes)            
+
         if hasattr(self, 'on_final_text'):
             self.on_final_text(text)
 
