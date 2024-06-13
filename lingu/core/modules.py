@@ -144,10 +144,13 @@ class Modules:
         Creates module structures by identifying all folders in the module path
         and initializes their respective properties.
         """
+        module_order = cfg('modules')        
         module_folders = self.get_module_folders(module_path)
 
         for folder in module_folders:
             module_name = os.path.basename(folder)
+            if module_order and module_name not in module_order:
+                continue
             log.inf(f"+ importing {folder}")
             files = [f for f in os.listdir(folder) if f.endswith('.py')]
 
