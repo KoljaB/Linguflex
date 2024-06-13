@@ -133,14 +133,15 @@ logging:
 
 modules:
   - listen
-  - see
+#  - see
   - brain
-  - mail
+#  - mail
   - mimic
   - music
-  - weather
-  - house 
-  - search
-  - calendar
+#  - weather
+#  - house 
+#  - search
+#  - calendar
+#  - server
   - interpreter
   - speech
