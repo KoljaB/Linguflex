@@ -168,22 +168,26 @@ def install_library(library):
         if f"Requirement already satisfied: {library}" in result.stdout:
             printl(f"Already installed {library}")
             printl(f"  {result.stdout}", noprint=True)
+            return True
 
         elif "Successfully installed" in result.stdout:
             printl(f"Successfully installed {library}")
             printl(f"  {result.stdout}", noprint=True)
+            return True
         else:
             printl(f"  {result.stdout}", noprint=True)
             ask_exit(
                 f"Failed to install {library}. Error: {result.stderr}",
                 f"Do you want to continue installation without verified installation of {library}? (yes/no): "
             )
+            return False
 
     except subprocess.CalledProcessError as e:
         ask_exit(
             f"Installation failed for {library}. Error: {e}",
             f"Do you want to continue installation without verified installation of {library}? (yes/no): "
         )
+        return True
 
 
 def install_libraries_from_requirements(file_path):
@@ -208,8 +212,18 @@ def purge_pip_cache():
         printl(f"Failed to clear pip cache. Error: {e}")
 
 
+def is_greater_version(v1, v2):
+    # Split version numbers into parts and convert to integers
+    parts1 = [int(part) for part in v1.split('.')]
+    parts2 = [int(part) for part in v2.split('.')]
+
+    # Compare version number parts
+    return parts1 > parts2
+
+
 def install_deepspeed(deepspeed_version, cuda_version, python_version):
     # Mapping of Deepspeed version, CUDA version, and Python version to wheel URL
+
     wheel_urls = {
         ("0.11.2", "11.8", (3, 10)): "https://github.com/daswer123/deepspeed-windows/releases/download/11.2/deepspeed-0.11.2+cuda118-cp310-cp310-win_amd64.whl",
         ("0.11.2", "12.1", (3, 10)): "https://github.com/daswer123/deepspeed-windows/releases/download/11.2/deepspeed-0.11.2+cuda121-cp310-cp310-win_amd64.whl",
@@ -225,6 +239,9 @@ def install_deepspeed(deepspeed_version, cuda_version, python_version):
         ("0.13.1", "12.1", (3, 11)): "https://github.com/daswer123/deepspeed-windows/releases/download/13.1/deepspeed-0.13.1+cu121-cp311-cp311-win_amd64.whl"
     }
 
+    if is_greater_version(cuda_version, "12.1"):
+        cuda_version = "12.1"
+
     # Constructing the key for the mapping
     key = (deepspeed_version, cuda_version, (python_version[0], python_version[1]))
 
@@ -232,11 +249,11 @@ def install_deepspeed(deepspeed_version, cuda_version, python_version):
     wheel_url = wheel_urls.get(key)
     if wheel_url:
         # Install the wheel using pip
-        install_library(wheel_url)
+        return install_library(wheel_url)
     else:
         printl(f"No matching wheel found for Deepspeed version {deepspeed_version}, CUDA version {cuda_version}, Python version {python_version[0]}.{python_version[1]}")
         printl("Trying to install deepspeed with pip ...")
-        install_library("deepspeed")
+        return install_library("deepspeed")
 
 
 def install_llama_cpp_python(cuda_version):
@@ -251,9 +268,11 @@ def install_llama_cpp_python(cuda_version):
         subprocess.check_call([sys.executable, "-m", "pip", "install", "llama-cpp-python", "--force-reinstall", "--upgrade", "--no-cache-dir", "--verbose"])
 
         printl("Successfully installed llama-cpp-python.")
+        return True
 
     except subprocess.CalledProcessError as e:
         printl(f"Failed to install llama-cpp-python. Error: {e}")
+        printl(f"Linguflex can run without llama-cpp-python. You can't use llama.cpp as model_provider in the local_llm section of the settings.yaml file. If you want to use local llms please select ollama as provider.")
         printl(f"You may need to copy MSBuildExtensions files for CUDA {cuda_version}.")
         printl(f"Copy all four MSBuildExtensions files from:\n"
                 f"C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v{cuda_version}\\extras\\visual_studio_integration\\MSBuildExtensions\n"
@@ -262,6 +281,7 @@ def install_llama_cpp_python(cuda_version):
                 f"before restarting the installation script or manually executing the following command:\n"
                 f"pip install llama-cpp-python --force-reinstall --upgrade --no-cache-dir --verbose")
         ask_exit("Do you want to continue without a verified installation of llama-cpp-python? (yes/no): ")
+        return False
 
 
 def install_pytorch_torchaudio(cuda_version):
@@ -346,9 +366,24 @@ if __name__ == "__main__":
     printl("\nInstalling torch with CUDA ...")
     install_pytorch_torchaudio(cuda_version)
     printl("\nInstalling required deepspeed ...")
-    install_deepspeed("0.11.2", cuda_version, python_version)
-    printl("\nInstalling required llama.cpp ...")
+    if not install_deepspeed("0.11.2", cuda_version, python_version):
+        import yaml
+        file_path = 'lingu/settings.yaml'
+        # Load the YAML file
+        with open(file_path, 'r') as file:
+            data = yaml.safe_load(file)
+
+        # Modify the 'coqui_use_deepspeed' setting under 'speech'
+        if 'speech' in data and 'coqui_use_deepspeed' in data['speech']:
+            data['speech']['coqui_use_deepspeed'] = False
+
+        # Write the modified data back to the YAML file
+        with open(file_path, 'w') as file:
+            yaml.safe_dump(data, file, default_flow_style=False)
+
+    printl("\nInstalling required llama.cpp ...")    
     install_llama_cpp_python(cuda_version)
+        
     printl("\nSetting numpy version ...")
     install_library("numpy==1.23.5")
 
