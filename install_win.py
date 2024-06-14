@@ -310,7 +310,6 @@ def install_pytorch_torchaudio(cuda_version):
                 f"Failed to install PyTorch and Torchaudio. Error: {e}",
                 "Do you want to continue without a verified installation of PyTorch and Torchaudio? (yes/no): ")
     else:
-        printl(f"No matching wheels found for CUDA version {cuda_version}.")
         ask_exit(
             f"No matching wheels found for CUDA version {cuda_version}.",
             "Do you want to continue without a verified installation of PyTorch and Torchaudio? (yes/no): ")
