@@ -85,7 +85,7 @@ def check_cuda():
             else:
                 ask_exit(
                     f"CUDA Toolkit version {cuda_version} detected.\n"
-                    "- Version 11.8 is strongly recommended.\n"
+                    "- Version 11.8 is recommended.\n"
                     "  https://developer.nvidia.com/cuda-11-8-0-download-archive",
                     "Do you want to continue with a different version of CUDA? (yes/no): "
                 )
@@ -288,8 +288,8 @@ def install_pytorch_torchaudio(cuda_version):
     printl("Installing PyTorch and Torchaudio...")
 
     torch_wheels = {
-        "11.8": "torch==2.2.2+cu118 torchaudio==2.1.2+cu118",
-        "12.1": "torch==2.2.2+cu121 torchaudio==2.1.2+cu121",
+        "11.8": "torch==2.2.2+cu118 torchaudio==2.2.2+cu118",
+        "12.1": "torch==2.2.2+cu121 torchaudio==2.2.2+cu121",
     }
 
     if is_greater_version(cuda_version, "12.1"):
