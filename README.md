@@ -22,6 +22,22 @@ I invite you to explore the framework, whether you're a user seeking an innovati
 <br>  
 
 > **[📓 Linguflex 2.0 installation ](./docs/installation.md)**  
+
+<details>
+<summary><strong>Understanding Installation Challenges</strong> (Click to expand)</summary>
+<br>
+
+Sometimes people suggest, "Just provide a Docker container; installation is so hard." I understand the frustration, but here's why that is challenging:
+
+1. **Complex Integration**: Linguflex is a substantial framework combining advanced TTS technologies like realtime local neural TTS voice generation with realtime RVC fine-tuning, alongside a plethora of other features. Ensuring that all these elements work together in a single environment is like finding the lowest common denominator for your favorite 60 Python libraries instead of just three. Moreover, this system must operate consistently across various platforms, OS versions, Python environments, CUDA versions, and CuDNN versions. It's a complex puzzle.
+2. **Dependency Management**: The nature of Python creates an inherently unstable environment. After determining a stable mix of libraries, we painstakingly specify and fix versions in our `requirements.txt`. However, fixed versions in our documentation don't guarantee that external libraries won't update their subdependencies, potentially causing disruptions. Even with fixed versions, background updates can still introduce breaking changes. We sometimes have to reinstall libraries to resolve these issues, but boy - keeping track of it all isn't always fun!
+
+**Patience Is Key:** Please have patience with the installation process. Things might not work on the first try. Sometimes, I just need a hint to things so I can fix them, and sometimes you might be able to solve issues by yourself. While it’s rare, there are instances where there might be nothing we can do. Trying to reduce those rare cases step by step.
+
+> **Note**: I constantly try to explore more user-friendly installation methods (and yes including docker).
+
+</details>
+
 > **[🎥 Installation video guide ](https://www.youtube.com/watch?v=KJ4HQ5Ud9L8)**  
 > **[🎥 See in action (short clip)](https://www.youtube.com/watch?v=w5_dA5cSeLo)**  
 
