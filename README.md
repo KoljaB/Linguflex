@@ -35,8 +35,6 @@ Sometimes people suggest, "Just provide a Docker container; installation is so h
 
 > **Note**: I constantly try to explore more user-friendly installation methods (and yes including docker).
 
-> **[🎥 See in action (short clip)](https://www.youtube.com/watch?v=w5_dA5cSeLo)**
-
 </details>
 
 > **[🎥 Installation video guide ](https://www.youtube.com/watch?v=KJ4HQ5Ud9L8)**  
