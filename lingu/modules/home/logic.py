@@ -1,29 +1,37 @@
 import requests
 from lingu import Logic, log, cfg
 
-bearer_token = cfg("home_assistant", "bearer_token")
+home_assistant_url = cfg(
+    "home_assistant",
+    "url",
+    default="homeassistant.local")
+bearer_token = cfg(
+    "home_assistant",
+    "bearer_token")
 
 
 class HomeAssistantLogic(Logic):
-    base_url = "http://localhost:8123/api"
+
+    base_url = f"http://{home_assistant_url}:8123/api"
+    bearer_string = f"Bearer {bearer_token}"
     headers = {
-        "authorization": bearer_token,
+        "authorization": bearer_string,
         "content-type": "application/json"
     }
 
-    # headers = {
-    #     "authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiI1YjgyOGNlYjgzMmQ0NTQyOWJjYWFkOWNjMGFhYWU4YyIsImlhdCI6MTcxOTA1NzA1NiwiZXhwIjoyMDM0NDE3MDU2fQ.ttg17ae_CXqWA_L7s_9AI1xDDStRYi52WmfbwmrufCI",
-    #     "content-type": "application/json"
-    # }
-
     def get_states(self):
         url = f"{self.base_url}/states"
+        print(f"Calling url {url} with headers {self.headers}")
         response = requests.get(url, headers=self.headers)
-        log.dbg(f"Fetching states from Home Assistant")
-        if response.status_code == 200:
-            return {"result": "success", "details": response.json()}
-        else:
-            return {"result": "error", "details": response.json()}
+        print(f"Response status code: {response.status_code}")
+        print(f"Response content: {response.text}")  # Log the response text
+
+        try:
+            response_json = response.json()
+            return {"result": "success", "details": response_json}
+        except requests.exceptions.JSONDecodeError as e:
+            print(f"JSON decode error: {e}")
+            return {"result": "error", "details": response.text}  # Return the raw response text if JSON decoding fails
 
     # def turn_on_light(self, light_name):
     #     url = f"{self.base_url}/services/light/turn_on"
