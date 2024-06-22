@@ -1,0 +1,59 @@
+{
+	"get_states_of_all_home_assistant_devices": {
+		"keywords": ["status*", "state*", "condition*", "device*", "appliance*", "equipment*", "machine*", "unit*", "gadget*", "tool*", "instrument*", "monitor*", "control*", "manage*", "home*", "assistant*", "smart*", "automation*", "connected*", "system*", "technology*", "integration*"],
+		"init_prompt": "",
+		"success_prompt": "Here is the status of all your Home Assistant devices.",
+		"fail_prompt": "I'm sorry, I couldn't retrieve the status of your Home Assistant devices at this time.",
+		"function_name_examples": [
+			{
+				"role": "user",
+				"content": "User's request:\n\"Can you check the status of my smart home devices?\""
+			},
+			{
+				"role": "user",
+				"content": "Return \"NOT_APPLICABLE\" if there is no function that can help or the functions are unrelated to the query. Otherwise, pass the name of the function to call."
+			},
+			{
+				"role": "assistant",
+				"content": "name_of_function_to_call='get_states_of_all_home_assistant_devices'"
+			},
+			{
+				"role": "user",
+				"content": "Fantastic, here is the next one."
+			},
+			{
+				"role": "user",
+				"content": "User's request:\n\"Check the state of my home automation devices.\""
+			},
+			{
+				"role": "user",
+				"content": "Return \"NOT_APPLICABLE\" if there is no function that can help or the functions are unrelated to the query. Otherwise, pass the name of the function to call."
+			},
+			{
+				"role": "assistant",
+				"content": "name_of_function_to_call='get_states_of_all_home_assistant_devices'"
+			},
+			{
+				"role": "user",
+				"content": "Fantastic, here is the next one."
+			},
+			{
+				"role": "user",
+				"content": "User's request:\n\"Show me the current status of my connected devices.\""
+			},
+			{
+				"role": "user",
+				"content": "Return \"NOT_APPLICABLE\" if there is no function that can help or the functions are unrelated to the query. Otherwise, pass the name of the function to call."
+			},
+			{
+				"role": "assistant",
+				"content": "name_of_function_to_call='get_states_of_all_home_assistant_devices'"
+			},
+			{
+				"role": "user",
+				"content": "Fantastic, here is the next one."
+			}
+		],
+		"function_argument_examples": []
+	}
+}
