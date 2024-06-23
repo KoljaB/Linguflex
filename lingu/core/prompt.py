@@ -59,7 +59,8 @@ class Prompt():
 
         Args:
             text (str): The prompt text to add.
-            prioritize (bool): If True, the prompt is added to priority prompts.
+            prioritize (bool): If True, the prompt is
+                added to priority prompts.
         """
         if not text:
             return
@@ -70,6 +71,56 @@ class Prompt():
         else:
             self.normal_prompts.append(text)
 
+    def build_prompt(self):
+        # print("Joining priority prompts...")
+        prio_prompt_str = " ".join(self.prio_prompts)
+        # print(f"Priority prompts joined: '{prio_prompt_str}'")
+
+        # Strip any leading or trailing whitespace
+        # from the priority prompt string
+        prio_prompt_str = prio_prompt_str.strip()
+        # print(f"Priority prompt stripped: '{prio_prompt_str}'")
+
+        # # Add a space at the end if the priority prompt string is not empty
+        # if prio_prompt_str:
+        #     prio_prompt_str = prio_prompt_str.rstrip() + " "
+        #     print(f"Priority prompt after adding space: '{prio_prompt_str}'")
+
+        # Add a space at the end if the init prompt string is not empty
+        init_prompt = self.init_prompt
+        if init_prompt:
+            init_prompt = init_prompt.rstrip() + " "
+            # print(f"Init prompt after adding space: '{init_prompt}'")
+
+        # Initialize the final prompt with the priority prompt
+        # and the initial prompt
+        prompt = init_prompt + prio_prompt_str
+        # print(f"Initial prompt: '{init_prompt}'")
+        # print(f"Prompt after adding initial prompt: '{prompt}'")
+
+        # Initialize the normal prompt string by
+        # joining the normal prompts list
+        # print("Joining normal prompts...")
+        normal_prompt_str = " ".join(self.normal_prompts)
+        # print(f"Normal prompts joined: '{normal_prompt_str}'")
+
+        # Strip any leading or trailing whitespace
+        # from the normal prompt string
+        normal_prompt_str = normal_prompt_str.strip()
+        # print(f"Normal prompt stripped: '{normal_prompt_str}'")
+
+        # Add the normal prompt string to the final prompt if it's not empty
+        if normal_prompt_str:
+            prompt += " " + normal_prompt_str
+            # print(f"Prompt after adding normal prompt: '{prompt}'")
+
+        # Strip any leading or trailing whitespace from the final prompt
+        prompt = prompt.strip()
+        # print(f"Final prompt after stripping: '{prompt}'")
+
+        # Return the final prompt
+        return prompt
+
     def get(self):
         """
         Construct and return the final prompt string.
@@ -77,17 +128,18 @@ class Prompt():
         Returns:
             str: The constructed prompt string.
         """
-        prio_prompt_str = " ".join(self.prio_prompts)
-        prio_prompt_str = prio_prompt_str.strip()
-        if prio_prompt_str:
-            prio_prompt_str += " "
-        prompt = prio_prompt_str + self.init_prompt
-        normal_prompt_str = " ".join(self.normal_prompts)
-        normal_prompt_str = normal_prompt_str.strip()
-        if normal_prompt_str:
-            prompt += " " + normal_prompt_str
-        prompt = prompt.strip()
-        return prompt
+        return self.build_prompt()
+        # prio_prompt_str = " ".join(self.prio_prompts)
+        # prio_prompt_str = prio_prompt_str.strip()
+        # if prio_prompt_str:
+        #     prio_prompt_str += " "
+        # prompt = prio_prompt_str + self.init_prompt
+        # normal_prompt_str = " ".join(self.normal_prompts)
+        # normal_prompt_str = normal_prompt_str.strip()
+        # if normal_prompt_str:
+        #     prompt += " " + normal_prompt_str
+        # prompt = prompt.strip()
+        # return prompt
 
     def system_prompt(self):
         """
