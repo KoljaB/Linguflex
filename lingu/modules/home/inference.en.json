@@ -1,6 +1,6 @@
 {
-	"get_states_of_all_home_assistant_devices": {
-		"keywords": ["status*", "state*", "condition*", "device*", "appliance*", "equipment*", "machine*", "unit*", "gadget*", "tool*", "instrument*", "monitor*", "control*", "manage*", "home*", "assistant*", "smart*", "automation*", "connected*", "system*", "technology*", "integration*"],
+	"get_states_of_all_devices": {
+		"keywords": ["check", "color", "light*", "bulb*", "lamp*", "status*", "state*", "condition*", "device*", "appliance*", "equipment*", "machine*", "unit*", "gadget*", "tool*", "instrument*", "monitor*", "control*", "manage*", "home*", "assistant*", "smart*", "automation*", "connected*", "system*", "technology*", "integration*"],
 		"init_prompt": "",
 		"success_prompt": "Here is the status of all your Home Assistant devices.",
 		"fail_prompt": "I'm sorry, I couldn't retrieve the status of your Home Assistant devices at this time.",
@@ -15,7 +15,7 @@
 			},
 			{
 				"role": "assistant",
-				"content": "name_of_function_to_call='get_states_of_all_home_assistant_devices'"
+				"content": "name_of_function_to_call='get_states_of_all_devices'"
 			},
 			{
 				"role": "user",
@@ -31,7 +31,7 @@
 			},
 			{
 				"role": "assistant",
-				"content": "name_of_function_to_call='get_states_of_all_home_assistant_devices'"
+				"content": "name_of_function_to_call='get_states_of_all_devices'"
 			},
 			{
 				"role": "user",
@@ -47,7 +47,178 @@
 			},
 			{
 				"role": "assistant",
-				"content": "name_of_function_to_call='get_states_of_all_home_assistant_devices'"
+				"content": "name_of_function_to_call='get_states_of_all_devices'"
+			},
+			{
+				"role": "user",
+				"content": "Fantastic, here is the next one."
+			}
+		],
+		"function_argument_examples": []
+	},
+	"turn_on_light": {
+		"keywords": ["turn", "on", "light*", "bulb*", "lamp*", "device*", "appliance*", "equipment*", "machine*", "unit*", "gadget*", "tool*", "instrument*", "control*", "manage*", "home*", "assistant*", "smart*", "automation*", "connected*", "system*", "technology*", "integration*"],
+		"init_prompt": "",
+		"success_prompt": "The light has been turned on, report that.",
+		"fail_prompt": "I'm sorry, I couldn't turn the light of this Home Assistant device on at this time.",
+		"function_name_examples": [
+			{
+				"role": "user",
+				"content": "User's request:\n\"Can you turn the light at the altar on?\""
+			},
+			{
+				"role": "user",
+				"content": "Return \"NOT_APPLICABLE\" if there is no function that can help or the functions are unrelated to the query. Otherwise, pass the name of the function to call."
+			},
+			{
+				"role": "assistant",
+				"content": "name_of_function_to_call='turn_on_light'"
+			},
+			{
+				"role": "user",
+				"content": "Fantastic, here is the next one."
+			},
+			{
+				"role": "user",
+				"content": "User's request:\n\"Make the lamp for Couch Unten on.\""
+			},
+			{
+				"role": "user",
+				"content": "Return \"NOT_APPLICABLE\" if there is no function that can help or the functions are unrelated to the query. Otherwise, pass the name of the function to call."
+			},
+			{
+				"role": "assistant",
+				"content": "name_of_function_to_call='turn_on_light'"
+			},
+			{
+				"role": "user",
+				"content": "Fantastic, here is the next one."
+			},
+			{
+				"role": "user",
+				"content": "User's request:\n\"I want the bulb for the PC Ecke to be switched on.\""
+			},
+			{
+				"role": "user",
+				"content": "Return \"NOT_APPLICABLE\" if there is no function that can help or the functions are unrelated to the query. Otherwise, pass the name of the function to call."
+			},
+			{
+				"role": "assistant",
+				"content": "name_of_function_to_call='turn_on_light'"
+			},
+			{
+				"role": "user",
+				"content": "Fantastic, here is the next one."
+			}
+		],
+		"function_argument_examples": []
+	},
+	"set_light_color": {
+		"keywords": ["set color", "change color", "light*", "bulb*", "lamp*", "device*", "appliance*", "equipment*", "machine*", "unit*", "gadget*", "tool*", "instrument*", "control*", "manage*", "home*", "assistant*", "smart*", "automation*", "connected*", "system*", "technology*", "integration*"],
+		"init_prompt": "",
+		"success_prompt": "The light color has been set, report that.",
+		"fail_prompt": "I'm sorry, I couldn't set the light color of this Home Assistant device on at this time.",
+		"function_name_examples": [
+			{
+				"role": "user",
+				"content": "User's request:\n\"Can you make the light at the altar green?\""
+			},
+			{
+				"role": "user",
+				"content": "Return \"NOT_APPLICABLE\" if there is no function that can help or the functions are unrelated to the query. Otherwise, pass the name of the function to call."
+			},
+			{
+				"role": "assistant",
+				"content": "name_of_function_to_call='set_light_color'"
+			},
+			{
+				"role": "user",
+				"content": "Fantastic, here is the next one."
+			},
+			{
+				"role": "user",
+				"content": "User's request:\n\"Make the lamp for Couch Unten shine in a nice mellow orange way.\""
+			},
+			{
+				"role": "user",
+				"content": "Return \"NOT_APPLICABLE\" if there is no function that can help or the functions are unrelated to the query. Otherwise, pass the name of the function to call."
+			},
+			{
+				"role": "assistant",
+				"content": "name_of_function_to_call='set_light_color'"
+			},
+			{
+				"role": "user",
+				"content": "Fantastic, here is the next one."
+			},
+			{
+				"role": "user",
+				"content": "User's request:\n\"I want the bulb for the PC Ecke to be somewhat cherry red.\""
+			},
+			{
+				"role": "user",
+				"content": "Return \"NOT_APPLICABLE\" if there is no function that can help or the functions are unrelated to the query. Otherwise, pass the name of the function to call."
+			},
+			{
+				"role": "assistant",
+				"content": "name_of_function_to_call='set_light_color'"
+			},
+			{
+				"role": "user",
+				"content": "Fantastic, here is the next one."
+			}
+		],
+		"function_argument_examples": []
+	},
+	"turn_off_light": {
+		"keywords": ["turn", "off", "light*", "bulb*", "lamp*", "device*", "appliance*", "equipment*", "machine*", "unit*", "gadget*", "tool*", "instrument*", "control*", "manage*", "home*", "assistant*", "smart*", "automation*", "connected*", "system*", "technology*", "integration*"],
+		"init_prompt": "",
+		"success_prompt": "The light has been turned off, report that.",
+		"fail_prompt": "I'm sorry, I couldn't turn the light of this Home Assistant device off at this time.",
+		"function_name_examples": [
+			{
+				"role": "user",
+				"content": "User's request:\n\"Can you turn the light at the altar off?\""
+			},
+			{
+				"role": "user",
+				"content": "Return \"NOT_APPLICABLE\" if there is no function that can help or the functions are unrelated to the query. Otherwise, pass the name of the function to call."
+			},
+			{
+				"role": "assistant",
+				"content": "name_of_function_to_call='turn_off_light'"
+			},
+			{
+				"role": "user",
+				"content": "Fantastic, here is the next one."
+			},
+			{
+				"role": "user",
+				"content": "User's request:\n\"Make the lamp for Couch Unten off.\""
+			},
+			{
+				"role": "user",
+				"content": "Return \"NOT_APPLICABLE\" if there is no function that can help or the functions are unrelated to the query. Otherwise, pass the name of the function to call."
+			},
+			{
+				"role": "assistant",
+				"content": "name_of_function_to_call='turn_off_light'"
+			},
+			{
+				"role": "user",
+				"content": "Fantastic, here is the next one."
+			},
+			{
+				"role": "user",
+				"content": "User's request:\n\"I want the bulb for the PC Ecke to be switched off.\""
+			},
+			{
+				"role": "user",
+				"content": "Return \"NOT_APPLICABLE\" if there is no function that can help or the functions are unrelated to the query. Otherwise, pass the name of the function to call."
+			},
+			{
+				"role": "assistant",
+				"content": "name_of_function_to_call='turn_off_light'"
 			},
 			{
 				"role": "user",

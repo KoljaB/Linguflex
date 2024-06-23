@@ -129,6 +129,16 @@ server:
 home_assistant:
   home_assistant_url: homeassistant.local # replace by your local home assistant server IP (e.g. 192.168.178.XXX)
   bearer_token: replace_this_by_your_home_assistant_bearer_token
+  entity_whitelist: switch.,light.,sensor.,person.,weather.
+  entity_blacklist: _kindersicherung,_parental
+  attribute_map:
+    light:
+      - brightness
+      - color_mode
+      - supported_color_modes
+      - color_temp
+      - hs_color
+    switch: []
 
 # Logging settings
 logging:
