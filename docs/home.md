@@ -1,6 +1,6 @@
 # Home Assistant Module for Linguflex
 
-The Home Assistant module for Linguflex interfaces with your Home Assistant server, allowing for seamless interaction and control of various entities within your smart home ecosystem.
+The Home Assistant module for Linguflex interacts with your Home Assistant server, allowing for access to your smart home ecosystem.
 
 ## Contents
 
