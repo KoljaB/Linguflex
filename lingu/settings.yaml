@@ -4,10 +4,12 @@ version: 1.0
 debug_mode: true
 language: en
 #openai_model: gpt-4-1106-preview
-openai_model: gpt-3.5-turbo-1106
-max_history_messages: 12
-max_tokens_per_msg: 1500
-max_history_tokens: 7000
+openai_model: gpt-4o
+# openai_model: gpt-4-1106-preview
+# openai_model: gpt-3.5-turbo-1106max_history_messages: 12
+max_history_messages: 50
+max_tokens_per_msg: 8000
+max_history_tokens: 64000
 called_tool_messages: 2
 retry_attempts: 7
 timeout_increase: 5
@@ -123,6 +125,10 @@ server:
   port_websocket: 8001
   ssl_certfile: 
   ssl_keyfile: 
+
+home_assistant:
+  home_assistant_url: homeassistant.local # replace by your local home assistant server IP (e.g. 192.168.178.XXX)
+  bearer_token: replace_this_by_your_home_assistant_bearer_token
 
 # Logging settings
 logging:
