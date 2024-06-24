@@ -2,6 +2,11 @@
 
 The Home Assistant module for Linguflex interacts with your Home Assistant server, allowing for access to your smart home ecosystem.
 
+## State
+
+Module is currently in early alpha stage.  
+It has been tested using the GPT-4o model. Due to the absence of a complete home assistant environment, the tests did not cover the entire range of functionalities. Therefore, while the core features have been implemented, further testing and development are required to ensure full functionality and reliability in various Home Assistant setups. Users are encouraged to report any issues or bugs encountered during use to help improve the module. Please write an [Issue on Github](https://github.com/KoljaB/Linguflex/issues/new/choose), write me an [Email](mailto:kolja.beigel@web.de) or write in our [discord channel](https://discord.gg/f556hqRjpv).
+
 ## Contents
 
 - [Functionality](#functionality)
