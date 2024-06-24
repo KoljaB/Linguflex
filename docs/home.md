@@ -16,6 +16,12 @@ The Home Assistant module performs several key functions:
 - Allows control over lights, including turning them on/off and setting their color.
 - Filters entities based on specified whitelist and blacklist criteria.
 - Extracts and processes relevant attributes for specific entity types.
+- Manages locks, including locking and unlocking doors.
+- Sets the temperature on climate control devices.
+- Retrieves various system configurations and settings.
+- Provides access to calendar events.
+- Retrieves the history and logbook entries of specific devices.
+- Fires custom events in the Home Assistant system.
 
 ## Examples
 
@@ -23,6 +29,27 @@ The Home Assistant module performs several key functions:
 - "Turn on the living room light."
 - "Set the kitchen light to blue."
 - "Provide a summary of all sensors in the home."
+- "Can you check the status of my smart home devices?"
+- "Can you turn the light at the altar on?"
+- "Make the lower couch lamp shine in a nice mellow orange way."
+- "I want the bulb for the pc to be switched off."
+- "Can you set the living room temperature to 22 degrees?"
+- "Adjust the temperature in the bedroom to 20 degrees."
+- "Can you lock the front door?"
+- "Secure the back door."
+- "I want to unlock the garage door."
+- "Can you show me the current configuration of my Home Assistant system?"
+- "Show me the recent activities in my smart home system."
+- "I want to see the events in my home automation system."
+- "Show me the available actions in my smart home system."
+- "Retrieve the history of my bedroom thermostat for the past week."
+- "I want to see the history of the kitchen door lock for the past month."
+- "Can you show me the logbook entries for the living room light for the past day?"
+- "Retrieve the calendars from my smart home system."
+- "Can you show me the events from my personal calendar for the past day?"
+- "Can you update the state of the living room light to on?"
+- "Initiate the alarm_triggered event in my smart home system."
+- "I want to fire the motion_detected event in my home automation system."
 
 ## Configuration
 

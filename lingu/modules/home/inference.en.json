@@ -57,7 +57,7 @@
 		"function_argument_examples": []
 	},
 	"turn_on_light": {
-		"keywords": ["turn", "on", "light*", "bulb*", "lamp*", "device*", "appliance*", "equipment*", "machine*", "unit*", "gadget*", "tool*", "instrument*", "control*", "manage*", "home*", "assistant*", "smart*", "automation*", "connected*", "system*", "technology*", "integration*"],
+		"keywords": ["turn", "on", "light*", "bulb*", "lamp*"],
 		"init_prompt": "",
 		"success_prompt": "The light has been turned on, report that.",
 		"fail_prompt": "I'm sorry, I couldn't turn the light of this Home Assistant device on at this time.",
@@ -114,7 +114,7 @@
 		"function_argument_examples": []
 	},
 	"set_light_color": {
-		"keywords": ["set color", "change color", "light*", "bulb*", "lamp*", "device*", "appliance*", "equipment*", "machine*", "unit*", "gadget*", "tool*", "instrument*", "control*", "manage*", "home*", "assistant*", "smart*", "automation*", "connected*", "system*", "technology*", "integration*"],
+		"keywords": ["color*", "light*", "bulb*", "lamp*"],
 		"init_prompt": "",
 		"success_prompt": "The light color has been set, report that.",
 		"fail_prompt": "I'm sorry, I couldn't set the light color of this Home Assistant device on at this time.",
@@ -171,7 +171,7 @@
 		"function_argument_examples": []
 	},
 	"turn_off_light": {
-		"keywords": ["turn", "off", "light*", "bulb*", "lamp*", "device*", "appliance*", "equipment*", "machine*", "unit*", "gadget*", "tool*", "instrument*", "control*", "manage*", "home*", "assistant*", "smart*", "automation*", "connected*", "system*", "technology*", "integration*"],
+		"keywords": ["turn", "off", "light*", "bulb*", "lamp*"],
 		"init_prompt": "",
 		"success_prompt": "The light has been turned off, report that.",
 		"fail_prompt": "I'm sorry, I couldn't turn the light of this Home Assistant device off at this time.",
@@ -226,5 +226,689 @@
 			}
 		],
 		"function_argument_examples": []
+	},
+	"set_temperature": {
+		"keywords": ["temperatur*", "climate*", "thermostat*"],
+		"init_prompt": "",
+		"success_prompt": "The temperature has been set, report that.",
+		"fail_prompt": "I'm sorry, I couldn't set the temperature of this Home Assistant device at this time.",
+		"function_name_examples": [
+			{
+				"role": "user",
+				"content": "User's request:\n\"Can you set the living room temperature to 22 degrees?\""
+			},
+			{
+				"role": "user",
+				"content": "Return \"NOT_APPLICABLE\" if there is no function that can help or the functions are unrelated to the query. Otherwise, pass the name of the function to call."
+			},
+			{
+				"role": "assistant",
+				"content": "name_of_function_to_call='set_temperature'"
+			},
+			{
+				"role": "user",
+				"content": "Fantastic, here is the next one."
+			},
+			{
+				"role": "user",
+				"content": "User's request:\n\"Adjust the temperature in the bedroom to 20 degrees.\""
+			},
+			{
+				"role": "user",
+				"content": "Return \"NOT_APPLICABLE\" if there is no function that can help or the functions are unrelated to the query. Otherwise, pass the name of the function to call."
+			},
+			{
+				"role": "assistant",
+				"content": "name_of_function_to_call='set_temperature'"
+			},
+			{
+				"role": "user",
+				"content": "Fantastic, here is the next one."
+			},
+			{
+				"role": "user",
+				"content": "User's request:\n\"I want to set the thermostat in the kitchen to 18 degrees.\""
+			},
+			{
+				"role": "user",
+				"content": "Return \"NOT_APPLICABLE\" if there is no function that can help or the functions are unrelated to the query. Otherwise, pass the name of the function to call."
+			},
+			{
+				"role": "assistant",
+				"content": "name_of_function_to_call='set_temperature'"
+			},
+			{
+				"role": "user",
+				"content": "Fantastic, here is the next one."
+			}
+		],
+		"function_argument_examples": []
+	},
+	"lock": {
+		"keywords": ["lock", "secure", "door*", "lock*"],
+		"init_prompt": "",
+		"success_prompt": "The lock has been secured, report that.",
+		"fail_prompt": "I'm sorry, I couldn't secure the lock of this Home Assistant device at this time.",
+		"function_name_examples": [
+			{
+				"role": "user",
+				"content": "User's request:\n\"Can you lock the front door?\""
+			},
+			{
+				"role": "user",
+				"content": "Return \"NOT_APPLICABLE\" if there is no function that can help or the functions are unrelated to the query. Otherwise, pass the name of the function to call."
+			},
+			{
+				"role": "assistant",
+				"content": "name_of_function_to_call='lock'"
+			},
+			{
+				"role": "user",
+				"content": "Fantastic, here is the next one."
+			},
+			{
+				"role": "user",
+				"content": "User's request:\n\"Secure the back door.\""
+			},
+			{
+				"role": "user",
+				"content": "Return \"NOT_APPLICABLE\" if there is no function that can help or the functions are unrelated to the query. Otherwise, pass the name of the function to call."
+			},
+			{
+				"role": "assistant",
+				"content": "name_of_function_to_call='lock'"
+			},
+			{
+				"role": "user",
+				"content": "Fantastic, here is the next one."
+			},
+			{
+				"role": "user",
+				"content": "User's request:\n\"I want to lock the garage door.\""
+			},
+			{
+				"role": "user",
+				"content": "Return \"NOT_APPLICABLE\" if there is no function that can help or the functions are unrelated to the query. Otherwise, pass the name of the function to call."
+			},
+			{
+				"role": "assistant",
+				"content": "name_of_function_to_call='lock'"
+			},
+			{
+				"role": "user",
+				"content": "Fantastic, here is the next one."
+			}
+		],
+		"function_argument_examples": []
+	},
+	"unlock": {
+		"keywords": ["unlock", "unsecure", "door*", "lock*", "device*"],
+		"init_prompt": "",
+		"success_prompt": "The lock has been unsecured, report that.",
+		"fail_prompt": "I'm sorry, I couldn't unsecure the lock of this Home Assistant device at this time.",
+		"function_name_examples": [
+			{
+				"role": "user",
+				"content": "User's request:\n\"Can you unlock the front door?\""
+			},
+			{
+				"role": "user",
+				"content": "Return \"NOT_APPLICABLE\" if there is no function that can help or the functions are unrelated to the query. Otherwise, pass the name of the function to call."
+			},
+			{
+				"role": "assistant",
+				"content": "name_of_function_to_call='unlock'"
+			},
+			{
+				"role": "user",
+				"content": "Fantastic, here is the next one."
+			},
+			{
+				"role": "user",
+				"content": "User's request:\n\"Unsecure the back door.\""
+			},
+			{
+				"role": "user",
+				"content": "Return \"NOT_APPLICABLE\" if there is no function that can help or the functions are unrelated to the query. Otherwise, pass the name of the function to call."
+			},
+			{
+				"role": "assistant",
+				"content": "name_of_function_to_call='unlock'"
+			},
+			{
+				"role": "user",
+				"content": "Fantastic, here is the next one."
+			},
+			{
+				"role": "user",
+				"content": "User's request:\n\"I want to unlock the garage door.\""
+			},
+			{
+				"role": "user",
+				"content": "Return \"NOT_APPLICABLE\" if there is no function that can help or the functions are unrelated to the query. Otherwise, pass the name of the function to call."
+			},
+			{
+				"role": "assistant",
+				"content": "name_of_function_to_call='unlock'"
+			},
+			{
+				"role": "user",
+				"content": "Fantastic, here is the next one."
+			}
+		],
+		"function_argument_examples": []
+	},
+	"get_config": {
+		"keywords": ["config*", "setting*", "system*"],
+		"init_prompt": "",
+		"success_prompt": "Here is the current configuration of your Home Assistant system.",
+		"fail_prompt": "I'm sorry, I couldn't retrieve the configuration of your Home Assistant system at this time.",
+		"function_name_examples": [
+			{
+				"role": "user",
+				"content": "User's request:\n\"Can you show me the current configuration of my Home Assistant system?\""
+			},
+			{
+				"role": "user",
+				"content": "Return \"NOT_APPLICABLE\" if there is no function that can help or the functions are unrelated to the query. Otherwise, pass the name of the function to call."
+			},
+			{
+				"role": "assistant",
+				"content": "name_of_function_to_call='get_config'"
+			},
+			{
+				"role": "user",
+				"content": "Fantastic, here is the next one."
+			},
+			{
+				"role": "user",
+				"content": "User's request:\n\"Show me the settings of my smart home system.\""
+			},
+			{
+				"role": "user",
+				"content": "Return \"NOT_APPLICABLE\" if there is no function that can help or the functions are unrelated to the query. Otherwise, pass the name of the function to call."
+			},
+			{
+				"role": "assistant",
+				"content": "name_of_function_to_call='get_config'"
+			},
+			{
+				"role": "user",
+				"content": "Fantastic, here is the next one."
+			},
+			{
+				"role": "user",
+				"content": "User's request:\n\"I want to see the current configuration settings of my home automation system.\""
+			},
+			{
+				"role": "user",
+				"content": "Return \"NOT_APPLICABLE\" if there is no function that can help or the functions are unrelated to the query. Otherwise, pass the name of the function to call."
+			},
+			{
+				"role": "assistant",
+				"content": "name_of_function_to_call='get_config'"
+			},
+			{
+				"role": "user",
+				"content": "Fantastic, here is the next one."
+			}
+		],
+		"function_argument_examples": []
+	},
+	"get_events": {
+		"keywords": ["event*", "activit*"],
+		"init_prompt": "",
+		"success_prompt": "Here are the events in your Home Assistant system.",
+		"fail_prompt": "I'm sorry, I couldn't retrieve the events of your Home Assistant system at this time.",
+		"function_name_examples": [
+			{
+				"role": "user",
+				"content": "User's request:\n\"Can you show me the events in my Home Assistant system?\""
+			},
+			{
+				"role": "user",
+				"content": "Return \"NOT_APPLICABLE\" if there is no function that can help or the functions are unrelated to the query. Otherwise, pass the name of the function to call."
+			},
+			{
+				"role": "assistant",
+				"content": "name_of_function_to_call='get_events'"
+			},
+			{
+				"role": "user",
+				"content": "Fantastic, here is the next one."
+			},
+			{
+				"role": "user",
+				"content": "User's request:\n\"Show me the recent activities in my smart home system.\""
+			},
+			{
+				"role": "user",
+				"content": "Return \"NOT_APPLICABLE\" if there is no function that can help or the functions are unrelated to the query. Otherwise, pass the name of the function to call."
+			},
+			{
+				"role": "assistant",
+				"content": "name_of_function_to_call='get_events'"
+			},
+			{
+				"role": "user",
+				"content": "Fantastic, here is the next one."
+			},
+			{
+				"role": "user",
+				"content": "User's request:\n\"I want to see the events in my home automation system.\""
+			},
+			{
+				"role": "user",
+				"content": "Return \"NOT_APPLICABLE\" if there is no function that can help or the functions are unrelated to the query. Otherwise, pass the name of the function to call."
+			},
+			{
+				"role": "assistant",
+				"content": "name_of_function_to_call='get_events'"
+			},
+			{
+				"role": "user",
+				"content": "Fantastic, here is the next one."
+			}
+		],
+		"function_argument_examples": []
+	},
+	"get_services": {
+		"keywords": ["service*", "action*", "operation*", "function*"],
+		"init_prompt": "",
+		"success_prompt": "Here are the available services in your Home Assistant system.",
+		"fail_prompt": "I'm sorry, I couldn't retrieve the services of your Home Assistant system at this time.",
+		"function_name_examples": [
+			{
+				"role": "user",
+				"content": "User's request:\n\"Can you show me the services available in my Home Assistant system?\""
+			},
+			{
+				"role": "user",
+				"content": "Return \"NOT_APPLICABLE\" if there is no function that can help or the functions are unrelated to the query. Otherwise, pass the name of the function to call."
+			},
+			{
+				"role": "assistant",
+				"content": "name_of_function_to_call='get_services'"
+			},
+			{
+				"role": "user",
+				"content": "Fantastic, here is the next one."
+			},
+			{
+				"role": "user",
+				"content": "User's request:\n\"Show me the available actions in my smart home system.\""
+			},
+			{
+				"role": "user",
+				"content": "Return \"NOT_APPLICABLE\" if there is no function that can help or the functions are unrelated to the query. Otherwise, pass the name of the function to call."
+			},
+			{
+				"role": "assistant",
+				"content": "name_of_function_to_call='get_services'"
+			},
+			{
+				"role": "user",
+				"content": "Fantastic, here is the next one."
+			},
+			{
+				"role": "user",
+				"content": "User's request:\n\"I want to see the services available in my home automation system.\""
+			},
+			{
+				"role": "user",
+				"content": "Return \"NOT_APPLICABLE\" if there is no function that can help or the functions are unrelated to the query. Otherwise, pass the name of the function to call."
+			},
+			{
+				"role": "assistant",
+				"content": "name_of_function_to_call='get_services'"
+			},
+			{
+				"role": "user",
+				"content": "Fantastic, here is the next one."
+			}
+		],
+		"function_argument_examples": []
+	},
+	"get_history": {
+		"keywords": ["history", "show history", "retrieve history"],
+		"init_prompt": "",
+		"success_prompt": "Here is the history of the specified entity in your Home Assistant system.",
+		"fail_prompt": "I'm sorry, I couldn't retrieve the history of the specified entity in your Home Assistant system at this time.",
+		"function_name_examples": [
+			{
+				"role": "user",
+				"content": "User's request:\n\"Can you show me the history of the living room light for the past day?\""
+				},
+				{
+					"role": "user",
+					"content": "Return \"NOT_APPLICABLE\" if there is no function that can help or the functions are unrelated to the query. Otherwise, pass the name of the function to call."
+				},
+				{
+					"role": "assistant",
+					"content": "name_of_function_to_call='get_history'"
+				},
+				{
+					"role": "user",
+					"content": "Fantastic, here is the next one."
+				},
+				{
+					"role": "user",
+					"content": "User's request:\n\"Retrieve the history of my bedroom thermostat for the past week.\""
+				},
+				{
+					"role": "user",
+					"content": "Return \"NOT_APPLICABLE\" if there is no function that can help or the functions are unrelated to the query. Otherwise, pass the name of the function to call."
+				},
+				{
+					"role": "assistant",
+					"content": "name_of_function_to_call='get_history'"
+				},
+				{
+					"role": "user",
+					"content": "Fantastic, here is the next one."
+				},
+				{
+					"role": "user",
+					"content": "User's request:\n\"I want to see the history of the kitchen door lock for the past month.\""
+				},
+				{
+					"role": "user",
+					"content": "Return \"NOT_APPLICABLE\" if there is no function that can help or the functions are unrelated to the query. Otherwise, pass the name of the function to call."
+				},
+				{
+					"role": "assistant",
+					"content": "name_of_function_to_call='get_history'"
+				},
+				{
+					"role": "user",
+					"content": "Fantastic, here is the next one."
+				}
+			],
+			"function_argument_examples": []
+	},
+	"get_logbook": {
+		"keywords": ["log*", "entries"],
+		"init_prompt": "",
+		"success_prompt": "Here are the logbook entries in your Home Assistant system.",
+		"fail_prompt": "I'm sorry, I couldn't retrieve the logbook entries of your Home Assistant system at this time.",
+		"function_name_examples": [
+			{
+				"role": "user",
+				"content": "User's request:\n\"Can you show me the logbook entries for the living room light for the past day?\""
+				},
+				{
+					"role": "user",
+					"content": "Return \"NOT_APPLICABLE\" if there is no function that can help or the functions are unrelated to the query. Otherwise, pass the name of the function to call."
+				},
+				{
+					"role": "assistant",
+					"content": "name_of_function_to_call='get_logbook'"
+				},
+				{
+					"role": "user",
+					"content": "Fantastic, here is the next one."
+				},
+				{
+					"role": "user",
+					"content": "User's request:\n\"Retrieve the logbook entries for my bedroom thermostat for the past week.\""
+				},
+				{
+					"role": "user",
+					"content": "Return \"NOT_APPLICABLE\" if there is no function that can help or the functions are unrelated to the query. Otherwise, pass the name of the function to call."
+				},
+				{
+					"role": "assistant",
+					"content": "name_of_function_to_call='get_logbook'"
+				},
+				{
+					"role": "user",
+					"content": "Fantastic, here is the next one."
+				},
+				{
+					"role": "user",
+					"content": "User's request:\n\"I want to see the logbook entries for the kitchen door lock for the past month.\""
+				},
+				{
+					"role": "user",
+					"content": "Return \"NOT_APPLICABLE\" if there is no function that can help or the functions are unrelated to the query. Otherwise, pass the name of the function to call."
+				},
+				{
+					"role": "assistant",
+					"content": "name_of_function_to_call='get_logbook'"
+				},
+				{
+					"role": "user",
+					"content": "Fantastic, here is the next one."
+				}
+			],
+			"function_argument_examples": []
+	},
+	"get_calendars": {
+		"keywords": ["calendar*"],
+		"init_prompt": "",
+		"success_prompt": "Here are the calendars in your Home Assistant system.",
+		"fail_prompt": "I'm sorry, I couldn't retrieve the calendars in your Home Assistant system at this time.",
+		"function_name_examples": [
+			{
+				"role": "user",
+				"content": "User's request:\n\"Can you show me the calendars in my Home Assistant system?\""
+				},
+				{
+					"role": "user",
+					"content": "Return \"NOT_APPLICABLE\" if there is no function that can help or the functions are unrelated to the query. Otherwise, pass the name of the function to call."
+				},
+				{
+					"role": "assistant",
+					"content": "name_of_function_to_call='get_calendars'"
+				},
+				{
+					"role": "user",
+					"content": "Fantastic, here is the next one."
+				},
+				{
+					"role": "user",
+					"content": "User's request:\n\"Retrieve the calendars from my smart home system.\""
+				},
+				{
+					"role": "user",
+					"content": "Return \"NOT_APPLICABLE\" if there is no function that can help or the functions are unrelated to the query. Otherwise, pass the name of the function to call."
+				},
+				{
+					"role": "assistant",
+					"content": "name_of_function_to_call='get_calendars'"
+				},
+				{
+					"role": "user",
+					"content": "Fantastic, here is the next one."
+				},
+				{
+					"role": "user",
+					"content": "User's request:\n\"I want to see the calendars in my home automation system.\""
+				},
+				{
+					"role": "user",
+					"content": "Return \"NOT_APPLICABLE\" if there is no function that can help or the functions are unrelated to the query. Otherwise, pass the name of the function to call."
+				},
+				{
+					"role": "assistant",
+					"content": "name_of_function_to_call='get_calendars'"
+				},
+				{
+					"role": "user",
+					"content": "Fantastic, here is the next one."
+				}
+			],
+			"function_argument_examples": []
+	},
+	"get_calendar_events": {
+		"keywords": ["event*", "calendar*"],
+		"init_prompt": "",
+		"success_prompt": "Here are the calendar events from the specified calendar in your Home Assistant system.",
+		"fail_prompt": "I'm sorry, I couldn't retrieve the calendar events from the specified calendar in your Home Assistant system at this time.",
+		"function_name_examples": [
+			{
+				"role": "user",
+				"content": "User's request:\n\"Can you show me the events from my personal calendar for the past day?\""
+				},
+				{
+					"role": "user",
+					"content": "Return \"NOT_APPLICABLE\" if there is no function that can help or the functions are unrelated to the query. Otherwise, pass the name of the function to call."
+				},
+				{
+					"role": "assistant",
+					"content": "name_of_function_to_call='get_calendar_events'"
+				},
+				{
+					"role": "user",
+					"content": "Fantastic, here is the next one."
+				},
+				{
+					"role": "user",
+					"content": "User's request:\n\"Retrieve the events from my work calendar for the past week.\""
+				},
+				{
+					"role": "user",
+					"content": "Return \"NOT_APPLICABLE\" if there is no function that can help or the functions are unrelated to the query. Otherwise, pass the name of the function to call."
+				},
+				{
+					"role": "assistant",
+					"content": "name_of_function_to_call='get_calendar_events'"
+				},
+				{
+					"role": "user",
+					"content": "Fantastic, here is the next one."
+				},
+				{
+					"role": "user",
+					"content": "User's request:\n\"I want to see the events from my family calendar for the past month.\""
+				},
+				{
+					"role": "user",
+					"content": "Return \"NOT_APPLICABLE\" if there is no function that can help or the functions are unrelated to the query. Otherwise, pass the name of the function to call."
+				},
+				{
+					"role": "assistant",
+					"content": "name_of_function_to_call='get_calendar_events'"
+				},
+				{
+					"role": "user",
+					"content": "Fantastic, here is the next one."
+				}
+			],
+			"function_argument_examples": []
+	},
+	"update_state": {
+		"keywords": ["update*", "change*", "state*", "on", "off", "turn"],
+		"init_prompt": "",
+		"success_prompt": "The state has been updated, report that.",
+		"fail_prompt": "I'm sorry, I couldn't update the state of this Home Assistant device at this time.",
+		"function_name_examples": [
+			{
+				"role": "user",
+				"content": "User's request:\n\"Can you update the state of the living room light to on?\""
+				},
+				{
+					"role": "user",
+					"content": "Return \"NOT_APPLICABLE\" if there is no function that can help or the functions are unrelated to the query. Otherwise, pass the name of the function to call."
+				},
+				{
+					"role": "assistant",
+					"content": "name_of_function_to_call='update_state'"
+				},
+				{
+					"role": "user",
+					"content": "Fantastic, here is the next one."
+				},
+				{
+					"role": "user",
+					"content": "User's request:\n\"Turn the bedroom thermostat off.\""
+				},
+				{
+					"role": "user",
+					"content": "Return \"NOT_APPLICABLE\" if there is no function that can help or the functions are unrelated to the query. Otherwise, pass the name of the function to call."
+				},
+				{
+					"role": "assistant",
+					"content": "name_of_function_to_call='update_state'"
+				},
+				{
+					"role": "user",
+					"content": "Fantastic, here is the next one."
+				},
+				{
+					"role": "user",
+					"content": "User's request:\n\"I want to change the state of the kitchen door lock to locked.\""
+				},
+				{
+					"role": "user",
+					"content": "Return \"NOT_APPLICABLE\" if there is no function that can help or the functions are unrelated to the query. Otherwise, pass the name of the function to call."
+				},
+				{
+					"role": "assistant",
+					"content": "name_of_function_to_call='update_state'"
+				},
+				{
+					"role": "user",
+					"content": "Fantastic, here is the next one."
+				}
+			],
+			"function_argument_examples": []
+	},
+	"fire_event": {
+		"keywords": ["fire", "trigger", "initiate", "event*"],
+		"init_prompt": "",
+		"success_prompt": "The event has been fired, report that.",
+		"fail_prompt": "I'm sorry, I couldn't fire the event in your Home Assistant system at this time.",
+		"function_name_examples": [
+			{
+				"role": "user",
+				"content": "User's request:\n\"Can you trigger the custom_event event in my Home Assistant system?\""
+				},
+				{
+					"role": "user",
+					"content": "Return \"NOT_APPLICABLE\" if there is no function that can help or the functions are unrelated to the query. Otherwise, pass the name of the function to call."
+				},
+				{
+					"role": "assistant",
+					"content": "name_of_function_to_call='fire_event'"
+				},
+				{
+					"role": "user",
+					"content": "Fantastic, here is the next one."
+				},
+				{
+					"role": "user",
+					"content": "User's request:\n\"Initiate the alarm_triggered event in my smart home system.\""
+				},
+				{
+					"role": "user",
+					"content": "Return \"NOT_APPLICABLE\" if there is no function that can help or the functions are unrelated to the query. Otherwise, pass the name of the function to call."
+				},
+				{
+					"role": "assistant",
+					"content": "name_of_function_to_call='fire_event'"
+				},
+				{
+					"role": "user",
+					"content": "Fantastic, here is the next one."
+				},
+				{
+					"role": "user",
+					"content": "User's request:\n\"I want to fire the motion_detected event in my home automation system.\""
+				},
+				{
+					"role": "user",
+					"content": "Return \"NOT_APPLICABLE\" if there is no function that can help or the functions are unrelated to the query. Otherwise, pass the name of the function to call."
+				},
+				{
+					"role": "assistant",
+					"content": "name_of_function_to_call='fire_event'"
+				},
+				{
+					"role": "user",
+					"content": "Fantastic, here is the next one."
+				}
+			],
+			"function_argument_examples": []
 	}
 }
