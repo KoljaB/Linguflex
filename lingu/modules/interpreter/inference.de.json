@@ -1,9 +1,36 @@
 {
-    "RunComputerInterpreterCommand": 
-		{
-			"keywords": ["openinterpreter", "interpret*", "computer", "code", "führe"],
-			"init_prompt": "",
-			"success_prompt": "",
-			"fail_prompt": ""
-		}
-}
+	"RunComputerInterpreterCommand":{
+	   "keywords":[
+		  "openinterpreter",
+		  "interpret*",
+		  "computer",
+		  "code",
+		  "run"
+	   ],
+	   "init_prompt":"",
+	   "success_prompt":"",
+	   "fail_prompt":"",
+	   "examples":[
+		  {
+			 "user":"Nutze den Interpreter und sag mir, welche Grafikkarte ich verwende?",
+			 "assistant":"interpreter_command='Welche Grafikkarte verwende ich?'"
+		  },
+		  {
+			 "user":"Kann der Interpreter die Speichernutzung meines Systems überprüfen?",
+			 "assistant":"interpreter_command='Speichernutzung des Systems überprüfen'"
+		  },
+		  {
+			 "user":"Bitten den Interpreter, alle installierten Anwendungen aufzulisten.",
+			 "assistant":"interpreter_command='Alle installierten Anwendungen auflisten'"
+		  },
+		  {
+			 "user":"Führe einen Diagnosetest für mein Netzwerk über den Interpreter aus.",
+			 "assistant":"interpreter_command='Netzwerkdiagnose ausführen'"
+		  },
+		  {
+			 "user":"Lass den Interpreter die aktuelle CPU-Temperatur anzeigen.",
+			 "assistant":"interpreter_command='Aktuelle CPU-Temperatur anzeigen'"
+		  }
+	   ]
+	}
+ }
