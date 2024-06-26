@@ -1,30 +1,150 @@
 {
-    "RetrieveCalendarEvents": 
-		{
-			"keywords": ["heut*", "schieb*", "änder*", "trag*", "lösch*", "entfern*", "kalender", "termin*", "ereignis*", "steht an", "zu tun", "*plan*", "pläne", "verabred*", "treffen", "zeitplan", "tagesordnung", "besprechung", "veranstaltung", "datum", "tag", "woche", "monat", "jahr", "demnächst", "beschäftigt", "freizeit", "verfügbar", "belegt", "ausgebucht", "verschieben", "stornieren", "bestätigen", "erinnerung", "alarm", "fällig", "deadline", "frist", "zeitfenster"],
-			"init_prompt": "",
-			"success_prompt": "Fasse Termine zusammen und gib sie vereinfacht ohne IDs wieder.",
-			"fail_prompt": ""
-		},
-	"AddCalendarEvent": 
-		{
-			"keywords": ["neue*", "trag*", "merk*", "kalender", "termin*", "ereignis*", "treffen", "veranstaltung", "erinner*"],
-			"init_prompt": "Termine dürfen nur hinzugefügt werden, wenn in dem angefragten Zeitraum kein anderer Termin existiert.",
-			"success_prompt": "Bestätige das erfolgreiche hinzufügen des Termins.",
-			"fail_prompt": ""
-		},
-	"MoveCalendarEvent": 
-		{
-			"keywords": ["schieb*", "änder*", "trag*", "kalender", "termin*", "ereignis*", "treffen", "veranstaltung", "erinner*"],
-			"init_prompt": "Termine dürfen nur verschoben werden, wenn am Ziel-Zeitraum kein anderer Termin existiert.",
-			"success_prompt": "Bestätige das erfolgreiche verschieben des Termins.",
-			"fail_prompt": ""
-		},
-	"DeleteCalendarEvent": 
-		{
-			"keywords": ["lösch*", "entfern*", "kalender", "termin*", "ereignis*", "treffen", "veranstaltung"],
-			"init_prompt": "Lösche nur Termine, wenn dies in der Anfrage eindeutig erbeten wird.",
-			"success_prompt": "Bestätige das erfolgreiche löschen des Termins.",
-			"fail_prompt": ""
-		}
-}
+	"RetrieveCalendarEvents":{
+	   "keywords":[
+		  "heut*",
+		  "schieb*",
+		  "änder*",
+		  "trag*",
+		  "lösch*",
+		  "entfern*",
+		  "kalender",
+		  "termin*",
+		  "ereignis*",
+		  "steht an",
+		  "zu tun",
+		  "*plan*",
+		  "pläne",
+		  "verabred*",
+		  "treffen",
+		  "zeitplan",
+		  "tagesordnung",
+		  "besprechung",
+		  "veranstaltung",
+		  "datum",
+		  "tag",
+		  "woche",
+		  "monat",
+		  "jahr",
+		  "demnächst",
+		  "beschäftigt",
+		  "freizeit",
+		  "verfügbar",
+		  "belegt",
+		  "ausgebucht",
+		  "verschieben",
+		  "stornieren",
+		  "bestätigen",
+		  "erinnerung",
+		  "alarm",
+		  "fällig",
+		  "deadline",
+		  "frist",
+		  "zeitfenster"
+	   ],
+	   "init_prompt":"",
+	   "success_prompt":"Fasse Termine zusammen und gib sie vereinfacht ohne IDs wieder.",
+	   "fail_prompt":"",
+	   "examples":[
+		  {
+			 "user":"Was steht heute auf meinem Kalender?"
+		  },
+		  {
+			 "user":"Zeige meine Ereignisse für nächste Woche."
+		  },
+		  {
+			 "user":"Was sind meine nächsten Termine?"
+		  },
+		  {
+			 "user":"Kannst du mir meinen Zeitplan für morgen mitteilen?"
+		  }
+	   ]
+	},
+	"AddCalendarEvent":{
+	   "keywords":[
+		  "neue*",
+		  "trag*",
+		  "merk*",
+		  "kalender",
+		  "termin*",
+		  "ereignis*",
+		  "treffen",
+		  "veranstaltung",
+		  "erinner*"
+	   ],
+	   "init_prompt":"Termine dürfen nur hinzugefügt werden, wenn in dem angefragten Zeitraum kein anderer Termin existiert.",
+	   "success_prompt":"Bestätige das erfolgreiche Hinzufügen des Termins.",
+	   "fail_prompt":"",
+	   "examples":[
+		  {
+			 "user":"Füge ein Treffen mit dem Design-Team zu meinem Kalender hinzu.",
+			 "assistant":"name='Treffen mit dem Design-Team', datum='2024-07-12', zeit='14:00', dauer=60"
+		  },
+		  {
+			 "user":"Plane einen Zahnarzttermin am 3. August um 10 Uhr.",
+			 "assistant":"name='Zahnarzttermin', datum='2024-08-03', zeit='10:00', dauer=30"
+		  },
+		  {
+			 "user":"Setze eine Geburtstagsparty am 10. September um 17 Uhr in meinen Kalender.",
+			 "assistant":"name='Geburtstagsparty', datum='2024-09-10', zeit='17:00', dauer=120"
+		  }
+	   ]
+	},
+	"MoveCalendarEvent":{
+	   "keywords":[
+		  "schieb*",
+		  "änder*",
+		  "trag*",
+		  "kalender",
+		  "termin*",
+		  "ereignis*",
+		  "treffen",
+		  "veranstaltung",
+		  "erinner*"
+	   ],
+	   "init_prompt":"Termine dürfen nur verschoben werden, wenn am Ziel-Zeitraum kein anderer Termin existiert.",
+	   "success_prompt":"Bestätige das erfolgreiche Verschieben des Termins.",
+	   "fail_prompt":"",
+	   "examples":[
+		  {
+			 "user":"Verschiebe mein Treffen von 9 Uhr morgens auf 14 Uhr morgen.",
+			 "assistant":"id='12345', datum='2024-07-13', zeit='14:00', dauer=60"
+		  },
+		  {
+			 "user":"Ändere die Zeit des Konferenzanrufs auf nächsten Montag um 15:00 Uhr.",
+			 "assistant":"id='67890', datum='2024-07-17', zeit='15:00', dauer=30"
+		  },
+		  {
+			 "user":"Verschiebe meinen Workshop von Freitagmorgen auf Donnerstagnachmittag.",
+			 "assistant":"id='13579', datum='2024-07-20', zeit='13:00', dauer=180"
+		  }
+	   ]
+	},
+	"DeleteCalendarEvent":{
+	   "keywords":[
+		  "lösch*",
+		  "entfern*",
+		  "kalender",
+		  "termin*",
+		  "ereignis*",
+		  "treffen",
+		  "veranstaltung"
+	   ],
+	   "init_prompt":"Lösche nur Termine, wenn dies in der Anfrage eindeutig erbeten wird.",
+	   "success_prompt":"Bestätige das erfolgreiche Löschen des Termins.",
+	   "fail_prompt":"",
+	   "examples":[
+		  {
+			 "user":"Lösche meinen Arzttermin.",
+			 "assistant":"id='54321'"
+		  },
+		  {
+			 "user":"Entferne das Mittagessen-Treffen aus meinem Kalender.",
+			 "assistant":"id='98765'"
+		  },
+		  {
+			 "user":"Erase the team briefing scheduled for next Wednesday.",
+			 "assistant":"id='24680'"
+		  }
+	   ]
+	}
+ }

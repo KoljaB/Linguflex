@@ -50,6 +50,7 @@ class SummarizeEmail(Populatable):
     """
     Your task is to summarize the email content, determine its importance and
     extract the links contained in it.
+    Always provide a summarized_content.
     """
     summarized_content: str = Field(
         ...,

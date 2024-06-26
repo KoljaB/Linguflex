@@ -1,30 +1,147 @@
 {
-    "RetrieveCalendarEvents": 
-		{
-			"keywords": ["today", "shift*", "chang*", "add*", "delet*", "remov*", "calendar", "appointment*", "event*", "upcoming", "to do", "*plan*", "plans", "date*", "meet*", "schedule", "agenda", "meeting", "event", "date", "day", "week", "month", "year", "soon", "busy", "free time", "available", "occupied", "booked", "move", "cancel", "confirm", "reminder", "alarm", "due", "deadline", "term", "time slot"],
-			"init_prompt": "",
-			"success_prompt": "Summarize appointments and provide them in a simplified manner without IDs.",
-			"fail_prompt": ""
-		},
-	"AddCalendarEvent": 
-		{
-			"keywords": ["new*", "add*", "note*", "calendar", "appointment*", "event*", "meeting", "reminder*"],
-			"init_prompt": "Appointments can only be added if no other appointment exists in the requested time period.",
-			"success_prompt": "Confirm the successful addition of the appointment.",
-			"fail_prompt": ""
-		},
-	"MoveCalendarEvent": 
-		{
-			"keywords": ["move*", "chang*", "add*", "calendar", "appointment*", "event*", "meeting", "reminder*"],
-			"init_prompt": "Appointments can only be moved if no other appointment exists at the target time period.",
-			"success_prompt": "Confirm the successful move of the appointment.",
-			"fail_prompt": ""
-		},
-	"DeleteCalendarEvent": 
-		{
-			"keywords": ["delete*", "remove*", "calendar", "appointment*", "event*", "meeting"],
-			"init_prompt": "Only delete appointments if this is explicitly requested in the request.",
-			"success_prompt": "Confirm the successful deletion of the appointment.",
-			"fail_prompt": ""
-		}
-}
+	"RetrieveCalendarEvents":{
+	   "keywords":[
+		  "today",
+		  "shift*",
+		  "chang*",
+		  "add*",
+		  "delet*",
+		  "remov*",
+		  "calendar",
+		  "appointment*",
+		  "event*",
+		  "upcoming",
+		  "to do",
+		  "*plan*",
+		  "plans",
+		  "date*",
+		  "meet*",
+		  "schedule",
+		  "agenda",
+		  "meeting",
+		  "event",
+		  "date",
+		  "day",
+		  "week",
+		  "month",
+		  "year",
+		  "soon",
+		  "busy",
+		  "free time",
+		  "available",
+		  "occupied",
+		  "booked",
+		  "move",
+		  "cancel",
+		  "confirm",
+		  "reminder",
+		  "alarm",
+		  "due",
+		  "deadline",
+		  "term",
+		  "time slot"
+	   ],
+	   "init_prompt":"",
+	   "success_prompt":"Summarize appointments and provide them in a simplified manner without IDs.",
+	   "fail_prompt":"",
+	   "examples":[
+		  {
+			 "user":"What's on my calendar today?"
+		  },
+		  {
+			 "user":"Show my events for next week."
+		  },
+		  {
+			 "user":"What are my next appointments?"
+		  },
+		  {
+			 "user":"Can you tell me my schedule for tomorrow?"
+		  }
+	   ]
+	},
+	"AddCalendarEvent":{
+	   "keywords":[
+		  "new*",
+		  "add*",
+		  "note*",
+		  "calendar",
+		  "appointment*",
+		  "event*",
+		  "meeting",
+		  "reminder*"
+	   ],
+	   "init_prompt":"Appointments can only be added if no other appointment exists in the requested time period.",
+	   "success_prompt":"Confirm the successful addition of the appointment.",
+	   "fail_prompt":"",
+	   "examples":[
+		  {
+			 "user":"Add a meeting with the design team to my calendar.",
+			 "assistant":"name='Meeting with Design Team', date='2024-07-12', time='14:00', duration=60"
+		  },
+		  {
+			 "user":"Schedule a dentist appointment on August 3 at 10 a.m.",
+			 "assistant":"name='Dentist Appointment', date='2024-08-03', time='10:00', duration=30"
+		  },
+		  {
+			 "user":"Put a birthday party on my calendar for September 10th at 5 PM.",
+			 "assistant":"name='Birthday Party', date='2024-09-10', time='17:00', duration=120"
+		  }
+	   ]
+	},
+	"MoveCalendarEvent":{
+	   "keywords":[
+		  "move*",
+		  "chang*",
+		  "add*",
+		  "calendar",
+		  "appointment*",
+		  "event*",
+		  "meeting",
+		  "reminder*"
+	   ],
+	   "init_prompt":"Appointments can only be moved if no other appointment exists at the target time period.",
+	   "success_prompt":"Confirm the successful move of the appointment.",
+	   "fail_prompt":"",
+	   "examples":[
+		  {
+			 "user":"Move my meeting from 9 a.m. to 2 p.m. tomorrow.",
+			 "assistant":"id='12345', date='2024-07-13', time='14:00', duration=60"
+		  },
+		  {
+			 "user":"Change the time of the conference call to next Monday at 3:00 PM.",
+			 "assistant":"id='67890', date='2024-07-17', time='15:00', duration=30"
+		  },
+		  {
+			 "user":"Shift my workshop from Friday morning to Thursday afternoon.",
+			 "assistant":"id='13579', date='2024-07-20', time='13:00', duration=180"
+		  }
+	   ]
+	},
+	"DeleteCalendarEvent":{
+	   "keywords":[
+		  "delete*",
+		  "remove*",
+		  "calendar",
+		  "appointment*",
+		  "event*",
+		  "meeting"
+	   ],
+	   "init_prompt":"Only delete appointments if this is explicitly requested in the request.",
+	   "success_prompt":"Confirm the successful deletion of the appointment.",
+	   "fail_prompt":"",
+	   "examples":[
+		  {
+			 "user":"Delete my doctor's appointment.",
+			 "assistant":"id='54321'"
+		  },
+		  {
+			 "user":"Remove the lunch meeting from my calendar.",
+			 "assistant":"id='98765'"
+		  },
+		  {
+			 "user":"Erase the team briefing scheduled for next Wednesday.",
+			 "assistant":"id='24680'"
+		  }
+	   ]
+	}
+ }

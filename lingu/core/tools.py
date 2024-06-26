@@ -154,6 +154,7 @@ class Tools:
         tool["return_value"] = return_value
         if tool["executed"]:
             self.executed_tools.append(tool)
+            
         return return_value
 
     def get_tools(self, text: str):

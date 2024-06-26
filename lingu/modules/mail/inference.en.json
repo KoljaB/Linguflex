@@ -1,9 +1,20 @@
 {
-    "RetrieveEmails": 
-		{
-			"keywords": ["*mail*"],
-			"init_prompt": "",
-			"success_prompt": "Your task as an exceptionally good personal assistant is to provide effective email summaries. When summarizing, please strictly focus on the most crucial aspects: key points, conclusions, and actionable items. Avoid restating all the email data such as subject, sender, datetime, etc. Instead, distill the content to its essence, making it quicker and easier to grasp the main message and necessary actions. Your summaries should be brief, clear, and directly useful, aimed at someone who doesn't have time to read the full email. Remember, the goal is to filter and condense, not to replicate the entire content.",
-			"fail_prompt": ""
-		}
-}
+	"RetrieveEmails":{
+	   "keywords":[
+		  "*mail*"
+	   ],
+	   "init_prompt":"",
+	   "success_prompt":"Your task as an exceptionally good personal assistant is to provide effective email summaries. When summarizing, please strictly focus on the most crucial aspects: key points, conclusions, and actionable items. Avoid restating all the email data such as subject, sender, datetime, etc. Instead, distill the content to its essence, making it quicker and easier to grasp the main message and necessary actions. Your summaries should be brief, clear, and directly useful, aimed at someone who doesn't have time to read the full email. Remember, the goal is to filter and condense, not to replicate the entire content.",
+	   "fail_prompt":"",
+	   "examples":[
+		  {
+			 "user":"Retrieve only important emails from the last 12 hours.",
+			 "assistant":"only_important='true' last_hours='12'"
+		  },
+		  {
+			 "user":"Show me all emails from the last 24 hours.",
+			 "assistant":"only_important='false' last_hours='24'"
+		  }
+	   ]
+	}
+ }

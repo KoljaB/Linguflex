@@ -6,8 +6,8 @@ Home Assistant Integration Module
 """
 
 from lingu import Populatable
-from pydantic import Field, conlist, confloat
-from typing import Optional, Dict, Any
+from pydantic import Field, conlist, confloat, conint
+from typing import Optional, Dict, Any, List
 from .logic import logic
 
 
@@ -47,6 +47,32 @@ class turn_off_light(Populatable):
         return logic.turn_off_light(self.light_entity_id)
 
 
+class turn_on_switch(Populatable):
+    """
+    Turns on a specified switch in Home Assistant.
+    This action sends a command to turn on the switch, which can be used to power a device or outlet.
+    Use correct entity_id.
+    Call get_states_of_all_devices first if you are unsure.
+    """
+    switch_entity_id: str = Field(..., description="entity_id of the switch to turn on. Example: 'switch.outlet_1', 'switch.living_room_outlet'")
+
+    def on_populated(self):
+        return logic.turn_on_switch(self.switch_entity_id)
+
+
+class turn_off_switch(Populatable):
+    """
+    Turns off a specified switch in Home Assistant.
+    This action sends a command to turn off the switch, which can be used to cut power to a device or outlet.
+    Use correct entity_id.
+    Call get_states_of_all_devices first if you are unsure.
+    """
+    switch_entity_id: str = Field(..., description="entity_id of the switch to turn off. Example: 'switch.outlet_1', 'switch.living_room_outlet'")
+
+    def on_populated(self):
+        return logic.turn_off_switch(self.switch_entity_id)
+
+
 class set_light_color(Populatable):
     """
     Sets the color of a specified light in Home Assistant.
@@ -56,14 +82,14 @@ class set_light_color(Populatable):
     """
     light_entity_id: str = Field(..., description="entity_id of the light to set the color. Example: 'light.altar', 'light.couch_unten'")
     color_name: Optional[str] = Field(None, description="Name of the color to set. Example: 'red', 'blue'")
-    hs_color: Optional[conlist(confloat(ge=0, le=360), min_length=2, max_length=2)] = Field(None, description="HS color values to set. Example: [300, 70]")
-    rgb_color: Optional[conlist(confloat(ge=0, le=255), min_length=3, max_length=3)] = Field(None, description="RGB color values to set. Example: [255, 0, 0]")
+    # hs_color: Optional[List[conint(ge=0, le=360)]] = Field(None, description="HS color values to set. Example: [300, 70]")
+    rgb_color: Optional[List[conint(ge=0, le=255)]] = Field(None, description="RGB color values to set. Example: [255, 0, 0]")
 
     def on_populated(self):
         return logic.set_light_color(
             self.light_entity_id,
             color_name=self.color_name,
-            hs_color=self.hs_color,
+            # hs_color=self.hs_color,
             rgb_color=self.rgb_color
         )
 
@@ -169,27 +195,27 @@ class get_logbook(Populatable):
 #         return logic.get_camera_image(self.entity_id)
 
 
-class get_calendars(Populatable):
-    """
-    Retrieves the list of calendars in Home Assistant.
-    This action fetches the calendars, providing an overview of the available calendars.
-    """
+# class get_calendars(Populatable):
+#     """
+#     Retrieves the list of calendars in Home Assistant.
+#     This action fetches the calendars, providing an overview of the available calendars.
+#     """
 
-    def on_populated(self):
-        return logic.get_calendars()
+#     def on_populated(self):
+#         return logic.get_calendars()
 
 
-class get_calendar_events(Populatable):
-    """
-    Retrieves the events from a specified calendar in Home Assistant.
-    This action fetches the calendar events, providing an overview of the scheduled events over a specified period.
-    """
-    calendar_entity_id: str = Field(..., description="entity_id of the calendar to retrieve events from. Example: 'calendar.personal'")
-    start: str = Field(..., description="Start time for the calendar events. Example: '2024-01-01T00:00:00Z'")
-    end: str = Field(..., description="End time for the calendar events. Example: '2024-01-02T00:00:00Z'")
+# class get_calendar_events(Populatable):
+#     """
+#     Retrieves the events from a specified calendar in Home Assistant.
+#     This action fetches the calendar events, providing an overview of the scheduled events over a specified period.
+#     """
+#     calendar_entity_id: str = Field(..., description="entity_id of the calendar to retrieve events from. Example: 'calendar.personal'")
+#     start: str = Field(..., description="Start time for the calendar events. Example: '2024-01-01T00:00:00Z'")
+#     end: str = Field(..., description="End time for the calendar events. Example: '2024-01-02T00:00:00Z'")
 
-    def on_populated(self):
-        return logic.get_calendar_events(self.calendar_entity_id, self.start, self.end)
+#     def on_populated(self):
+#         return logic.get_calendar_events(self.calendar_entity_id, self.start, self.end)
 
 
 class update_state(Populatable):

@@ -1,9 +1,74 @@
 {
-    "RetrieveWeatherForecast": 
-    {
-        "keywords": ["weather*", "forecast*", "prediction*", "climate*", "report*", "meteorol*", "temperature*", "precipitation*", "sun*", "rain*", "snow", "hail", "lightning*", "thunder", "storm*", "fog*", "cold*", "warm*", "heat*", "cool*", "ice*", "frost*", "walk*", "outside", "outdoors", "nature", "cloud*", "thunderstorm", "snow*", "fall", "spring", "summer", "winter", "air", "humidity*", "*humidity*", "precipitation", "season*", "cloudy*", "muggy*", "wind*", "tropical*", "dry*"],
-        "init_prompt": "",
-        "success_prompt": "You are a weather presenter. Given the raw weather data provided, your task is to interpret the data and create a concise, engaging, and compelling one to two sentence weather forecast. Identify and explain the key patterns and trends in the data, such as temperature changes and shifts in weather conditions. Your report should not just list the data points, but weave them into a narrative that gives the general public a clear and accessible forecast for the next few days. Strive to make your report both informative and entertaining while keeping it to one to two sentences.",
-        "fail_prompt": ""
+    "RetrieveWeatherForecast":{
+       "keywords":[
+          "weather*",
+          "forecast*",
+          "prediction*",
+          "climate*",
+          "report*",
+          "meteorol*",
+          "temperature*",
+          "precipitation*",
+          "sun*",
+          "rain*",
+          "snow",
+          "hail",
+          "lightning*",
+          "thunder",
+          "storm*",
+          "fog*",
+          "cold*",
+          "warm*",
+          "heat*",
+          "cool*",
+          "ice*",
+          "frost*",
+          "walk*",
+          "outside",
+          "outdoors",
+          "nature",
+          "cloud*",
+          "thunderstorm",
+          "snow*",
+          "fall",
+          "spring",
+          "summer",
+          "winter",
+          "air",
+          "humidity*",
+          "*humidity*",
+          "precipitation",
+          "season*",
+          "cloudy*",
+          "muggy*",
+          "wind*",
+          "tropical*",
+          "dry*"
+       ],
+       "init_prompt":"If no city was mentioned by the user, leave it blank.",
+       "success_prompt":"You are a weather presenter. Given the raw weather data provided, your task is to interpret the data and create a concise, engaging, and compelling one to two sentence weather forecast. Identify and explain the key patterns and trends in the data, such as temperature changes and shifts in weather conditions. Your report should not just list the data points, but weave them into a narrative that gives the general public a clear and accessible forecast for the next few days. Strive to make your report both informative and entertaining while keeping it to one to two sentences.",
+       "fail_prompt":"",
+       "examples":[
+          {
+             "user":"What's the weather today?",
+             "assistant":""
+          },
+          {
+             "user":"What's the weather like in New York today?",
+             "assistant":"city='New York'"
+          },
+          {
+             "user":"Can you give me the forecast for Tokyo?",
+             "assistant":"city='Tokyo'"
+          },
+          {
+             "user":"I need the weather prediction for Paris this weekend.",
+             "assistant":"city='Paris'"
+          },
+          {
+             "user":"Tell me about the weather in San Francisco.",
+             "assistant":"city='San Francisco'"
+          }
+       ]
     }
-}
+ }

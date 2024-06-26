@@ -1,9 +1,75 @@
 {
-    "RetrieveWeatherForecast": 
-    {
-        "keywords": ["wetter*", "vorhersage*", "prognose*", "klima*", "bericht*", "meteorol*", "temperatur*", "niederschlag*", "sonn*", "regen*", "regne*", "schnee", "hagel", "blitz*", "donner", "sturm*", "nebel*", "kalt*", "warm*", "hitze*", "kühl*", "eis*", "frost*", "spazier*", "draussen", "draußen", "natur", "wolken", "gewitter", "schnei*", "herbst", "frühling", "sommer", "winter", "luft", "feucht*", "*feuchtigke*", "niederschlag", "jahreszeit*", "bewölkt*", "schwül*", "wind*", "tropisch*", "trocken*"],
-        "init_prompt": "",
-        "success_prompt": "Du bist ein Wettermoderator. Erstelle auf Basis der Rohwetterdaten einen ansprechenden und mitreißenden Wetterbericht auf deutsch. Analysiere Muster und Trends und stelle sicher, dass der Bericht für die allgemeine Öffentlichkeit leicht verständlich ist. Dein Ziel ist es, den Zuschauern eine klare Vorstellung davon zu geben, was sie in den nächsten Tagen erwartet und sie gleichzeitig zu unterhalten.",
-        "fail_prompt": ""
+    "RetrieveWeatherForecast":{
+       "keywords":[
+          "wetter*",
+          "vorhersage*",
+          "prognose*",
+          "klima*",
+          "bericht*",
+          "meteorol*",
+          "temperatur*",
+          "niederschlag*",
+          "sonn*",
+          "regen*",
+          "regne*",
+          "schnee",
+          "hagel",
+          "blitz*",
+          "donner",
+          "sturm*",
+          "nebel*",
+          "kalt*",
+          "warm*",
+          "hitze*",
+          "kühl*",
+          "eis*",
+          "frost*",
+          "spazier*",
+          "draussen",
+          "draußen",
+          "natur",
+          "wolken",
+          "gewitter",
+          "schnei*",
+          "herbst",
+          "frühling",
+          "sommer",
+          "winter",
+          "luft",
+          "feucht*",
+          "*feuchtigke*",
+          "niederschlag",
+          "jahreszeit*",
+          "bewölkt*",
+          "schwül*",
+          "wind*",
+          "tropisch*",
+          "trocken*"
+       ],
+       "init_prompt":"",
+       "success_prompt":"Du bist ein Wettermoderator. Erstelle auf Basis der Rohwetterdaten einen ansprechenden und mitreißenden Wetterbericht auf deutsch. Analysiere Muster und Trends und stelle sicher, dass der Bericht für die allgemeine Öffentlichkeit leicht verständlich ist. Dein Ziel ist es, den Zuschauern eine klare Vorstellung davon zu geben, was sie in den nächsten Tagen erwartet und sie gleichzeitig zu unterhalten.",
+       "fail_prompt":"",
+       "examples":[
+          {
+             "user":"Wie ist das Wetter heute?",
+             "assistant":""
+          },
+          {
+             "user":"Wie ist das Wetter heute in Berlin?",
+             "assistant":"city='Berlin'"
+          },
+          {
+             "user":"Kannst du mir die Wettervorhersage für München geben?",
+             "assistant":"city='München'"
+          },
+          {
+             "user":"Ich brauche die Wetterprognose für Hamburg dieses Wochenende.",
+             "assistant":"city='Hamburg'"
+          },
+          {
+             "user":"Erzähl mir etwas über das Wetter in Köln.",
+             "assistant":"city='Köln'"
+          }
+       ]
     }
-}
+ }

@@ -1,9 +1,48 @@
 {
-    "switch_char": 
-		{
-			"keywords": ["char*", "verhalt*", "sei", "wirst", "werd*", "verwand*", "schlüpf*", "rolle", "verkörper*", "identität", "person", "figur", "avatar", "übernehm*", "übernimm", "profil", "wechs*", "tausch", "änder*", "pass", "persön*"],
-			"init_prompt": "",
-			"success_prompt": "Der Charakter bzw die Persönlichkeit wurde gewechselt.",
-			"fail_prompt": ""
-		}
-}
+	"switch_char":{
+	   "keywords":[
+		  "char*",
+		  "verhalt*",
+		  "sei",
+		  "wirst",
+		  "werd*",
+		  "verwand*",
+		  "schlüpf*",
+		  "rolle",
+		  "verkörper*",
+		  "identität",
+		  "person",
+		  "figur",
+		  "avatar",
+		  "übernehm*",
+		  "übernimm",
+		  "profil",
+		  "wechs*",
+		  "tausch",
+		  "änder*",
+		  "pass",
+		  "persön*"
+	   ],
+	   "init_prompt":"",
+	   "success_prompt":"Der Charakter bzw die Persönlichkeit wurde gewechselt.",
+	   "fail_prompt":"",
+	   "examples":[
+		  {
+			 "user":"Kannst du zum Charakter Gandalf wechseln?",
+			 "assistant":"char_name='Gandalf'"
+		  },
+		  {
+			 "user":"Ich möchte jetzt mit Sherlock Holmes interagieren.",
+			 "assistant":"char_name='SherlockHolmes'"
+		  },
+		  {
+			 "user":"Ändere die Persönlichkeit zu Tony Stark.",
+			 "assistant":"char_name='TonyStark'"
+		  },
+		  {
+			 "user":"Übernimm die Rolle von Elsa.",
+			 "assistant":"char_name='Elsa'"
+		  }
+	   ]
+	}
+ }

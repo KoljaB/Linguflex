@@ -1,9 +1,48 @@
 {
-    "switch_char": 
-		{
-			"keywords": ["charact*", "behav*", "be", "will", "becom*", "transform*", "slip*", "role", "embody*", "identity", "person", "figure", "avatar", "take over*", "assume", "profile", "switch*", "exchange", "chang*", "adapt", "personal*"],
-			"init_prompt": "",
-			"success_prompt": "The character or personality has been switched.",
-			"fail_prompt": ""
-		}
-}
+	"switch_char":{
+	   "keywords":[
+		  "charact*",
+		  "behav*",
+		  "be",
+		  "will",
+		  "becom*",
+		  "transform*",
+		  "slip*",
+		  "role",
+		  "embody*",
+		  "identity",
+		  "person",
+		  "figure",
+		  "avatar",
+		  "take over*",
+		  "assume",
+		  "profile",
+		  "switch*",
+		  "exchange",
+		  "chang*",
+		  "adapt",
+		  "personal*"
+	   ],
+	   "init_prompt":"",
+	   "success_prompt":"The character or personality has been switched.",
+	   "fail_prompt":"",
+	   "examples":[
+		  {
+			 "user":"Can you switch to the character of Gandalf?",
+			 "assistant":"char_name='Gandalf'"
+		  },
+		  {
+			 "user":"I'd like to interact with Sherlock Holmes now.",
+			 "assistant":"char_name='SherlockHolmes'"
+		  },
+		  {
+			 "user":"Change the personality to Tony Stark.",
+			 "assistant":"char_name='TonyStark'"
+		  },
+		  {
+			 "user":"Assume the role of Elsa.",
+			 "assistant":"char_name='Elsa'"
+		  }
+	   ]
+	}
+ }

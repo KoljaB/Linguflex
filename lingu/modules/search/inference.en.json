@@ -1,16 +1,60 @@
 {
-    "SearchWorldWideWeb": 
-		{
-			"keywords": ["search*", "internet", "*web*", "find*", "www"],
-			"init_prompt": "",
-			"success_prompt": "Analyze the search results and summarize the necessary information for the answer. Do NOT include HTML in the output!",
-			"fail_prompt": ""
-		},
-	"SearchForPicture": 
-		{
-			"keywords": ["pictur*", "show*", "search*", "photo*", "photo*", "display*", "present*", "graphi*", "graphi*", "photogra*", "photogra*", "illustrat*", "visual*", "imag*", "pic*", "capture*"],
-			"init_prompt": "",
-			"success_prompt": "Confirm the successful finding and display of the picture.",
-			"fail_prompt": ""
-		}
-}
+	"SearchWorldWideWeb":{
+	   "keywords":[
+		  "search*",
+		  "internet",
+		  "*web*",
+		  "find*",
+		  "www",
+		  "update*",
+		  "recent",
+		  "latest"
+	   ],
+	   "init_prompt":"",
+	   "success_prompt":"Analyze the search results and summarize the necessary information for the answer. Do NOT include HTML in the output!",
+	   "fail_prompt":"",
+	   "examples":[
+		  {
+			 "user":"Can you find the latest news on the stock market?",
+			 "assistant":"search_terms='latest stock market news'"
+		  },
+		  {
+			 "user":"What are the most recent updates on climate change?",
+			 "assistant":"search_terms='recent climate change updates'"
+		  }
+	   ]
+	},
+	"SearchForPicture":{
+	   "keywords":[
+		  "pictur*",
+		  "show*",
+		  "search*",
+		  "photo*",
+		  "photo*",
+		  "display*",
+		  "present*",
+		  "graphi*",
+		  "graphi*",
+		  "photogra*",
+		  "photogra*",
+		  "illustrat*",
+		  "visual*",
+		  "imag*",
+		  "pic*",
+		  "capture*"
+	   ],
+	   "init_prompt":"",
+	   "success_prompt":"Confirm the successful finding and display of the picture.",
+	   "fail_prompt":"",
+	   "examples":[
+		  {
+			 "user":"Show me a picture of the Eiffel Tower at night.",
+			 "assistant":"search_terms='Eiffel Tower at night'"
+		  },
+		  {
+			 "user":"Find an image of a blue whale.",
+			 "assistant":"search_terms='blue whale'"
+		  }
+	   ]
+	}
+ }

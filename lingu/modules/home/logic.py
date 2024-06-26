@@ -112,16 +112,43 @@ class HomeAssistantLogic(Logic):
         else:
             return {"result": "error", "details": response.text}
 
-    def set_light_color(self, entity_id, color_name=None, hs_color=None, rgb_color=None):
+    def turn_on_switch(self, entity_id):
+        url = f"{self.base_url}/services/switch/turn_on"
+        payload = {"entity_id": entity_id}
+
+        response = requests.post(url, headers=self.headers, json=payload)
+
+        if response.status_code == 200:
+            return {"result": "success", "details": f"Switch {entity_id} turned on successfully."}
+        else:
+            return {"result": "error", "details": response.text}
+
+    def turn_off_switch(self, entity_id):
+        url = f"{self.base_url}/services/switch/turn_off"
+        payload = {"entity_id": entity_id}
+
+        response = requests.post(url, headers=self.headers, json=payload)
+
+        if response.status_code == 200:
+            return {"result": "success", "details": f"Switch {entity_id} turned off successfully."}
+        else:
+            return {"result": "error", "details": response.text}
+
+    def set_light_color(
+            self,
+            entity_id,
+            color_name=None,
+            # hs_color=None,
+            rgb_color=None):
         url = f"{self.base_url}/services/light/turn_on"
         payload = {"entity_id": entity_id}
 
         # Add color to the payload if provided
         if color_name:
             payload["color_name"] = color_name
-        if hs_color:
-            payload["hs_color"] = hs_color
-        if rgb_color:
+        # elif hs_color:
+            # payload["hs_color"] = hs_color
+        elif rgb_color:
             payload["rgb_color"] = rgb_color
 
         response = requests.post(url, headers=self.headers, json=payload)

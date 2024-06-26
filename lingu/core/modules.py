@@ -235,8 +235,7 @@ class Modules:
                                 'init_prompt',
                                 'success_prompt',
                                 'fail_prompt',
-                                'function_name_examples',
-                                'function_argument_examples'
+                                'examples',
                             ]:
                                 if key in module["lang"][inf_obj.name]:
                                     value = module["lang"][inf_obj.name][key]

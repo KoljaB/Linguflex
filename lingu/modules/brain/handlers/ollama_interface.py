@@ -1,4 +1,3 @@
-from llama_cpp.llama_speculative import LlamaPromptLookupDecoding
 from .languagemodelbase import LLM_Base
 from lingu import cfg, log, exc, prompt, events, Prompt
 from pydantic import BaseModel, Field
@@ -8,7 +7,6 @@ import instructor
 import itertools
 import json
 import time
-import os
 
 SHOW_DEBUG = True
 
@@ -36,7 +34,7 @@ n_threads = int(cfg("local_llm", "threads", default=6))
 rope_freq_base = int(cfg("local_llm", "rope_freq_base", default=10000))
 rope_freq_scale = float(cfg("local_llm", "rope_freq_scale", default=1.0))
 ollama_url = cfg("local_llm", "ollama_url", default="http://localhost:11434/v1")
-
+next_message = {"role": "user", "content": "Fantastic, here is the next one."}
 
 class ChatAnswer(BaseModel):
     answer: str = Field(
@@ -75,6 +73,7 @@ class OllamaInterface(LLM_Base):
         )
         self.sleep = False
         self.abort = False
+
         events.add_listener(
             "escape_key_pressed",
             "*",
@@ -83,7 +82,6 @@ class OllamaInterface(LLM_Base):
             "volume_interrupt",
             "*",
             self.abort_immediately)
-
         events.add_listener(
             "inference_start",
             "inference",
@@ -142,6 +140,77 @@ class OllamaInterface(LLM_Base):
     def get_arguments_for_tool(self, user_content, fct_call):
         pass
 
+    def extend_function_parameter_messages(self, messages):
+        # Define the additional messages to be inserted after each user request
+        additional_messages = [next_message]
+
+        # Create an empty list to store the extended messages
+        extended_messages = []
+
+        # Iterate over the original messages
+        for message in messages:
+            if 'assistant' not in message:
+                continue
+
+            user_message = {
+                "role": "user",
+                "content": f"User's request:\n\"{message['user']}\""
+            }
+            extended_messages.append(user_message)
+            assistant_message = {
+                "role": "assistant",
+                "content": message['assistant']
+            }
+            extended_messages.append(assistant_message)
+
+            # Append the additional messages to the list
+            extended_messages.extend(additional_messages)
+
+        # Remove the last "Fantastic, here is the next one."
+        # as there will be no next one after the last message
+        if extended_messages and extended_messages[-1] == next_message:
+            extended_messages.pop()
+
+        # return json.dumps(extended_messages, indent=4)
+        return extended_messages
+
+    def extend_function_call_messages(self, messages, fct_name):
+        # Define the additional messages to be inserted after each user request
+        additional_messages = [
+            {
+                "role": "user",
+                "content": "Return \"NOT_APPLICABLE\" if there is no function that can help or the functions are unrelated to the user's request. Otherwise, pass the name of the function to call."
+            },
+            {
+                "role": "assistant",
+                #"content": f"name_of_function_to_call='{fct_name}'"
+                "content": f"name_of_function_to_call=\"{fct_name}\""
+            },
+            next_message
+        ]
+
+        # Create an empty list to store the extended messages
+        extended_messages = []
+
+        # Iterate over the original messages
+        for message in messages:
+            user_message = {
+                "role": "user",
+                "content": f"User's request:\n\"{message['user']}\""
+            }
+            extended_messages.append(user_message)
+
+            # Append the additional messages to the list
+            extended_messages.extend(additional_messages)
+
+        # Remove the last "Fantastic, here is the next one."
+        # as there will be no next one after the last message
+        if extended_messages and extended_messages[-1] == next_message:
+            extended_messages.pop()
+
+        #return json.dumps(extended_messages, indent=4)
+        return extended_messages
+
     def _get_tool_example(
             self,
             tool_name,
@@ -152,13 +221,43 @@ class OllamaInterface(LLM_Base):
             return None
 
         if example_type == "function_name":
-            if 'function_name_examples' in tool.language_info:
-                return tool.language_info['function_name_examples']
+            if 'examples' in tool.language_info:
+                return self.extend_function_call_messages(
+                    tool.language_info['examples'],
+                    tool_name
+                )
             else:
                 return None
         elif example_type == "function_arguments":
-            if 'function_arguments_examples' in tool.language_info:
-                return tool.language_info['function_arguments_examples']
+            if 'examples' in tool.language_info:
+                return self.extend_function_parameter_messages(
+                    tool.language_info['examples']
+                )
+            else:
+                return None
+
+    def _get_tool_init_prompt(
+            self,
+            tool_name,
+            example_type):
+
+        tool = self.tools.get_tool_by_name(tool_name)
+        if not tool:
+            return None
+
+        if example_type == "function_name":
+            if 'examples' in tool.language_info:
+                return self.extend_function_call_messages(
+                    tool.language_info['examples'],
+                    tool_name
+                )
+            else:
+                return None
+        elif example_type == "function_arguments":
+            if 'examples' in tool.language_info:
+                return self.extend_function_parameter_messages(
+                    tool.language_info['examples']
+                )
             else:
                 return None
 
@@ -179,6 +278,7 @@ class OllamaInterface(LLM_Base):
         function_names = ""
         tool_examples_name = []
         tool_examples_arguments = []
+        system_prompts = []
         for tool in tools:
             name = tool["function"]["name"]
             function_names += f' - \"{name}\"\n'
@@ -189,10 +289,27 @@ class OllamaInterface(LLM_Base):
                 name, "function_arguments")
             if tool_example_name != None:
                 tool_examples_name = tool_examples_name + tool_example_name
-                log.dbg(f"  [TOOL INJECTION] INJECTING TOOL EXAMPLES: {tool_example_name}")
+                if SHOW_DEBUG:
+                    print(f"  [TOOL INJECTION] INJECTING TOOL EXAMPLES:\n{tool_example_name}")
+                # log.dbg(f"  [TOOL INJECTION] INJECTING TOOL EXAMPLES: {tool_example_name}")
             if tool_example_argument != None:
                 tool_examples_arguments = tool_examples_arguments + tool_example_argument
-                log.dbg(f"  [TOOL INJECTION] INJECTING SUB TOOL EXAMPLES: {tool_example_argument}")
+                if SHOW_DEBUG:
+                    print(f"  [TOOL INJECTION] INJECTING SUB TOOL EXAMPLES:\n{tool_example_argument}")
+                # log.dbg(f"  [TOOL INJECTION] INJECTING SUB TOOL EXAMPLES: {tool_example_argument}")
+
+            module_tool = self.tools.get_tool_by_name(name)
+            if "init_prompt" in module_tool.language_info:
+                system_prompts.append(module_tool.language_info["init_prompt"])
+
+        system_prompt = """You are a world class function calling algorithm.
+        Your task is to call a function when needed.
+        You need to decide if invoking a specific function
+        aids in successfully addressing a user's request.
+        You will be provided with a list of functions."""
+
+        if system_prompts:
+            system_prompt += "\n" + " ".join(system_prompts)
 
         messages_decide_1 = [
             {
@@ -341,11 +458,11 @@ class OllamaInterface(LLM_Base):
             log.dbg(f"  [brain] {self.function_calling_model_name} "
                     f"calling tool {fct_call} "
                     f"with messages {messages}")
-            
+
             self.wait_wake()
-            
+
             try:
-                
+
                 if SHOW_DEBUG:
                     print("TOOL CALL MESSAGES:" + str(messages_tool))
 
@@ -366,7 +483,7 @@ class OllamaInterface(LLM_Base):
                     final_extraction = extraction
 
                 extraction_stream = final_extraction
-                
+
             except Exception as e:
                 log.err(f"  [brain] {self.function_calling_model_name} tool stream failed, reason: {str(e)}")
                 _LOOP_MESSAGES_APPENDED = [
@@ -418,9 +535,7 @@ class OllamaInterface(LLM_Base):
             
             # The info to return to the user
 
-            message_tool_execution = {
-                "role": "user",
-                "content": f"""\
+            message_tool_execution_content = f"""\
 User's request:
 "{user_content}"
 
@@ -442,7 +557,14 @@ DO NOT include the name of the function in your response.
 DO NOT include emojis in your response.
 DO NOT say "here is the simplifed response" just make your response the simplified response.\
 """
+            if system_prompts:
+                message_tool_execution_content += "\n" + " ".join(system_prompts)
+
+            message_tool_execution = {
+                "role": "user",
+                "content": message_tool_execution_content
             }
+
 
             messages.append(message_tool_execution)
 

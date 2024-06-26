@@ -127,7 +127,14 @@ class OpenaiInterface(LLM_Base):
                          "tool_calls": []
                        }
         if not self.abort:
+            # The following "for chunk in response:" can throw ApiError:
+            #   raise APIError(
+            #     openai.APIError: An error occurred during streaming
+            #   File "D:\Linguflex\Linguflex\lingu\modules\brain\handlers\openai_interface.py", line 130, in generate
+            #     for chunk in response:
+
             for chunk in response:
+
                 if self.abort:
                     break
                 delta = chunk.choices[0].delta
