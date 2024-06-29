@@ -66,8 +66,31 @@ local_llm:
   mirostat_eta: 0.1
 
 listen:
-  main_recorder_model: large-v2
-  realtime_recorder_model: tiny.en
+  main_recorder_model: large-v2  # Model size for main transcription
+  realtime_recorder_model: tiny  # Model size for real-time transcription
+  enable_realtime_transcription: true  # Enable or disable real-time transcription
+  realtime_processing_pause: 0.02  # Time interval between real-time transcription updates
+  webrtc_sensitivity: 3  # Sensitivity for WebRTC Voice Activity Detection (0-3)
+  min_length_of_recording: 0.3  # Minimum duration of a recording session in seconds
+  min_gap_between_recordings: 0.01  # Minimum time between recording sessions in seconds
+  wake_word_timeout: 40  # Duration in seconds to wait for speech after wake word detection
+  silero_use_onnx: false  # Use ONNX format for Silero model
+  return_to_wakewords_after_silence: 20  # Time in seconds to return to wake word detection after silence
+  silero_sensitivity_normal: 0.2  # Silero VAD sensitivity for normal mode
+  silero_sensitivity_music: 0.01  # Silero VAD sensitivity for music mode
+  fast_post_speech_silence_duration: 0.25  # Duration of silence to consider speech ended (fast mode)
+  long_term_noise_decay: 0.995  # Decay factor for long-term noise estimation
+  short_term_noise_decay: 0.9  # Decay factor for short-term noise estimation
+  allow_speech_interruption: true  # Allow interruption of ongoing speech
+  sentence_delimiters: .?!。  # Characters used to delimit sentences in transcription
+  wakeword_backend: pvporcupine  # Backend library for wake word detection (pvporcupine or oww)
+  # For openwakeword / oww detection set comma-separated paths to custom OpenWakeWord model files
+  #   e.g. for windows
+  # openwakeword_model_paths: D:\AI_Models\Oww_Onnx\suh_man_tuh.onnx,D:\AI_Models\Oww_Onnx\suh_mahn_thuh.onnx,D:\AI_Models\Oww_Onnx\ling_goo_flex.onnx  # Comma-separated paths to custom OpenWakeWord model files
+  openwakeword_model_paths:
+  openwakeword_inference_framework: onnx  # Inference framework for OpenWakeWord (onnx or tflite)
+  wake_word_buffer_duration: 0.1  # Duration in seconds to buffer audio during wake word detection (set to ~0.1 for pvporcupine and ~1.0 for oww)
+  wake_words_sensitivity: 0.5  # Sensitivity for wake word detection (0 to 1, (set to ~0.5 for pvporcupine and ~0.35 for oww)
 
 speech:
   warmup: true

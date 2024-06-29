@@ -37,7 +37,21 @@ short_term_noise_decay = float(cfg(
     "listen", "short_term_noise_decay", default=0.9))
 allow_speech_interruption = bool(cfg(
     "listen", "allow_speech_interruption", default=True))
-sentence_delimiters = '.?!。'
+sentence_delimiters = cfg(
+    "listen", "sentence_delimiters", default='.?!。')
+wakeword_backend = cfg(
+    "listen", "wakeword_backend", default="pvporcupine") # can be "pvporcupine" or "oww"
+openwakeword_model_paths = cfg(
+    "listen", "openwakeword_model_paths",
+    default=None # for example: "suh_man_tuh.onnx,suh_mahn_thuh.onnx,ling_goo_flex.onnx"
+    )
+openwakeword_inference_framework = cfg(
+    "listen", "openwakeword_inference_framework", default="onnx")
+wake_word_buffer_duration = float(cfg(
+    "listen", "wake_word_buffer_duration", default=1.0))
+wake_words_sensitivity = float(cfg(
+    "listen", "wake_words_sensitivity", default=0.35))
+
 
 
 class ListenLogic(Logic):
@@ -296,6 +310,7 @@ class ListenLogic(Logic):
             'model': main_recorder_model,
             'language': lang,
             'wake_words': "Jarvis",
+            'wake_words_sensitivity': wake_words_sensitivity,
             'spinner': False,
             'silero_sensitivity': silero_sensitivity_normal,
             'silero_use_onnx': silero_use_onnx,
@@ -312,6 +327,10 @@ class ListenLogic(Logic):
             'wake_word_timeout': wake_word_timeout,
             'wake_word_activation_delay':
                 self.state.wake_word_activation_delay,
+            'wakeword_backend': wakeword_backend,
+            'openwakeword_model_paths': openwakeword_model_paths,
+            'openwakeword_inference_framework': openwakeword_inference_framework,
+            'wake_word_buffer_duration': wake_word_buffer_duration,
             'enable_realtime_transcription': enable_realtime_transcription,
             'realtime_processing_pause': realtime_processing_pause,
             'realtime_model_type': realtime_recorder_model,
