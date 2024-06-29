@@ -1,7 +1,6 @@
 @echo off
 set PYTHON_EXE=python.exe
 
-
 cd /d %~dp0
 
 set LOGFILE=%~dp0log_install_shell.txt
