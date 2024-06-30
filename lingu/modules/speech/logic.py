@@ -1,3 +1,23 @@
+"""
+Triggers:
+- self.trigger("speech_ready")
+    To inform listen logic that the speech module is ready
+- self.trigger("audio_chunk", chunk)
+    To yield an audio chunk to the server module
+- self.trigger("rvc_audio_chunk", sub_chunk)
+    To yield an rvc post processed audio chunk to the server module
+- self.trigger("stop_recorder")
+    To inform listen logic that the recorder should be stopped
+- self.trigger("audio_stream_start")
+    To inform speech and server logic that the audio output started
+    - speech must disable the voice test button
+    - server sends this info to the client
+- self.trigger("audio_stream_stop")
+    To inform about audio output stopped
+- self.trigger("update_ui")
+    To update the UI
+"""
+
 from lingu import log, cfg, Logic, RealtimeRVC
 from .state import state
 from .handlers.feed2stream import BufferStream
@@ -14,6 +34,11 @@ from scipy.signal import butter, lfilter
 
 force_first_fragment_after_words = \
     int(cfg("speech", "force_first_fragment_after_words", default=12))
+
+warmup = bool(cfg("speech", "warmup", default=False))
+if warmup:
+    warmup_text = cfg("speech", "warmup_text", default="Hi")
+    warmup_muted = bool(cfg("speech", "warmup_muted", default=False))
 
 # speed-optimized:
 # min_sentence_length = 5
@@ -123,9 +148,9 @@ class SpeechLogic(Logic):
         self.ready()
 
     def mimic_set_voice(self, voice):
-        print(f'Mimic sets voice{voice["name"]}')
+        # print(f'Mimic sets voice{voice["name"]}')
         self.voices.mimic_set_voice(voice)
-        print(f'Set rvce enabled: {state.rvc_enabled}')
+        # print(f'Set rvce enabled: {state.rvc_enabled}')
         self.set_rvc_enabled(state.rvc_enabled)
 
     def _yield_playout(self):
@@ -156,18 +181,6 @@ class SpeechLogic(Logic):
             wav_file.setframerate(16000)
             wav_file.writeframes(audio_int16.tobytes())
 
-        # speaker_embedding_cur = self.engines.engine.get_embeddings(path_cur_file)
-        # speaker_embedding_ref = self.engines.engine.get_embeddings(path_ref_file)
-
-        # speaker_embedding_cur = np.array(speaker_embedding_cur, dtype=np.float16)
-        # speaker_embedding_ref = np.array(speaker_embedding_ref, dtype=np.float16)
-
-        # # (gpt_cond_latent_cur, speaker_embedding_cur) = self.engines.engine.get_embeddings(path_cur_file)
-        # # (gpt_cond_latent_ref, speaker_embedding_ref) = self.engines.engine.get_embeddings(path_ref_file)
-        # similarity = 1 - cosine(speaker_embedding_cur, speaker_embedding_ref)
-        # print(f"Similarity: {similarity}")
-
-
     def yield_chunk_callback(self, chunk):
 
         _, _, sample_rate = self.engines.engine.get_stream_info()
@@ -191,16 +204,6 @@ class SpeechLogic(Logic):
 
         # Assume chunk is a bytes object containing float32 data
         audio_data = np.frombuffer(chunk, dtype=np.float32)
-
-        # # Create a low-pass filter
-        # nyquist_rate = sample_rate / 2
-        # cutoff_freq = nyquist_rate * 0.9  # Adjust the cutoff frequency as needed
-        # order = 6  # Adjust the filter order as needed
-        # b, a = butter(order, cutoff_freq / nyquist_rate, btype='low', analog=False)
-
-        # # Apply the low-pass filter to the audio data
-        # filtered_audio = lfilter(b, a, audio_data)
-        # audio_data = filtered_audio
 
         # Resample the audio
         resampled_audio = resampy.resample(audio_data, sample_rate, target_sample_rate)
@@ -236,53 +239,12 @@ class SpeechLogic(Logic):
         if remaining_data_start < len(chunk):
             remaining_data = chunk[remaining_data_start:]        
             self.trigger("rvc_audio_chunk", remaining_data)
-        # self.trigger("rvc_audio_chunk", chunk)
-        # Determine the size of each chunk in bytes
-        # chunk_size = 2048
-        
-        # # Calculate the number of full chunks that can be extracted from the input
-        # num_full_chunks = len(chunk) // chunk_size
-        
-        # # Iterate over each full chunk and trigger an event
-        # for i in range(num_full_chunks):
-        #     start = i * chunk_size
-        #     end = start + chunk_size
-        #     sub_chunk = chunk[start:end]
-        #     self.trigger("rvc_audio_chunk", sub_chunk)
-        
-        # # Optional: Handle any remaining data that's less than a full chunk
-        # remaining_data_start = num_full_chunks * chunk_size
-        # if remaining_data_start < len(chunk):
-        #     remaining_data = chunk[remaining_data_start:]
-        #     self.trigger("rvc_audio_chunk", remaining_data)
-            # Here you could either store this and wait until you accumulate enough for a full chunk,
-            # or decide to send it as is (may not be desirable depending on your use case).
-            # For example:
-            # self.trigger("rvc_audio_chunk", remaining_data)
-    # def rvc_yield_chunk_callback(self, chunk):
-
-    #     self.trigger("rvc_audio_chunk", chunk)
-
-        #chunk = self.resample_float32_to_float32(chunk, 40000, 48000)
-        # self.resampler.set_sample_rate(40000, 48000)
-        # np_data = np.frombuffer(chunk, dtype=np.float32)
-        # # Scale float32 data to int16 range
-        # np_data_int16 = (np_data * 32767).astype(np.int16)
-        # np_resampled_data = self.resampler.resample(np_data_int16)
-        # chunk = np_resampled_data.astype(np.float32) / 32767.0
-        # chunk = chunk.newbyteorder('<')  # Force little-endian
-        # chunk = chunk.tobytes()
-        # self.trigger("audio_chunk", chunk)
 
     def post_init_processing(self):
         if not state.engine_name == "coqui":
             return
 
-        warmup = bool(cfg("speech", "warmup", default=False))
         if warmup:
-            warmup_text = cfg("speech", "warmup_text", default="Hi")
-            warmup_muted = bool(cfg("speech", "warmup_muted", default=False))
-
             # delayed execute warmup
             threading.Timer(2, self.test_voice, args=[warmup_text, warmup_muted]).start()
 
@@ -324,7 +286,6 @@ class SpeechLogic(Logic):
         if not self.engines.stream.is_playing():
             self.engines.stream.feed(self.text_stream.gen())
             if state.rvc_enabled:
-                print("RVC ENABLED")
                 self.rvc.chunk_callback_only = self.playout_yielded
                 self.engines.stream.play_async(
                     fast_sentence_fragment=fast_sentence_fragment,
@@ -371,9 +332,8 @@ class SpeechLogic(Logic):
             text (str): The text to be synthesized and played for testing.
 
         """
-        print(f"Testing voice: {text}, muted: {muted}")
+        # print(f"Testing voice: {text}, muted: {muted}")
         self.trigger("stop_recorder")
-        print("self.state.set_active(True)")
         self.state.set_active(True)
 
         self.text_stream = BufferStream()
