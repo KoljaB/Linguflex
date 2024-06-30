@@ -1,3 +1,18 @@
+"""
+Triggers:
+- self.trigger("user_text", text)
+- self.trigger("user_text_complete", text)
+- self.trigger("user_audio_complete", user_bytes)
+- self.trigger("recording_start")
+- self.trigger("recording_stop")
+- self.trigger("vad_start")
+- self.trigger("wakeword_start")
+- self.trigger("wakeword_end")
+- self.trigger("recorded_chunk")
+- self.trigger("volume_interrupt")
+"""
+
+
 from RealtimeSTT import AudioToTextRecorder
 from lingu import cfg, log, Logic
 import numpy as np
@@ -63,6 +78,7 @@ class ListenLogic(Logic):
         self.last_realtime_text = ""
         self.start_listen_event = threading.Event()
         self.speech_ready_event = threading.Event()
+        self.listen_ready_event = threading.Event()
         self.recorder_active = True
         self.long_term_noise_level = 0.0
         self.current_noise_level = 0.0
@@ -107,6 +123,7 @@ class ListenLogic(Logic):
         self.state.set_text("")
         log.inf("  [listen] client disconnected, enabling server microphone")
         self.recorder.set_microphone(True)
+
     def sleep(self):
         self.start_listen_event.clear()
         self.recorder.abort()
@@ -115,8 +132,11 @@ class ListenLogic(Logic):
         self.state.set_disabled(True)
 
     def wakeup(self):
+        self.recorder.recording_stop_time = 0
         self.state.set_disabled(False)
+        self.recorder.wakeup()
         self.start_listen_event.set()
+        self.recorder.listen_start = time.time()
 
     def set_lang_shortcut(self, lang_shortcut):
         log.inf(f"  [listen] setting language shortcut to {lang_shortcut}")
@@ -127,16 +147,11 @@ class ListenLogic(Logic):
 
     def _on_stop_recorder(self):
         log.inf("  [listen] stop recorder")
-        self.start_listen_event.clear()
-        self.recorder.abort()
-        self.recorder.stop()
-        self.state.set_active(False)
-        self.state.set_disabled(True)
+        self.sleep()
 
     def _on_audio_stream_stop(self):
         log.dbg("  [listen] audio stream stop")
-        self.state.set_disabled(False)
-        self.start_listen_event.set()
+        self.wakeup()
 
     def _on_speech_ready(self):
         self.speech_ready_event.set()
@@ -172,7 +187,7 @@ class ListenLogic(Logic):
         self.trigger("user_text_complete", text)
 
         user_bytes = self.recorder.last_transcription_bytes
-        self.trigger("user_audio_complete", user_bytes)            
+        self.trigger("user_audio_complete", user_bytes)
 
         if hasattr(self, 'on_final_text'):
             self.on_final_text(text)
@@ -181,16 +196,17 @@ class ListenLogic(Logic):
         self.start_listen_event.set()
 
     def init_finished(self):
-        # print("⚠️⚠️⚠️ init finished Creating recorder")
         self.create_recorder()
 
     def create_recorder(self):
         self.recorder_active = True
+
         self.recording_worker_thread = threading.Thread(
             target=self._recording_worker
         )
         self.recording_worker_thread.daemon = True
         self.recording_worker_thread.start()
+
         self.listen()
 
     def destroy_recorder(self):
@@ -202,6 +218,7 @@ class ListenLogic(Logic):
 
     def _on_playback_start(self):
         self.recorder.silero_sensitivity = silero_sensitivity_music
+
         self.recorder.wake_word_activation_delay = 0
 
     def _on_playback_stop(self):
@@ -209,28 +226,13 @@ class ListenLogic(Logic):
         self.recorder.wake_word_activation_delay = \
             return_to_wakewords_after_silence
 
-    def set_mute_state(self):
-        print(f"  [listen] set_mute_state: {self.state.is_muted}")
-
-        if self.state.is_muted:
-            log.dbg("  [listen] mute")
-            self.start_listen_event.clear()
-            print("  [listen] aborting recorder")
-            self.recorder.abort()
-            print("  [listen] stopping recorder")
-            self.recorder.stop()
-            print("  [listen] setting active to False")            
-            self.state.set_active(False)
-            print("  [listen] setting disabled to True")
-            self.state.set_disabled(True)
-        else:
-            log.dbg("  [listen] unmute")
-            self.state.set_disabled(False)
-            self.start_listen_event.set()
-
     def toggle_mute(self):
         self.state.is_muted = not self.state.is_muted
-        self.set_mute_state()
+
+        if self.state.is_muted:
+            self.sleep()
+        else:
+            self.wakeup()
 
     def _recording_start(self):
         log.dbg("  [listen] recording start")
@@ -251,9 +253,11 @@ class ListenLogic(Logic):
         self.trigger("vad_start")
 
     def _wakeword_start(self):
+        log.dbg(f"  [listen] listening to wakeword")
         self.trigger("wakeword_start")
 
     def _wakeword_end(self):
+        log.dbg(f"  [listen] stopped listening to wakeword")
         self.trigger("wakeword_end")
 
     def _transcription_start(self):
@@ -356,13 +360,12 @@ class ListenLogic(Logic):
             if text:
                 self._final_text(text)
 
+        self.listen_ready_event.set()
         while (self.recorder_active):
-            # print("  [listen] ⚠️⚠️⚠️ waiting for start_listen_event")
             self.start_listen_event.wait()
 
             self.start_listen_event.clear()
 
-            # print("  [listen] ⚠️⚠️⚠️ self.recorder.text")
             self.recorder.text(final_text)
 
         self.start_listen_event.clear()
