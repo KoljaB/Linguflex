@@ -32,8 +32,8 @@ Before you begin, ensure you have the following:
 - [ffmpeg](https://ffmpeg.org/download.html)  
   [🎥 Setup Tutorial for ffmpeg](https://www.youtube.com/watch?v=jZLqNocSQDM)
 - If you want to start with OpenAI-Client, set your OpenAI API key:  
-  Windows: setx OPENAI_API_KEY "your-api-key-here"  
-  macOS and Linux: export OPENAI_API_KEY='your-api-key-here'
+  Windows: `setx OPENAI_API_KEY "your-api-key-here"`
+  macOS and Linux: `export OPENAI_API_KEY='your-api-key-here'`
 
 Additional components that may be required:
 - eSpeak NG (possibly needed for certain text-to-speech functionalities)
