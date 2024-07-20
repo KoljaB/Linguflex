@@ -117,7 +117,10 @@ def check_cudnn():
         r"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8\bin",
         r"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8\include",
         r"C:\tools\cuda\bin",
-        r"C:\tools\cuda\include"
+        r"C:\tools\cuda\include",
+        # Paths needed for cuDNN v9 to support CUDA 12, since the default .exe install filestructure has changed
+        r"C:\Program Files\NVIDIA\CUDNN\v9.2\bin\12.5",
+        r"C:\Program Files\NVIDIA\CUDNN\v9.2\include\12.5"
     ]
 
     cudnn_h_found = False
@@ -129,8 +132,8 @@ def check_cudnn():
             cudnn_h_found = True
         # Check for the existence of the cuDNN library file (dll)
         # The file name can vary based on the cuDNN version
-        # Here we are checking for version 7 as an example
-        if any(os.path.exists(os.path.join(path, f)) for f in ["cudnn64_7.dll", "cudnn64_8.dll"]):
+        # Here we are checking for version 7, 8, or 9 as an example
+        if any(os.path.exists(os.path.join(path, f)) for f in ["cudnn64_7.dll", "cudnn64_8.dll", "cudnn64_9.dll"]):
             cudnn_dll_found = True
 
     if cudnn_h_found and cudnn_dll_found:
