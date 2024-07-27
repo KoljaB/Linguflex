@@ -25,10 +25,8 @@ class InferenceManager:
         """
         Initialize the InferenceManager with an OpenAI client.
         """
-        self.client = OpenAI()
         self.instructor = None
-        client = patch(OpenAI())
-        self.openai_instructor = client.chat.completions.create
+        self.openai_instructor = None
         self.inference_allowed = True
 
         events.add_listener(
@@ -250,6 +248,12 @@ class InferenceManager:
 
         raise Exception(f"Could not find inference object {inference_object}")
 
+    def verify_openai_client(self):
+        if not self.openai_instructor:
+            self.client = OpenAI()
+            client = patch(OpenAI())
+            self.openai_instructor = client.chat.completions.create
+
     def _inference_openai(
             self,
             inference_object,
@@ -272,6 +276,8 @@ class InferenceManager:
         Returns:
             Any: The result of the inference process.
         """
+
+        self.verify_openai_client()
 
         for inf_obj in self.inf_objs:
             if inf_obj.name == inference_object and inf_obj.is_internal:
