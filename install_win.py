@@ -288,8 +288,8 @@ def install_pytorch_torchaudio(cuda_version):
     printl("Installing PyTorch and Torchaudio...")
 
     torch_wheels = {
-        "11.8": "torch==2.2.2+cu118 torchaudio==2.2.2+cu118",
-        "12.1": "torch==2.2.2+cu121 torchaudio==2.2.2+cu121",
+        "11.8": "torch==2.1.2+cu118 torchaudio==2.1.2+cu118",
+        "12.1": "torch==2.1.2+cu121 torchaudio==2.1.2+cu121",
     }
 
     if is_greater_version(cuda_version, "12.1"):
@@ -352,6 +352,10 @@ if __name__ == "__main__":
     clear_pip = always_clear_pip or \
         ask("Do you want to clear the pip cache? This can resolve some installation issues.", "Please enter yes or no: ")
 
+    perform_llama_cpp_install = \
+        ask("Do you want to install llama.cpp (may need some more prerequisites, for experienced users who want to use exotic models that ollama can't provide)?",
+            "Please enter yes or no: ")
+
     printl("\nChecking system requirements ...")
     python_version = check_python_version()
     check_platform()
@@ -383,8 +387,9 @@ if __name__ == "__main__":
         with open(file_path, 'w') as file:
             yaml.safe_dump(data, file, default_flow_style=False)
 
-    printl("\nInstalling required llama.cpp ...")    
-    install_llama_cpp_python(cuda_version)
+    if perform_llama_cpp_install:
+        printl("\nInstalling required llama.cpp ...")    
+        install_llama_cpp_python(cuda_version)
         
     printl("\nSetting numpy version ...")
     install_library("numpy==1.23.5")
