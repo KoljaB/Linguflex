@@ -49,9 +49,12 @@ prompt: >
 local_llm:
   use_local_llm: false # change to true to use local llms like ollama, default: false (uses openai model)
   gpu_layers: 10
-  model_provider: ollama  # "ollama" or "llama.cpp"
+  model_provider: ollama  # "ollama" or "lmstudio" or "llama.cpp"
+  ollama_url: http://localhost:11434/v1
+  lmstudio_url: http://localhost:1234/v1
   model_path: models/llm/
   model_name: llama3
+  # model_name: lmstudio-community/Meta-Llama-3.1-8B-Instruct-GGUF/Meta-Llama-3.1-8B-Instruct-Q4_K_M-take2.gguf
   function_calling_model_name: llama3
   max_retries: 3
   max_tokens: 1024
@@ -103,7 +106,7 @@ speech:
   elevenlabs_model: eleven_multilingual_v1
   xtts_model_path: models/xtts
   coqui_use_pretrained_model: true
-  coqui_use_deepspeed: true
+  coqui_use_deepspeed: false
   coqui_temperature: 0.9
   coqui_length_penalty: 1
   coqui_repetition_penalty: 10

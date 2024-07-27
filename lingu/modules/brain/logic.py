@@ -1,6 +1,3 @@
-from .handlers.openai_interface import OpenaiInterface
-from .handlers.llama_cpp_interface import LLamaCppInterface
-from .handlers.ollama_interface import OllamaInterface
 from .handlers.history import History
 from lingu import log, cfg, prompt, Logic
 from .state import state
@@ -37,12 +34,19 @@ class BrainLogic(Logic):
         if use_local_llm:
             if model_provider == "ollama":
                 log.inf(f"  [brain] using local language model \"{model_name}\" with ollama provider")
+                from .handlers.ollama_interface import OllamaInterface
                 self.llm = OllamaInterface(self.history)
+            elif model_provider == "lmstudio":
+                log.inf(f"  [brain] using local language model \"{model_name}\" with lmstudio provider")
+                from .handlers.lmstudio_interface import LMStudioInterface
+                self.llm = LMStudioInterface(self.history)
             else:
                 log.inf(f"  [brain] using local language model \"{model_name}\" with llama.cpp provider")
                 self.llm = LLamaCppInterface(self.history)
+                from .handlers.llama_cpp_interface import LLamaCppInterface
         else:
             log.inf("  [brain] using openai language model")
+            from .handlers.openai_interface import OpenaiInterface
             self.llm = OpenaiInterface()
 
         self.tools = None
