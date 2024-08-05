@@ -22,8 +22,11 @@
 			 "user":"Schau jetzt in die Webcam."
 		  },
 		  {
-			 "user":"Zeige, was die Webcam sieht."
-		  }
+			"user":"Zeige, was die Webcam sieht."
+		  },
+		  {
+			"user":"Kannst du sehen, was ich gerade in der Hand halte?"
+		  }		
 	   ]
 	},
 	"LookAtDesktop":{

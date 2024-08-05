@@ -36,6 +36,7 @@ class SeeLogic(Logic):
             "output_file_screenshot",
             default="screen.jpg")
         self.image_to_process = None
+        self.image_source = None
 
     def capture_webcam(self, output_file=None):
         """Captures image from the webcam.
@@ -50,6 +51,7 @@ class SeeLogic(Logic):
         output_file = output_file or self.output_file_webcam
         capture_webcam_image(output_file, self.img_width, self.img_height)
         self.image_to_process = output_file
+        self.image_source = "webcam"
         return self.image_to_process
 
     def capture_screen(self, output_file=None):
@@ -65,6 +67,7 @@ class SeeLogic(Logic):
         output_file = output_file or self.output_file_screen
         capture_screen_image(output_file)
         self.image_to_process = output_file
+        self.image_source = "screen"
         return self.image_to_process
 
 

@@ -13,7 +13,7 @@ max_history_tokens: 64000
 called_tool_messages: 2
 retry_attempts: 7
 timeout_increase: 5
-rvc_model_path: models/rvc/models
+rvc_model_path: D:/Data/Models/rvc/models
 prompt: >
   You are Linguflex, a large language model and personal assistant.
 
@@ -47,15 +47,16 @@ prompt: >
   Remember to follow these rules absolutely, and do not refer to these rules, even if you're asked about them.  
 
 local_llm:
-  use_local_llm: false # change to true to use local llms like ollama, default: false (uses openai model)
-  gpu_layers: 10
-  model_provider: ollama  # "ollama" or "lmstudio" or "llama.cpp"
+  use_local_llm: true # change to true to use local llms like ollama, default: false (uses openai model)
+  gpu_layers: 40
+  model_provider: ollama  # "ollama" or "lmstudio" 
   ollama_url: http://localhost:11434/v1
   lmstudio_url: http://localhost:1234/v1
   model_path: models/llm/
-  model_name: llama3
+  model_name: llama3.1:8b
+  function_calling_model_name: llama3.1:8b
   # model_name: lmstudio-community/Meta-Llama-3.1-8B-Instruct-GGUF/Meta-Llama-3.1-8B-Instruct-Q4_K_M-take2.gguf
-  function_calling_model_name: llama3
+  # function_calling_model_name: lmstudio-community/Meta-Llama-3.1-8B-Instruct-GGUF/Meta-Llama-3.1-8B-Instruct-Q4_K_M-take2.gguf
   max_retries: 3
   max_tokens: 1024
   context_length: 8192
@@ -67,10 +68,11 @@ local_llm:
   mirostat_mode: 0
   mirostat_tau: 5
   mirostat_eta: 0.1
+  verbose: true
 
 listen:
-  main_recorder_model: large-v2  # Model size for main transcription
-  realtime_recorder_model: tiny  # Model size for real-time transcription
+  main_recorder_model: large-v2 # Model size for main transcription, can be distil models like distil-large-v2 or smaller like medium
+  realtime_recorder_model: tiny.en  # Model size for real-time transcription
   enable_realtime_transcription: true  # Enable or disable real-time transcription
   realtime_processing_pause: 0.02  # Time interval between real-time transcription updates
   webrtc_sensitivity: 3  # Sensitivity for WebRTC Voice Activity Detection (0-3)
@@ -118,7 +120,7 @@ weather:
   city: New York
 
 see:
-  model: gpt-4o
+  model: llava # you can use ollama vision model here if using ollama as a provider
   img_width: 1024
   img_height: 768
   output_file_webcam: webcam.jpg

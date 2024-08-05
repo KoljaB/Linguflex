@@ -44,10 +44,10 @@ def download_file(
 create_directories()
 
 # download default local llm file
-print("Downloading default local llm model file")
-download_file(
-    "TheBloke/OpenHermes-2.5-Mistral-7B-GGUF",
-    "openhermes-2.5-mistral-7b.Q5_K_M.gguf", "models/llm")
+# print("Downloading default local llm model file")
+# download_file(
+#     "TheBloke/OpenHermes-2.5-Mistral-7B-GGUF",
+#     "openhermes-2.5-mistral-7b.Q5_K_M.gguf", "models/llm")
 
 # download rvc base model (hubert) files
 print("Downloading hubert base model files")

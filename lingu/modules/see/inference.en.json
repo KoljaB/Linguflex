@@ -15,10 +15,10 @@
 			 "user":"What are you seeing right now?"
 		  },
 		  {
-			 "user":"Look at the webcam now."
+			 "user":"Look what is in my hand right now."
 		  },
 		  {
-			 "user":"Show what the webcam sees."
+			 "user":"Can you see what I am holding in my hand right now?"
 		  }
 	   ]
 	},

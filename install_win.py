@@ -268,7 +268,7 @@ def install_llama_cpp_python(cuda_version):
         os.environ['FORCE_CMAKE'] = '1'
 
         # Perform installation with pip
-        subprocess.check_call([sys.executable, "-m", "pip", "install", "llama-cpp-python", "--force-reinstall", "--upgrade", "--no-cache-dir", "--verbose"])
+        subprocess.check_call([sys.executable, "-m", "pip", "install", "llama-cpp-python==0.2.74", "--force-reinstall", "--upgrade", "--no-cache-dir", "--verbose"])
 
         printl("Successfully installed llama-cpp-python.")
         return True
@@ -349,14 +349,14 @@ def download_models():
 if __name__ == "__main__":
 
     perform_download = always_download_models or \
-        ask("Do you want to download pre-trained llm (OpenHermes-2.5-Mistral-7B-GGUF), xtts and rvc models (recommended for tts rvc post processing)?",
+        ask("Do you want to download xtts and rvc models (recommended for tts rvc post processing)?",
             "Please enter yes or no: ")
 
     clear_pip = always_clear_pip or \
         ask("Do you want to clear the pip cache? This can resolve some installation issues.", "Please enter yes or no: ")
 
-    perform_llama_cpp_install = \
-        ask("Do you want to install llama.cpp (may need some more prerequisites, for experienced users who want to use exotic models that ollama can't provide)?",
+    perform_deepspeed_install = \
+        ask("Do you want to install a deepspeed wheel? (not recommended wheels might not work on lots of systems, also only coqui tts on linux really benefits from it and gets bit faster)",
             "Please enter yes or no: ")
 
     printl("\nChecking system requirements ...")
@@ -374,30 +374,25 @@ if __name__ == "__main__":
     install_libraries_from_requirements(requirements_file_path)
     printl("\nInstalling torch with CUDA ...")
     install_pytorch_torchaudio(cuda_version)
-    printl("\nInstalling required deepspeed ...")
-    if not install_deepspeed("0.11.2", cuda_version, python_version):
-        import yaml
-        file_path = 'lingu/settings.yaml'
-        # Load the YAML file
-        with open(file_path, 'r') as file:
-            data = yaml.safe_load(file)
+    if perform_deepspeed_install:
+        printl("\nInstalling deepspeed ...")
+        if install_deepspeed("0.11.2", cuda_version, python_version):
+            import yaml
+            file_path = 'lingu/settings.yaml'
+            # Load the YAML file
+            with open(file_path, 'r') as file:
+                data = yaml.safe_load(file)
 
-        # Modify the 'coqui_use_deepspeed' setting under 'speech'
-        if 'speech' in data and 'coqui_use_deepspeed' in data['speech']:
-            data['speech']['coqui_use_deepspeed'] = False
+            # Modify the 'coqui_use_deepspeed' setting under 'speech'
+            if 'speech' in data and 'coqui_use_deepspeed' in data['speech']:
+                data['speech']['coqui_use_deepspeed'] = True
 
-        # Write the modified data back to the YAML file
-        with open(file_path, 'w') as file:
-            yaml.safe_dump(data, file, default_flow_style=False)
+            # Write the modified data back to the YAML file
+            with open(file_path, 'w') as file:
+                yaml.safe_dump(data, file, default_flow_style=False)
 
-    if perform_llama_cpp_install:
-        printl("\nInstalling required llama.cpp ...")    
-        install_llama_cpp_python(cuda_version)
-        
     printl("\nSetting numpy version ...")
     install_library("numpy==1.23.5")
 
     if perform_download:
         download_models()
-
-    # vram_mb = detect_vram()

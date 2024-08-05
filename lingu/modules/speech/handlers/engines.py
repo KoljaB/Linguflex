@@ -127,9 +127,9 @@ class Engines():
                     add_sentence_filter=True,
                     use_deepspeed=coqui_use_deepspeed,
                     pretrained=coqui_pretrained,
-                    comma_silence_duration=0.3,
-                    sentence_silence_duration=0.6,
-                    default_silence_duration=0.3)
+                    comma_silence_duration=0.1,
+                    sentence_silence_duration=0.2,
+                    default_silence_duration=0.1)
                 denotify()
             else:
                 self.set_coqui_model(self.state.coqui_model)

@@ -136,11 +136,15 @@ class Lingu:
             # prepare final answer (or call tools again)
             self.tools.executed_tools = []
             prompt.start()
+
+            # check for vision (module there plus image provided)
             if seelogic and seelogic.image_to_process:
-                # if executed tool needs vision, call vision
+
+                # let vision llm process and answer that image
                 self.brainlogic.create_assistant_image_answer(
                     text,
-                    seelogic.image_to_process
+                    seelogic.image_to_process,
+                    seelogic.image_source
                 )
             else:
                 tools_for_usertext, functions = self.tools.get_tools(text)

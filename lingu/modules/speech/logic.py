@@ -33,7 +33,7 @@ import wave
 from scipy.signal import butter, lfilter
 
 force_first_fragment_after_words = \
-    int(cfg("speech", "force_first_fragment_after_words", default=12))
+    int(cfg("speech", "force_first_fragment_after_words", default=99999))
 
 warmup = bool(cfg("speech", "warmup", default=False))
 if warmup:
@@ -148,9 +148,7 @@ class SpeechLogic(Logic):
         self.ready()
 
     def mimic_set_voice(self, voice):
-        # print(f'Mimic sets voice{voice["name"]}')
         self.voices.mimic_set_voice(voice)
-        # print(f'Set rvce enabled: {state.rvc_enabled}')
         self.set_rvc_enabled(state.rvc_enabled)
 
     def _yield_playout(self):
@@ -164,8 +162,6 @@ class SpeechLogic(Logic):
         self.playout_yielded = False
 
     def _user_audio(self, user_audio_bytes):
-        # print(f"Got audio bytes, len: {len(user_audio_bytes)}")
-        # print(f"current engine: {self.engines.engine.engine_name}")
         if not self.engines.engine.engine_name == "coqui":
             return
         path_ref_file = "lingu/resources/user_voice/voice_example.wav"
@@ -278,7 +274,6 @@ class SpeechLogic(Logic):
             text (str): The text to be synthesized and played.
 
         """
-        # print(f"Playing text: {text}, muted: {muted}")
         self.muted = muted
         self.text_stream.add(text)
 
@@ -300,7 +295,6 @@ class SpeechLogic(Logic):
                     )
             else: 
                 if not self.playout_yielded:
-                    # log.inf(f"  [speech] normal playing text: {text}, 'muted': {muted}")
                     self.engines.stream.play_async(
                         fast_sentence_fragment=fast_sentence_fragment,
                         minimum_sentence_length=min_sentence_length,
@@ -312,7 +306,6 @@ class SpeechLogic(Logic):
                         force_first_fragment_after_words=force_first_fragment_after_words,
                         )
                 else:
-                    # log.inf(f"  [speech] yield_chunk_callback playing text 'text': {text}")
                     self.engines.stream.play_async(
                         fast_sentence_fragment=fast_sentence_fragment,
                         minimum_sentence_length=min_sentence_length,
@@ -389,8 +382,6 @@ class SpeechLogic(Logic):
         if not self.muted:
             _, _, sample_rate = self.engines.engine.get_stream_info()
             if self.playout_yielded:
-                # yield up to 60000 ?
-                # print("yielding chunk to rvc")
                 self.rvc.feed(chunk, sample_rate, 48000)
             else:
                 self.rvc.feed(chunk, sample_rate)
