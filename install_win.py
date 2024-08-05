@@ -71,42 +71,64 @@ def check_platform():
 
 def check_cuda():
     printl("Checking CUDA Toolkit...")
-
     try:
-        # Execute nvcc to get CUDA version
         nvcc_output = subprocess.check_output("nvcc --version", shell=True).decode()
-
-        # Use regular expression to extract version number
         match = re.search(r"release (\d+\.\d+)", nvcc_output)
         if match:
             cuda_version = match.group(1)
-            if cuda_version == "11.8":
-                printl(f"  CUDA Toolkit version {cuda_version} detected.")
-            else:
-                ask_exit(
-                    f"CUDA Toolkit version {cuda_version} detected.\n"
-                    "- Version 11.8 is recommended.\n"
-                    "  https://developer.nvidia.com/cuda-11-8-0-download-archive",
-                    "Do you want to continue with a different version of CUDA? (yes/no): "
-                )
+            printl(f"  CUDA Toolkit version {cuda_version} detected.")
             return cuda_version
         else:
             ask_exit(
-                "CUDA Toolkit version 11.8 could not be detected.\n"
-                "- Version 11.8 is strongly recommended.\n"
-                "  https://developer.nvidia.com/cuda-11-8-0-download-archive",
-                "Do you want to proceed despite CUDA 11.8 was not detected? (yes/no): "
+                "CUDA Toolkit version could not be detected.",
+                "Do you want to proceed despite CUDA not being detected? (yes/no): "
             )
-            return "11.8"
-
+            return None
     except subprocess.CalledProcessError:
         ask_exit(
-            "CUDA Toolkit version 11.8 could not be detected.\n"
-            "- Version 11.8 is strongly recommended.\n"
-            "  https://developer.nvidia.com/cuda-11-8-0-download-archive",
-            "Do you want to proceed despite CUDA 11.8 was not detected? (yes/no): "
+            "CUDA Toolkit could not be detected.",
+            "Do you want to proceed despite CUDA not being detected? (yes/no): "
         )
-        return "11.8"
+        return None
+
+# def check_cuda():
+#     printl("Checking CUDA Toolkit...")
+
+#     try:
+#         # Execute nvcc to get CUDA version
+#         nvcc_output = subprocess.check_output("nvcc --version", shell=True).decode()
+
+#         # Use regular expression to extract version number
+#         match = re.search(r"release (\d+\.\d+)", nvcc_output)
+#         if match:
+#             cuda_version = match.group(1)
+#             if cuda_version == "11.8":
+#                 printl(f"  CUDA Toolkit version {cuda_version} detected.")
+#             else:
+#                 ask_exit(
+#                     f"CUDA Toolkit version {cuda_version} detected.\n"
+#                     "- Version 11.8 is recommended.\n"
+#                     "  https://developer.nvidia.com/cuda-11-8-0-download-archive",
+#                     "Do you want to continue with a different version of CUDA? (yes/no): "
+#                 )
+#             return cuda_version
+#         else:
+#             ask_exit(
+#                 "CUDA Toolkit version 11.8 could not be detected.\n"
+#                 "- Version 11.8 is strongly recommended.\n"
+#                 "  https://developer.nvidia.com/cuda-11-8-0-download-archive",
+#                 "Do you want to proceed despite CUDA 11.8 was not detected? (yes/no): "
+#             )
+#             return "11.8"
+
+#     except subprocess.CalledProcessError:
+#         ask_exit(
+#             "CUDA Toolkit version 11.8 could not be detected.\n"
+#             "- Version 11.8 is strongly recommended.\n"
+#             "  https://developer.nvidia.com/cuda-11-8-0-download-archive",
+#             "Do you want to proceed despite CUDA 11.8 was not detected? (yes/no): "
+#         )
+#         return "11.8"
 
 
 def check_cudnn():
