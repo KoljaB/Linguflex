@@ -1,8 +1,9 @@
 from PyQt6.QtWidgets import QWidget
 from PyQt6.QtGui import QPainter, QColor, QFont, QFontMetrics
-from PyQt6.QtCore import Qt, QRect, QTimer
+from PyQt6.QtCore import Qt, QRect, QTimer, QMetaObject, pyqtSlot
 from functools import partial
 
+debug = False
 
 class Text(QWidget):
     """
@@ -37,7 +38,9 @@ class Text(QWidget):
             distance_right (int): Distance from the right for positioning.
         """
         super().__init__()
+        self.name = "unknown"
         self.text = text
+        self.current_text = ""
         self.color = color
         self.maxWidth = width
         self.origX = x
@@ -52,6 +55,12 @@ class Text(QWidget):
         if not text:
             self.hide()
 
+    @pyqtSlot()
+    def _updateGeometryWrapper(self):
+        self.updateGeometry()
+        self.update()
+        self.ensureVisible()
+
     def setText(self, text: str):
         """
         Sets the text of the widget quickly, deferring the update of
@@ -60,10 +69,15 @@ class Text(QWidget):
         Args:
             text (str): The new text to display.
         """
+        if text == self.current_text:
+            return
         self.text = text
+        self.current_text = text
 
-        # Deferring is important here to return control to caller asap
-        QTimer.singleShot(0, self.updateGeometry)
+        if debug:
+            print(f"TEXT {self.name} Setting text to {text}")
+
+        QTimer.singleShot(0, self._updateGeometryWrapper)
 
     def calculateHeight(self) -> int:
         """
@@ -130,6 +144,11 @@ class Text(QWidget):
         textRect = QRect(self.padding, self.padding, self.width() - 2 * self.padding, event.rect().height() - 2 * self.padding)
         painter.drawText(textRect, Qt.TextFlag.TextWordWrap | Qt.AlignmentFlag.AlignRight, self.text)
 
+    def ensureVisible(self):
+            if not self.isVisible():
+                self.show()
+            self.raise_()
+
     def setVisibility(self, visible: bool):
         """
         Sets the visibility of the widget.
@@ -149,15 +168,18 @@ class Text(QWidget):
         if y is None:
             y = self.y()
         shifted_x = self.origX - self.calculateWidth()
-        self.setGeometry(
-            shifted_x,
-            y,
-            self.calculateWidth(),
-            self.calculateHeight())
 
-        self.update()
-        self.showNormal()
-        self.raise_()
+        new_geometry = QRect(
+            shifted_x - 5,
+            y,
+            self.calculateWidth() + 5,
+            self.calculateHeight()
+        )
+
+        if debug:
+            print(f"TEXT {self.name} New geometry: {new_geometry}")
+
+        super().setGeometry(new_geometry)
 
     def set_y(self, y: int):
         """
