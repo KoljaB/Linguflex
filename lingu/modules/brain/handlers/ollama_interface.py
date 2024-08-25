@@ -6,10 +6,13 @@ import ollama
 import json
 
 class OllamaInterface(LLMInterfaceBase):
-    def __init__(self, history, model_path=None, model_name=None):
+    def __init__(self, history, model_path=None, model_name=None, vision_model_name=None):
         model_name = model_name or cfg("local_llm", "model_name", default="llama3.1:8b")
+        vision_model_name = vision_model_name or cfg("see", "model_name", default="llava")
+        self.vision_model = vision_model_name
         function_calling_model_name = cfg("local_llm", "function_calling_model_name", default="llama3.1:8b")
         ollama_url = cfg("local_llm", "ollama_url", default="http://localhost:11434/v1")
+
 
         llama = OpenAI(base_url=ollama_url, api_key="dummy")
         create = instructor.patch(
@@ -17,14 +20,6 @@ class OllamaInterface(LLMInterfaceBase):
             mode=instructor.Mode.JSON_SCHEMA
         )
         super().__init__(history, model_name, function_calling_model_name, llama, create)
-
-                # self.llama = OpenAI(base_url=base_url, api_key="dummy")
-        # self.create = instructor.patch(
-        #     create=self.llama.chat.completions.create,
-        #     mode=instructor_mode
-        # )
-
-        self.vision_model = cfg("see", "model", default="llava")
 
     def generate_image(
             self,
