@@ -9,7 +9,7 @@ import json
 import time
 import os
 
-DEBUG_LEVEL = 1
+DEBUG_LEVEL = 5
 
 class ChatAnswer(BaseModel):
     answer: str = Field(
@@ -22,7 +22,6 @@ class FunctionName(BaseModel):
     )
 
 class LLMInterfaceBase(LLM_Base):
-    #def __init__(self, history: History, model_name, function_calling_model_name, base_url, instructor_mode=instructor.Mode.JSON_SCHEMA):
     def __init__(self, history: History, model_name, function_calling_model_name, llama_create, instructor_create, openai_completion=False):
         super().__init__()
         self.prompt = Prompt("")
@@ -38,11 +37,6 @@ class LLMInterfaceBase(LLM_Base):
         self.llama = llama_create
         self.create = instructor_create
 
-        # self.llama = OpenAI(base_url=base_url, api_key="dummy")
-        # self.create = instructor.patch(
-        #     create=self.llama.chat.completions.create,
-        #     mode=instructor_mode
-        # )
 
         self.max_retries = int(cfg("local_llm", "max_retries", default=6))
 
@@ -53,7 +47,9 @@ class LLMInterfaceBase(LLM_Base):
         events.add_listener("inference_end", "inference", lambda: self.set_sleep(False))
 
         log.dbg("  [brain] warm up llm")
-        self.warm_up()
+
+        if model_name:
+            self.warm_up()
 
     def abort_immediately(self):
         self.abort = True
@@ -92,8 +88,6 @@ class LLMInterfaceBase(LLM_Base):
             assistant_message = {"role": "assistant", "content": message['assistant']}
             extended_messages.append(assistant_message)
             extended_messages.extend(additional_messages)
-        # if extended_messages and extended_messages[-1] == additional_messages[0]:
-        #     extended_messages.pop()
         return extended_messages
 
     def extend_function_call_messages(self, messages, fct_name):
@@ -119,323 +113,196 @@ class LLMInterfaceBase(LLM_Base):
             return self.extend_function_parameter_messages(tool.language_info['examples'])
 
     def decide_for_tool_to_call(self, messages, tools):
-        TOOL_CALL_LOOP_MESSAGES_APPENDED = []
-        TOOL_CALL_NEXT_LOOP_MESSAGES_APPENDED = []
-
-        TOOL_CALL_LOOP_LATEST_EXTRACTION = None
-        TOOL_CALL_NEXT_LOOP_LATEST_EXTRACTION = None
-
-        TOOL_CALL_PASS_INITIAL = False
-
         if not tools:
             return False, None
 
-        if DEBUG_LEVEL >= 1:
-            log.inf(f"  [brain] Deciding if to select a tool.")
+        log.inf(f"  [brain] Deciding if to select a tool.")
 
         user_message, user_content = self.get_user_message(messages)
 
-        function_names = ""
-        tool_examples_name = []
-        tool_examples_arguments = []
-        system_prompts = []
-        for tool in tools:
+        function_choices = {}
+        choice_letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+        for i, tool in enumerate(tools):
             name = tool["function"]["name"]
-            function_names += f' - \"{name}\"\n'
+            function_choices[choice_letters[i]] = name
 
-            tool_example_name = self._get_tool_example(
-                name, "function_name")
-            tool_example_argument = self._get_tool_example(
-                name, "function_arguments")
-            if tool_example_name != None:
-                print (f"ADDING {tool_example_name}")
-                tool_examples_name = tool_examples_name + tool_example_name
-                if DEBUG_LEVEL >= 3:
-                    log.inf(f"  [brain]  [TOOL INJECTION] INJECTING TOOL EXAMPLES:\n{tool_example_name}")
-                # log.dbg(f"  [TOOL INJECTION] INJECTING TOOL EXAMPLES: {tool_example_name}")
-            if tool_example_argument != None:
+        system_prompt = """You are the world's leading expert in function selection for AI systems. Your task is to analyze a user's request and select the most appropriate function to address their needs. Your vast knowledge spans diverse fields, enabling you to make precise, accurate decisions based on the available functions and the user's requirements.
+
+Your task is to select the most appropriate function for the given user request. You MUST adhere to these guidelines:
+
+1. Respond ONLY with the letter corresponding to your chosen function.
+2. Provide NO explanations or additional text whatsoever.
+3. If no function is applicable or related to the user's request, select the option for "Not Applicable".
+4. Approach each request methodically, considering all options before making your selection.
+5. Think step-by-step through each option before finalizing your answer.
+6. DO use your vast expertise to inform your decision-making process.
+7. DO NOT hesitate in providing your answer once you've made your decision.
+
+Remember:
+- Your expertise is unmatched – trust your knowledge and analytical skills.
+- Ensure your answer is unbiased and based solely on the user's request and available functions.
+- You will be penalized heavily for any response that includes text beyond the answer letter.
+- You will receive a $500 bonus for each correct function selection, motivating you to provide the most accurate responses possible."""
+
+        function_list = "\n".join([f"{letter}: {name}" for letter, name in function_choices.items()])
+        function_list += f"\n{choice_letters[len(function_choices)]}: Not Applicable"
+
+        user_prompt = f"""Available functions:
+{function_list}
+
+User's request:
+"{user_content}"
+
+Select the most appropriate function by responding with its corresponding letter. If no function is applicable, select "Not Applicable"."""
+
+        messages_decide = [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": user_prompt}
+        ]
+
+        params = {
+            "max_tokens": 1,
+            "temperature": 0.2,
+            "top_p": 0.95,
+        }
+
+        log.inf(f"  [brain] Calling {self.function_calling_model_name} for function selection")
+        log.dbg(f"  [brain] Calling with messages:\n {messages_decide}")
+
+        if self.openai_completion:
+            response = self.llama.create_chat_completion_openai_v1(
+                messages=messages_decide,
+                stream=False,
+                **params
+            )
+        else:
+            response = self.llama.chat.completions.create(
+                messages=messages_decide,
+                stream=False,
+                model=self.function_calling_model_name,
+                **params
+            )
+
+        selected_letter = response.choices[0].message.content.strip().upper()
+
+        if selected_letter in function_choices:
+            selected_function = function_choices[selected_letter]
+            log.inf(f"  [brain] {self.function_calling_model_name} selected function: {selected_function}")
+            tool = self.tools.get_tool_by_name(selected_function)
+            if not tool:
+                log.err(f"  [brain] {self.function_calling_model_name} selected function not found: {selected_function}")
+                return False, None
+            
+            # Proceed with function call logic
+            tool_examples_arguments = []
+            tool_example_argument = self._get_tool_example(selected_function, "function_arguments")
+
+            if tool_example_argument is not None:
                 tool_examples_arguments = tool_examples_arguments + tool_example_argument
                 if DEBUG_LEVEL >= 3:
                     log.inf(f"  [brain]  [TOOL INJECTION] INJECTING SUB TOOL EXAMPLES:\n{tool_example_argument}")
-                # log.dbg(f"  [TOOL INJECTION] INJECTING SUB TOOL EXAMPLES: {tool_example_argument}")
 
-            module_tool = self.tools.get_tool_by_name(name)
-            if "init_prompt" in module_tool.language_info:
-                system_prompts.append(module_tool.language_info["init_prompt"])
+            tool_call_system_prompt = f"""You are the world's leading expert in executing the {selected_function} function. Your task is to analyze a user's request and provide the correct parameters for this function. Your unparalleled knowledge enables you to interpret user requests accurately and translate them into precise function parameters.
 
-        system_prompt = """You are a world class function calling algorithm.
-Your task is to call a function when needed.
-You need to decide if invoking a specific function
-aids in successfully addressing a user's request.
-You will be provided with a list of functions."""
+Your task is to provide the parameters for the {selected_function} function based on the given user request. You MUST adhere to these guidelines:
 
-        if system_prompts:
-            system_prompt += "\n" + " ".join(system_prompts)
+1. Respond ONLY with the required parameters for the function.
+2. Provide NO explanations or additional text whatsoever.
+3. Ensure all required parameters are included and correctly formatted.
+4. If a parameter is not explicitly mentioned in the user's request, use your expert judgment to provide a reasonable default value.
+5. Think step-by-step through the user's request to extract all relevant information.
+6. DO use your vast expertise to inform your parameter selection process.
+7. DO NOT hesitate in providing your answer once you've determined the correct parameters.
 
-        messages_decide_1 = [
-            {
-                "role": "system",
-                "content": """You are a world class function calling algorithm.
-Your task is to call a function when needed.
-You need to decide if invoking a specific function
-aids in successfully addressing a user's request.
-You will be provided with a list of functions.""",
-            },
-            {
-                "role": "user",
-                "content": f"Available functions:\n"
-                        f"{function_names}",
-            },
-        ]
+Remember:
+- Your expertise in executing this function is unmatched – trust your knowledge and analytical skills.
+- Ensure your parameters are based solely on the user's request and the function's requirements.
+- You will be penalized heavily for any response that includes text beyond the required parameters.
+- You will receive a $1000 bonus for each set of correct parameters, motivating you to provide the most accurate responses possible."""
 
-        messages_decide_2 = [
-            {
-                "role": "user",
-                "content": f"User's request:\n"
-                        f'"{user_content}"',
-            },
-            {
-                "role": "user",
-                "content": "Return \"NOT_APPLICABLE\" if there is no function that can help or the functions are unrelated to the query. Otherwise, pass the name of the function to call.",
-            },
-        ]
+            user_request_prompt = f"""User's request:
+    "{user_content}"
 
-        # Set the tool call decision messages to the intial system message, + the examples that could be found on the tool, + the final system message
-        messages_decide = messages_decide_1 + tool_examples_name + messages_decide_2
+    Based on this request, provide the parameters for the {selected_function} function. Respond only with the parameter values in the correct format for the function."""
 
-        for i in range(self.max_retries):
-            # The tool call loop will automatically return (essentially ending the loop) if the tool call finishes successfully
-
-            # We don't want to call the "decide what tool to use" function multiple times, so we only call it once
-            if not TOOL_CALL_PASS_INITIAL:
-                if len(TOOL_CALL_LOOP_MESSAGES_APPENDED) > 0:
-                    messages_decide = messages_decide + TOOL_CALL_LOOP_MESSAGES_APPENDED
-
-                log.inf(f"  [brain] {self.function_calling_model_name} creating tool stream for "
-                        f"messages {messages}")
-
-                self.wait_wake()
-
-                if DEBUG_LEVEL >= 1:
-                    log.inf(f"  [brain]  DECISION MESSAGES:" + str(messages_decide))
-
-                try:
-                    extraction_stream = self.create(
-                        response_model=instructor.Partial[FunctionName],
-                        max_retries=self.max_retries,
-                        messages=messages_decide,
-                        model=self.function_calling_model_name,
-                        max_tokens=4000,
-                        temperature=0.1,
-                        stream=True,
-                    )
-
-                    for extraction in extraction_stream:
-                        if DEBUG_LEVEL >= 4:
-                            log.inf(f"  [brain]  {extraction}")
-                        TOOL_CALL_LOOP_LATEST_EXTRACTION = extraction
-                        final_extraction = extraction
-
-                    extraction_stream = final_extraction
-
-                    fct_call = extraction_stream.name_of_function_to_call
-                    try:
-                        fct_call_stripped = fct_call.strip().lower()
-                    except:
-                        log.err(f"  [brain] {self.function_calling_model_name} tool stream failed, reason: Failed to convert to stripped lowercase.")
-                        _LOOP_MESSAGES_APPENDED = [
-                            {
-                                "role": "assistant",
-                                "content": "" + str(TOOL_CALL_LOOP_LATEST_EXTRACTION) + "",
-                            },
-                            {
-                                "role": "user",
-                                "content": f"You need to pass a valid function name. Either pass the name of the function you want to call or pass \"NOT_APPLICABLE\" if there is no function that can help or the functions are unrelated to the query."
-                            }
-                        ]
-                        TOOL_CALL_LOOP_MESSAGES_APPENDED = TOOL_CALL_LOOP_MESSAGES_APPENDED + _LOOP_MESSAGES_APPENDED
-                        log.dbg(f"  [brain] {self.function_calling_model_name} TS1 stream failed, attempting again")
-                        continue
-
-                    if fct_call_stripped == "not_applicable":
-                        log.inf(f"  [brain] {self.function_calling_model_name} no function to call")
-                        return False, None
-
-                    log.inf(f"  [brain] {self.function_calling_model_name} wants to "
-                            f"call function {fct_call}")
-
-                    tool = self.tools.get_tool_by_name(fct_call)
-
-                except Exception as e:
-                    log.err(f"  [brain] {self.function_calling_model_name} tool stream failed, reason: {str(e)}")
-                    _LOOP_MESSAGES_APPENDED = [
-                        {
-                            "role": "assistant",
-                            "content": "" + str(TOOL_CALL_LOOP_LATEST_EXTRACTION) + "",
-                        },
-                        {
-                            "role": "user",
-                            "content": f"There was an error while trying to call the function. Here is the error: {str(e)}\nPlease try again."
-                        }
-                    ]
-                    TOOL_CALL_LOOP_MESSAGES_APPENDED = TOOL_CALL_LOOP_MESSAGES_APPENDED + _LOOP_MESSAGES_APPENDED
-                    log.dbg(f"  [brain] {self.function_calling_model_name} Tool stream failed, attempting again")
-                    continue
-
-                if not tool:
-                    log.err(f"  [brain] {self.function_calling_model_name} tool not found: {fct_call}")
-                    _LOOP_MESSAGES_APPENDED = [
-                        {
-                            "role": "assistant",
-                            "content": f"{extraction_stream}"
-                        },
-                        {
-                            "role": "user",
-                            "content": f"That is not a valid function. Using the proper format, please choose from the list of available functions: {function_names}"
-                        }
-                    ]
-                    TOOL_CALL_LOOP_MESSAGES_APPENDED = TOOL_CALL_LOOP_MESSAGES_APPENDED + _LOOP_MESSAGES_APPENDED
-                    log.dbg(f"  [brain] {self.function_calling_model_name} TS1 stream failed, attempting again")
-                    continue
-
-                type_of_tool = type(tool.instance)
-                log.dbg(f"  [brain] {self.function_calling_model_name} tool found: {tool}")
-                log.dbg(f"  [brain] tool type of instance: {type_of_tool}")
-
-                TOOL_CALL_PASS_INITIAL = True
-
-            # Now that there has been no errors, we can call the tool
-
-            messages_tool_1 = [
-                user_message
-            ]
-
-            #There is no system message to append so it's just examples, then the user message
-            messages_tool = tool_examples_arguments + messages_tool_1
-
-            if len(TOOL_CALL_NEXT_LOOP_MESSAGES_APPENDED) > 0:
-                messages_tool = messages_tool + TOOL_CALL_NEXT_LOOP_MESSAGES_APPENDED
+            messages_tool = [{"role": "system", "content": tool_call_system_prompt}] + tool_examples_arguments + [{"role": "user", "content": user_request_prompt}]
 
             log.dbg(f"  [brain] {self.function_calling_model_name} "
-                    f"calling tool {fct_call} "
-                    f"with messages {messages}")
+                    f"calling tool {selected_function} "
+                    f"with messages {messages_tool}")
 
             self.wait_wake()
 
             try:
-                if DEBUG_LEVEL >= 1:
-                    log.inf(f"  [brain]  Decided for tool: {fct_call}")
-
-                if DEBUG_LEVEL >= 3:
-                    log.inf(f"  [brain]  TOOL CALL MESSAGES:" + str(messages_tool))
-
-                extraction_stream = self.create(
+                final_extraction = self.create(
                     response_model=instructor.Partial[tool.instance],
                     max_retries=self.max_retries,
                     messages=messages_tool,
                     model=self.function_calling_model_name,
-                    max_tokens=4000,
+                    max_tokens=300,
                     temperature=0.1,
-                    stream=True,
                 )
 
-                for extraction in extraction_stream:
-                    if DEBUG_LEVEL >= 4:
-                        log.inf(f"  [brain]  {extraction}")
-                    TOOL_CALL_NEXT_LOOP_LATEST_EXTRACTION = extraction
-                    final_extraction = extraction
+                if final_extraction is None:
+                    raise Exception("No valid extraction received")
 
-                extraction_stream = final_extraction
-
-            except Exception as e:
-                log.err(f"  [brain] {self.function_calling_model_name} tool stream failed, reason: {str(e)}")
-                _LOOP_MESSAGES_APPENDED = [
-                    {
-                        "role": "assistant",
-                        "content": "" + str(TOOL_CALL_NEXT_LOOP_LATEST_EXTRACTION) + "",
-                    },
-                    {
-                        "role": "user",
-                        "content": f"There was an error while trying to call the function. Here is the error: {str(e)}\nPlease try again."
-                    }
-                ]
-                TOOL_CALL_NEXT_LOOP_MESSAGES_APPENDED = TOOL_CALL_NEXT_LOOP_MESSAGES_APPENDED + _LOOP_MESSAGES_APPENDED
-                log.dbg(f"  [brain] {self.function_calling_model_name} Tool stream failed, attempting again")
-                continue
-
-
-            # This is from when there is an error with the tool call. This can happen when there are invalid search terms, etc.
-            try:
                 # executing function call
-                if hasattr(extraction_stream, 'on_populated'):
-                    return_value = extraction_stream.on_populated()
-                    log.dbg(f"  [brain] tool {fct_call} returned: {return_value}")
+                if hasattr(final_extraction, 'on_populated'):
+                    return_value = final_extraction.on_populated()
+                    log.dbg(f"  [brain] tool {selected_function} returned: {return_value}")
                 else:
                     return_value = "success"
 
                 if "success_prompt" in tool.language_info:
-                    self.prompt.add(
-                        tool.language_info["success_prompt"]
-                    )
+                    self.prompt.add(tool.language_info["success_prompt"])
+
+                self.tools.executed_tools.append(tool)
+
+                log.dbg(f"  [brain] {self.function_calling_model_name} tool {selected_function} executed, "
+                        f"return value: {return_value}")
+
+                message_tool_execution_content = f"""\
+    User's request:
+    "{user_content}"
+
+    To help address the user's request, the function {selected_function} was called with these parameters:
+    "{final_extraction}"
+
+    The function returned the following data:
+    "{return_value}"
+
+    Your task is to carefully analyze and interpret the returned data.
+    Translate the returned data into an easily understandable form.
+    Imagine explaining it to someone without technical knowledge.
+    If the data is complex, simplify it.
+    Turn numbers, codes, or technical terms into plain explanations.
+    Using the function's returned data and your understanding, provide a clear response that addresses the user's request.
+    Extract the key information relevant to the user's request and present it in clear, easily understandable language.
+    Focus on providing a short, concise, and direct response to the user's query, rather than simply reproducing the raw data.
+    DO NOT include the name of the function in your response.
+    DO NOT include emojis in your response.
+    DO NOT say "here is the simplified response" just make your response the simplified response."""
+
+                message_tool_execution = {
+                    "role": "user",
+                    "content": message_tool_execution_content
+                }
+
+                messages.append(message_tool_execution)
+
+                return True, return_value
+
             except Exception as e:
                 log.err(f"  [brain] {self.function_calling_model_name} tool stream failed, reason: {str(e)}")
-                _LOOP_MESSAGES_APPENDED = [
-                    {
-                        "role": "assistant",
-                        "content": "" + str(TOOL_CALL_NEXT_LOOP_LATEST_EXTRACTION) + "",
-                    },
-                    {
-                        "role": "user",
-                        "content": f"There was an error while trying to call the function. Here is the error: {str(e)}\nPlease try again."
-                    }
-                ]
-                TOOL_CALL_NEXT_LOOP_MESSAGES_APPENDED = TOOL_CALL_NEXT_LOOP_MESSAGES_APPENDED + _LOOP_MESSAGES_APPENDED
-                log.dbg(f"  [brain] {self.function_calling_model_name} Tool stream failed, attempting again")
-                continue
+                return False, f"The function call failed: {str(e)}"
 
-            self.tools.executed_tools.append(tool)
+        elif selected_letter == choice_letters[len(function_choices)]:
+            log.inf(f"  [brain] {self.function_calling_model_name} determined no applicable function")
+            return False, None
+        else:
+            log.err(f"  [brain] {self.function_calling_model_name} provided an invalid selection: {selected_letter}")
+            return False, None
 
-            log.dbg(f"  [brain] {self.function_calling_model_name} tool {fct_call} executed, "
-                    f"return value: {return_value}")
-            
-            # The info to return to the user
-
-            message_tool_execution_content = f"""\
-User's request:
-"{user_content}"
-
-To help address the user's request, the function {fct_call} was called with these parameters:
-"{extraction_stream}"
-
-The function returned the following data:
-"{return_value}"
-
-Your task is to carefully analyze and interpret the returned data.
-Translate the returned data into an easily understandable form.
-Imagine explaining it to someone without technical knowledge.
-If the data is complex, simplify it.
-Turn numbers, codes, or technical terms into plain explanations.
-Using the function's returned data and your understanding, provide a clear response that addresses the user's request.
-Extract the key information relevant to the user's request and present it in clear, easily understandable language.
-Focus on providing a short, concise, and direct response to the user's query, rather than simply reproducing the raw data.
-DO NOT include the name of the function in your response.
-DO NOT include emojis in your response.
-DO NOT say "here is the simplifed response" just make your response the simplified response.\
-"""
-            if system_prompts:
-                message_tool_execution_content += "\n" + " ".join(system_prompts)
-
-            message_tool_execution = {
-                "role": "user",
-                "content": message_tool_execution_content
-            }
-
-
-            messages.append(message_tool_execution)
-
-            return True, return_value
-
-        return False, "The function calling model failed to call a function after multiple retries."
 
     def generate(self, text, messages, tools=None):
         self.abort = False
