@@ -2,6 +2,7 @@ from .languagemodelbase import LLM_Base
 from openai import OpenAI
 from lingu import log, cfg
 from lingu import events
+import base64
 import json
 
 # gpt-3.5-turbo
@@ -11,7 +12,7 @@ import json
 # gpt-4-0613
 # gpt-4-32k-0613
 openai_model = cfg("openai_model", default="gpt-3.5-turbo-1106")
-vision_model = cfg("see", "model", default="gpt-4-vision-preview")
+vision_model = cfg("see", "model", default="gpt-4o")
 vision_max_tokens = cfg("see", "max_tokens", default=1000)
 
 
@@ -53,11 +54,44 @@ class OpenaiInterface(LLM_Base):
         # traceback.print_stack()
         return self.model
 
+    def encode_image(self, image_path):
+        """
+        Encodes the image at the given path to a base64 string.
+
+        Args:
+            image_path (str): The path to the image file.
+
+        Returns:
+            str: The base64 encoded string of the image.
+        """
+        with open(image_path, "rb") as image_file:
+            return base64.b64encode(image_file.read()).decode('utf-8')
+
     def generate_image(
             self,
             messages,
+            prompt: str,
+            image_path: str,
+            image_source: str
     ):
         self.abort = False
+
+        base64_image = self.encode_image(image_path)
+        messages.append({
+            "role": "user",
+            "content": [
+                {
+                    "type": "text",
+                    "text": prompt
+                },
+                {
+                    "type": "image_url",
+                    "image_url": {
+                        "url": f"data:image/jpeg;base64,{base64_image}"
+                    }
+                }
+            ]
+        })
 
         params = {
             "model": vision_model,
@@ -85,7 +119,7 @@ class OpenaiInterface(LLM_Base):
                 if content:
                     yield content
 
-    def generate(self, messages, tools=None):
+    def generate(self, text, messages, tools=None):
         self.abort = False
 
         def add_fct(fct):
@@ -127,7 +161,14 @@ class OpenaiInterface(LLM_Base):
                          "tool_calls": []
                        }
         if not self.abort:
+            # The following "for chunk in response:" can throw ApiError:
+            #   raise APIError(
+            #     openai.APIError: An error occurred during streaming
+            #   File "D:\Linguflex\Linguflex\lingu\modules\brain\handlers\openai_interface.py", line 130, in generate
+            #     for chunk in response:
+
             for chunk in response:
+
                 if self.abort:
                     break
                 delta = chunk.choices[0].delta
@@ -175,3 +216,10 @@ class OpenaiInterface(LLM_Base):
 
         # print(f"Recovered pieces: {self.tool_calls_message}")
         events.trigger("answer_finished", "brain", fct)
+
+    def add_tools_to_history(self, tools, history):
+        history.add_executed_tools(self.tool_calls_message, tools)
+        # self.history.add_executed_tools(
+        #     self.llm.tool_calls_message,
+        #     tools
+        # )        

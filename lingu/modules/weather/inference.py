@@ -24,4 +24,6 @@ class RetrieveWeatherForecast(Populatable):
                     "ASK (!) if unknown, DO NOT make it up.")
 
     def on_populated(self):
+        if not self.city:
+            return logic.get_weather(default_city)
         return logic.get_weather(self.city)

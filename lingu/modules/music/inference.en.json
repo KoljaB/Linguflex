@@ -1,51 +1,233 @@
 {
-	"play_music_by_name": 
-	{
-		"keywords": ["play*", "song*", "tune*", "album*", "albums", "music*", "clip*", "movie*", "stream*", "audio*", "sound*", "*list*", "title*", "track*", "media*", "artist*", "performer*", "band*", "youtube*", "listen*", "podcast*", "*play*", "*start*", "*begin*", "jams*", "beats*", "composition*"],
-		"init_prompt": "",
-		"success_prompt": "You are a radio announcer. Announce the music in a short sentence that's perfect for radio broadcasting (the sentence should NOT contain URLs or LINKS), by citing at most the artist and revised song title (remove unnecessary additions such as \"remastered\") and building suspense, sparking excitement and piquing curiosity about the piece.",
-		"fail_prompt": ""
+	"play_music_by_name":{
+	   "keywords":[
+		  "play*",
+		  "song*",
+		  "tune*",
+		  "album*",
+		  "albums",
+		  "music*",
+		  "clip*",
+		  "movie*",
+		  "stream*",
+		  "audio*",
+		  "sound*",
+		  "*list*",
+		  "title*",
+		  "track*",
+		  "media*",
+		  "artist*",
+		  "performer*",
+		  "band*",
+		  "youtube*",
+		  "listen*",
+		  "podcast*",
+		  "*play*",
+		  "*start*",
+		  "*begin*",
+		  "jams*",
+		  "beats*",
+		  "composition*"
+	   ],
+	   "init_prompt":"",
+	   "success_prompt":"You are a radio announcer. Announce the music in a short sentence that's perfect for radio broadcasting (the sentence should NOT contain URLs or LINKS), by citing at most the artist and revised song title (remove unnecessary additions such as \"remastered\") and building suspense, sparking excitement and piquing curiosity about the piece.",
+	   "fail_prompt":"",
+	   "examples":[
+		  {
+			 "user":"Can you please play Sydney Sweeney by Ken Carson?",
+			 "assistant":"name_or_search_terms='Ken Carson - Sydney Sweeney', single_song='True'"
+		  },
+		  {
+			 "user":"Hey, please play a playlist with Kylie Minogue songs.",
+			 "assistant":"name_of_function_to_call='play_music_by_name'"
+		  },
+		  {
+			 "user":"Play something by future.",
+			 "assistant":"name_or_search_terms='Future' single_song='False'"
+		  },
+		  {
+			 "user":"Play Million Dollar Baby",
+			 "assistant":"name_or_search_terms='Million Dollar Baby' single_song='False'"
+		  }
+	   ]
 	},
-	"play_music_by_playlist_index":
-	{
-		"keywords": ["play*", "song*", "tune*", "album*", "albums*", "music*", "clip*", "movie*", "stream*", "audio*", "sound*", "*list*", "title*", "track*", "pos*", "number*", "*play*", "index*", "slot*"],
-		"init_prompt": "",
-		"success_prompt": "Audio is being played. Don't mention any URLs.",
-		"fail_prompt": ""
+	"play_music_by_playlist_index":{
+	   "keywords":[
+		  "play*",
+		  "song*",
+		  "tune*",
+		  "album*",
+		  "albums*",
+		  "music*",
+		  "clip*",
+		  "movie*",
+		  "stream*",
+		  "audio*",
+		  "sound*",
+		  "*list*",
+		  "title*",
+		  "track*",
+		  "pos*",
+		  "number*",
+		  "*play*",
+		  "index*",
+		  "slot*"
+	   ],
+	   "init_prompt":"",
+	   "success_prompt":"Audio is being played. Don't mention any URLs.",
+	   "fail_prompt":"",
+	   "examples":[
+		  {
+			 "user":"Play the third song in the playlist.",
+			 "assistant":"audio_index=2"
+		  },
+		  {
+			 "user":"Start playing from the fifth track.",
+			 "assistant":"audio_index=4"
+		  }
+	   ]
 	},
-	"skip_audio":
-	{
-		"keywords": ["*skip*", "*jump*", "*forward*", "*switch*", "next*", "*bounce*", "*pass*", "*ahead", "*back*", "*previous*", "*rewind*", "*back", "*last*"],
-		"init_prompt": "",
-		"success_prompt": "Audio is being played. Don't mention any URLs.",
-		"fail_prompt": ""
+	"skip_audio":{
+	   "keywords":[
+		  "*skip*",
+		  "*jump*",
+		  "*forward*",
+		  "*switch*",
+		  "next*",
+		  "*bounce*",
+		  "*pass*",
+		  "*ahead",
+		  "*back*",
+		  "*previous*",
+		  "*rewind*",
+		  "*back",
+		  "*last*"
+	   ],
+	   "init_prompt":"",
+	   "success_prompt":"Audio is being played. Don't mention any URLs.",
+	   "fail_prompt":"",
+	   "examples":[
+		  {
+			 "user":"Skip this song.",
+			 "assistant":"skip_count=1"
+		  },
+		  {
+			 "user":"Go back a song.",
+			 "assistant":"skip_count=-1"
+		  },
+		  {
+			 "user":"Skip ahead 3 songs.",
+			 "assistant":"skip_count=3"
+		  }
+	   ]
 	},
-	"get_playlist_information": 
-	{
-		"keywords": ["info*", "detail*", "data*", "inquiry*", "information*", "knowledge*", "playlist*", "*list*"],
-		"init_prompt": "",
-		"success_prompt": "",
-		"fail_prompt": ""
+	"get_playlist_information":{
+	   "keywords":[
+		  "info*",
+		  "detail*",
+		  "data*",
+		  "inquiry*",
+		  "information*",
+		  "knowledge*",
+		  "playlist*",
+		  "*list*"
+	   ],
+	   "init_prompt":"",
+	   "success_prompt":"",
+	   "fail_prompt":"",
+	   "examples":[
+		  {
+			 "user":"What's on the current playlist?"
+		  },
+		  {
+			 "user":"Can you give me details about the playlist?"
+		  }
+	   ]
 	},
-	"stop_music_playback": 
-	{
-		"keywords": ["*stop*", "*end*", "*halt*", "*conclude*", "*cease*", "*shut*", "*turn*", "*break*", "*interrupt*"],
-		"init_prompt": "",
-		"success_prompt": "Confirm the successful termination of the music playback in one or two words.",
-		"fail_prompt": ""
+	"stop_music_playback":{
+	   "keywords":[
+		  "*stop*",
+		  "*end*",
+		  "*halt*",
+		  "*conclude*",
+		  "*cease*",
+		  "*shut*",
+		  "*turn*",
+		  "*break*",
+		  "*interrupt*"
+	   ],
+	   "init_prompt":"",
+	   "success_prompt":"Confirm the successful termination of the music playback in one or two words.",
+	   "fail_prompt":"",
+	   "examples":[
+		  {
+			 "user":"Stop the music now."
+		  },
+		  {
+			 "user":"I need to take a call, please halt the music."
+		  }
+	   ]
 	},
-	"change_music_volume": 
-	{
-		"keywords": ["quiet*", "loud*", "volume*", "*strength*", "sound*", "noise*", "level*", "audio*", "db*", "decibel*", "intensity*", "amplitude*", "power*", "energy*", "deaf", "hear*", "hearing"],
-		"init_prompt": "",
-		"success_prompt": "Confirm the successful change in volume in one or two words.",
-		"fail_prompt": ""
+	"change_music_volume":{
+	   "keywords":[
+		  "quiet*",
+		  "loud*",
+		  "volume*",
+		  "*strength*",
+		  "sound*",
+		  "noise*",
+		  "level*",
+		  "audio*",
+		  "db*",
+		  "decibel*",
+		  "intensity*",
+		  "amplitude*",
+		  "power*",
+		  "energy*",
+		  "deaf",
+		  "hear*",
+		  "hearing"
+	   ],
+	   "init_prompt":"",
+	   "success_prompt":"Confirm the successful change in volume in one or two words.",
+	   "fail_prompt":"",
+	   "examples":[
+		  {
+			 "user":"Please turn down the volume.",
+			 "assistant":"VolumeDirection='down'"
+		  },
+		  {
+			 "user":"Turn it down a bit.",
+			 "assistant":"VolumeDirection='down'"
+		  },
+		  {
+			 "user":"Turn the music up.",
+			 "assistant":"VolumeDirection='up'"
+		  }
+	   ]
 	},
-	"pause_or_continue_music": 
-	{
-		"keywords": ["pause*", "continue*", "*halt*", "stop*", "*resume*", "proceed", "carry on", "*restart*", "*begin*"],
-		"init_prompt": "",
-		"success_prompt": "Confirm the successful change in pause mode in one or two words.",
-		"fail_prompt": ""
+	"pause_or_continue_music":{
+	   "keywords":[
+		  "pause*",
+		  "continue*",
+		  "*halt*",
+		  "stop*",
+		  "*resume*",
+		  "proceed",
+		  "carry on",
+		  "*restart*",
+		  "*begin*"
+	   ],
+	   "init_prompt":"",
+	   "success_prompt":"Confirm the successful change in pause mode in one or two words.",
+	   "fail_prompt":"",
+	   "examples":[
+		  {
+			 "user":"Pause the music, please."
+		  },
+		  {
+			 "user":"Continue playing the music."
+		  }
+	   ]
 	}
-}
+ }

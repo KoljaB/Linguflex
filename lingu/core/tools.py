@@ -154,6 +154,7 @@ class Tools:
         tool["return_value"] = return_value
         if tool["executed"]:
             self.executed_tools.append(tool)
+            
         return return_value
 
     def get_tools(self, text: str):
@@ -173,9 +174,6 @@ class Tools:
             if inf_obj.is_internal:
                 continue
 
-            # print(f"  checking {inf_obj.name}")
-            # print(f"  keywords {inf_obj.language_info.get('keywords', None)}")
-
             if "keywords" in inf_obj.language_info and \
                     inf_obj.language_info["keywords"] and \
                     len(inf_obj.language_info["keywords"]) > 0:
@@ -194,8 +192,6 @@ class Tools:
                         init_prompt = inf_obj.language_info["init_prompt"]
                         self.prompt.add(init_prompt)
                 functions.append(inf_obj.schema)
-                # log.dbg(f"  no keywords attached to {inf_obj.name}, "
-                #         "added schema")
                 continue
 
             if keywords_in_input:
@@ -207,8 +203,6 @@ class Tools:
                 log.dbg(f"  keywords detected {str(keywords_in_input)} "
                         f"for {inf_obj.name}, added schema")
                 continue
-            # else:
-            #     log.dbg(f"  no keywords detected for {inf_obj.name}")
 
             if inf_obj.execute_count:
                 log.dbg(f"  execute_count for {inf_obj.name} is "

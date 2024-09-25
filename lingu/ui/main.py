@@ -213,6 +213,9 @@ class UI:
             SymbolConfig.DISTANCE_RIGHT
 
         for module_index, module in enumerate(self.sorted_modules):
+            if "state" not in module:
+                print("STATE FILE missing for module")
+                continue
 
             # Create and show the symbol widget
             symbol_widget = Symbol(

@@ -49,6 +49,8 @@ def safe_decode_escaped_string(escaped_str: str) -> str:
 
 
 def decode(text):
+    if not text:
+        return ""
     byte_data = text.encode('raw_unicode_escape')
     detected_encoding = chardet.detect(byte_data)['encoding']
     if detected_encoding and detected_encoding == "ascii":

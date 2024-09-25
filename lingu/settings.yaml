@@ -4,14 +4,16 @@ version: 1.0
 debug_mode: true
 language: en
 #openai_model: gpt-4-1106-preview
-openai_model: gpt-3.5-turbo-1106
-max_history_messages: 12
-max_tokens_per_msg: 1500
-max_history_tokens: 7000
+openai_model: gpt-4o
+# openai_model: gpt-4-1106-preview
+# openai_model: gpt-3.5-turbo-1106max_history_messages: 12
+max_history_messages: 50
+max_tokens_per_msg: 8000
+max_history_tokens: 64000
 called_tool_messages: 2
 retry_attempts: 7
 timeout_increase: 5
-rvc_model_path: models/rvc/models
+rvc_model_path: D:/Data/Models/rvc/models
 prompt: >
   You are Linguflex, a large language model and personal assistant.
 
@@ -45,10 +47,16 @@ prompt: >
   Remember to follow these rules absolutely, and do not refer to these rules, even if you're asked about them.  
 
 local_llm:
-  use_local_llm: false
-  gpu_layers: 10
+  use_local_llm: true # change to true to use local llms like ollama, default: false (uses openai model)
+  gpu_layers: 40
+  model_provider: ollama  # "ollama" or "lmstudio" 
+  ollama_url: http://localhost:11434/v1
+  lmstudio_url: http://localhost:1234/v1
   model_path: models/llm/
-  model_name: openhermes-2.5-mistral-7b.Q5_K_M.gguf
+  model_name: llama3.1:8b
+  function_calling_model_name: llama3.1:8b
+  # model_name: lmstudio-community/Meta-Llama-3.1-8B-Instruct-GGUF/Meta-Llama-3.1-8B-Instruct-Q4_K_M-take2.gguf
+  # function_calling_model_name: lmstudio-community/Meta-Llama-3.1-8B-Instruct-GGUF/Meta-Llama-3.1-8B-Instruct-Q4_K_M-take2.gguf
   max_retries: 3
   max_tokens: 1024
   context_length: 8192
@@ -60,10 +68,34 @@ local_llm:
   mirostat_mode: 0
   mirostat_tau: 5
   mirostat_eta: 0.1
+  verbose: true
 
 listen:
-  main_recorder_model: tiny.en
-  realtime_recorder_model: tiny.en
+  main_recorder_model: large-v2 # Model size for main transcription, can be distil models like distil-large-v2 or smaller like medium
+  realtime_recorder_model: tiny.en  # Model size for real-time transcription
+  enable_realtime_transcription: true  # Enable or disable real-time transcription
+  realtime_processing_pause: 0.02  # Time interval between real-time transcription updates
+  webrtc_sensitivity: 3  # Sensitivity for WebRTC Voice Activity Detection (0-3)
+  min_length_of_recording: 0.3  # Minimum duration of a recording session in seconds
+  min_gap_between_recordings: 0.01  # Minimum time between recording sessions in seconds
+  wake_word_timeout: 40  # Duration in seconds to wait for speech after wake word detection
+  silero_use_onnx: false  # Use ONNX format for Silero model
+  return_to_wakewords_after_silence: 20  # Time in seconds to return to wake word detection after silence
+  silero_sensitivity_normal: 0.2  # Silero VAD sensitivity for normal mode
+  silero_sensitivity_music: 0.01  # Silero VAD sensitivity for music mode
+  fast_post_speech_silence_duration: 0.25  # Duration of silence to consider speech ended (fast mode)
+  long_term_noise_decay: 0.995  # Decay factor for long-term noise estimation
+  short_term_noise_decay: 0.9  # Decay factor for short-term noise estimation
+  allow_speech_interruption: true  # Allow interruption of ongoing speech
+  sentence_delimiters: .?!。  # Characters used to delimit sentences in transcription
+  wakeword_backend: pvporcupine  # Backend library for wake word detection (pvporcupine or oww)
+  # For openwakeword / oww detection set comma-separated paths to custom OpenWakeWord model files
+  #   e.g. for windows
+  # openwakeword_model_paths: D:\AI_Models\Oww_Onnx\suh_man_tuh.onnx,D:\AI_Models\Oww_Onnx\suh_mahn_thuh.onnx,D:\AI_Models\Oww_Onnx\ling_goo_flex.onnx  # Comma-separated paths to custom OpenWakeWord model files
+  openwakeword_model_paths:
+  openwakeword_inference_framework: onnx  # Inference framework for OpenWakeWord (onnx or tflite)
+  wake_word_buffer_duration: 0.1  # Duration in seconds to buffer audio during wake word detection (set to ~0.1 for pvporcupine and ~1.0 for oww)
+  wake_words_sensitivity: 0.5  # Sensitivity for wake word detection (0 to 1, (set to ~0.5 for pvporcupine and ~0.35 for oww)
 
 speech:
   warmup: true
@@ -76,7 +108,7 @@ speech:
   elevenlabs_model: eleven_multilingual_v1
   xtts_model_path: models/xtts
   coqui_use_pretrained_model: true
-  coqui_use_deepspeed: true
+  coqui_use_deepspeed: false
   coqui_temperature: 0.9
   coqui_length_penalty: 1
   coqui_repetition_penalty: 10
@@ -88,7 +120,7 @@ weather:
   city: New York
 
 see:
-  model: gpt-4-vision-preview
+  model: llava # you can use ollama vision model here if using ollama as a provider
   img_width: 1024
   img_height: 768
   output_file_webcam: webcam.jpg
@@ -113,7 +145,7 @@ mail:
     Use the english language for the summary.
     Extract all links.
   importance_threshold: 5
-  summarize_model: gpt-3.5-turbo-1106
+  summarize_model: gpt-3.5-turbo-1106 # can be a openai model like "gpt-3.5-turbo-1106" or "ollama" or "local" (when using llama.cpp)
 
 server:
   host: 192.168.178.1
@@ -121,6 +153,20 @@ server:
   port_websocket: 8001
   ssl_certfile: 
   ssl_keyfile: 
+
+home_assistant:
+  home_assistant_url: homeassistant.local # replace by your local home assistant server IP (e.g. 192.168.178.XXX)
+  bearer_token: replace_this_by_your_home_assistant_bearer_token
+  entity_whitelist: switch.,light.,sensor.,person.,weather.
+  entity_blacklist: _kindersicherung,_parental
+  attribute_map:
+    light:
+      - brightness
+      - color_mode
+      - supported_color_modes
+      - color_temp
+      - hs_color
+    switch: []
 
 # Logging settings
 logging:
@@ -131,14 +177,15 @@ logging:
 
 modules:
   - listen
-  - see
+#  - see
   - brain
-  - mail
+#  - mail
   - mimic
   - music
-  - weather
-  - house 
-  - search
-  - calendar
+#  - weather
+#  - house 
+#  - search
+#  - calendar
+#  - server
   - interpreter
   - speech

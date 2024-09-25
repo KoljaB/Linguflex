@@ -71,42 +71,64 @@ def check_platform():
 
 def check_cuda():
     printl("Checking CUDA Toolkit...")
-
     try:
-        # Execute nvcc to get CUDA version
         nvcc_output = subprocess.check_output("nvcc --version", shell=True).decode()
-
-        # Use regular expression to extract version number
         match = re.search(r"release (\d+\.\d+)", nvcc_output)
         if match:
             cuda_version = match.group(1)
-            if cuda_version == "11.8":
-                printl(f"  CUDA Toolkit version {cuda_version} detected.")
-            else:
-                ask_exit(
-                    f"CUDA Toolkit version {cuda_version} detected.\n"
-                    "- Version 11.8 is strongly recommended.\n"
-                    "  https://developer.nvidia.com/cuda-11-8-0-download-archive",
-                    "Do you want to continue with a different version of CUDA? (yes/no): "
-                )
+            printl(f"  CUDA Toolkit version {cuda_version} detected.")
             return cuda_version
         else:
             ask_exit(
-                "CUDA Toolkit version 11.8 could not be detected.\n"
-                "- Version 11.8 is strongly recommended.\n"
-                "  https://developer.nvidia.com/cuda-11-8-0-download-archive",
-                "Do you want to proceed despite CUDA 11.8 was not detected? (yes/no): "
+                "CUDA Toolkit version could not be detected.",
+                "Do you want to proceed despite CUDA not being detected? (yes/no): "
             )
-            return "11.8"
-
+            return None
     except subprocess.CalledProcessError:
         ask_exit(
-            "CUDA Toolkit version 11.8 could not be detected.\n"
-            "- Version 11.8 is strongly recommended.\n"
-            "  https://developer.nvidia.com/cuda-11-8-0-download-archive",
-            "Do you want to proceed despite CUDA 11.8 was not detected? (yes/no): "
+            "CUDA Toolkit could not be detected.",
+            "Do you want to proceed despite CUDA not being detected? (yes/no): "
         )
-        return "11.8"
+        return None
+
+# def check_cuda():
+#     printl("Checking CUDA Toolkit...")
+
+#     try:
+#         # Execute nvcc to get CUDA version
+#         nvcc_output = subprocess.check_output("nvcc --version", shell=True).decode()
+
+#         # Use regular expression to extract version number
+#         match = re.search(r"release (\d+\.\d+)", nvcc_output)
+#         if match:
+#             cuda_version = match.group(1)
+#             if cuda_version == "11.8":
+#                 printl(f"  CUDA Toolkit version {cuda_version} detected.")
+#             else:
+#                 ask_exit(
+#                     f"CUDA Toolkit version {cuda_version} detected.\n"
+#                     "- Version 11.8 is recommended.\n"
+#                     "  https://developer.nvidia.com/cuda-11-8-0-download-archive",
+#                     "Do you want to continue with a different version of CUDA? (yes/no): "
+#                 )
+#             return cuda_version
+#         else:
+#             ask_exit(
+#                 "CUDA Toolkit version 11.8 could not be detected.\n"
+#                 "- Version 11.8 is strongly recommended.\n"
+#                 "  https://developer.nvidia.com/cuda-11-8-0-download-archive",
+#                 "Do you want to proceed despite CUDA 11.8 was not detected? (yes/no): "
+#             )
+#             return "11.8"
+
+#     except subprocess.CalledProcessError:
+#         ask_exit(
+#             "CUDA Toolkit version 11.8 could not be detected.\n"
+#             "- Version 11.8 is strongly recommended.\n"
+#             "  https://developer.nvidia.com/cuda-11-8-0-download-archive",
+#             "Do you want to proceed despite CUDA 11.8 was not detected? (yes/no): "
+#         )
+#         return "11.8"
 
 
 def check_cudnn():
@@ -117,7 +139,10 @@ def check_cudnn():
         r"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8\bin",
         r"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8\include",
         r"C:\tools\cuda\bin",
-        r"C:\tools\cuda\include"
+        r"C:\tools\cuda\include",
+        # Paths needed for cuDNN v9 to support CUDA 12, since the default .exe install filestructure has changed
+        r"C:\Program Files\NVIDIA\CUDNN\v9.2\bin\12.5",
+        r"C:\Program Files\NVIDIA\CUDNN\v9.2\include\12.5"
     ]
 
     cudnn_h_found = False
@@ -129,8 +154,8 @@ def check_cudnn():
             cudnn_h_found = True
         # Check for the existence of the cuDNN library file (dll)
         # The file name can vary based on the cuDNN version
-        # Here we are checking for version 7 as an example
-        if any(os.path.exists(os.path.join(path, f)) for f in ["cudnn64_7.dll", "cudnn64_8.dll"]):
+        # Here we are checking for version 7, 8, or 9 as an example
+        if any(os.path.exists(os.path.join(path, f)) for f in ["cudnn64_7.dll", "cudnn64_8.dll", "cudnn64_9.dll"]):
             cudnn_dll_found = True
 
     if cudnn_h_found and cudnn_dll_found:
@@ -168,22 +193,26 @@ def install_library(library):
         if f"Requirement already satisfied: {library}" in result.stdout:
             printl(f"Already installed {library}")
             printl(f"  {result.stdout}", noprint=True)
+            return True
 
         elif "Successfully installed" in result.stdout:
             printl(f"Successfully installed {library}")
             printl(f"  {result.stdout}", noprint=True)
+            return True
         else:
             printl(f"  {result.stdout}", noprint=True)
             ask_exit(
                 f"Failed to install {library}. Error: {result.stderr}",
                 f"Do you want to continue installation without verified installation of {library}? (yes/no): "
             )
+            return False
 
     except subprocess.CalledProcessError as e:
         ask_exit(
             f"Installation failed for {library}. Error: {e}",
             f"Do you want to continue installation without verified installation of {library}? (yes/no): "
         )
+        return True
 
 
 def install_libraries_from_requirements(file_path):
@@ -208,8 +237,18 @@ def purge_pip_cache():
         printl(f"Failed to clear pip cache. Error: {e}")
 
 
+def is_greater_version(v1, v2):
+    # Split version numbers into parts and convert to integers
+    parts1 = [int(part) for part in v1.split('.')]
+    parts2 = [int(part) for part in v2.split('.')]
+
+    # Compare version number parts
+    return parts1 > parts2
+
+
 def install_deepspeed(deepspeed_version, cuda_version, python_version):
     # Mapping of Deepspeed version, CUDA version, and Python version to wheel URL
+
     wheel_urls = {
         ("0.11.2", "11.8", (3, 10)): "https://github.com/daswer123/deepspeed-windows/releases/download/11.2/deepspeed-0.11.2+cuda118-cp310-cp310-win_amd64.whl",
         ("0.11.2", "12.1", (3, 10)): "https://github.com/daswer123/deepspeed-windows/releases/download/11.2/deepspeed-0.11.2+cuda121-cp310-cp310-win_amd64.whl",
@@ -225,6 +264,9 @@ def install_deepspeed(deepspeed_version, cuda_version, python_version):
         ("0.13.1", "12.1", (3, 11)): "https://github.com/daswer123/deepspeed-windows/releases/download/13.1/deepspeed-0.13.1+cu121-cp311-cp311-win_amd64.whl"
     }
 
+    if is_greater_version(cuda_version, "12.1"):
+        cuda_version = "12.1"
+
     # Constructing the key for the mapping
     key = (deepspeed_version, cuda_version, (python_version[0], python_version[1]))
 
@@ -232,11 +274,11 @@ def install_deepspeed(deepspeed_version, cuda_version, python_version):
     wheel_url = wheel_urls.get(key)
     if wheel_url:
         # Install the wheel using pip
-        install_library(wheel_url)
+        return install_library(wheel_url)
     else:
         printl(f"No matching wheel found for Deepspeed version {deepspeed_version}, CUDA version {cuda_version}, Python version {python_version[0]}.{python_version[1]}")
         printl("Trying to install deepspeed with pip ...")
-        install_library("deepspeed")
+        return install_library("deepspeed")
 
 
 def install_llama_cpp_python(cuda_version):
@@ -248,12 +290,14 @@ def install_llama_cpp_python(cuda_version):
         os.environ['FORCE_CMAKE'] = '1'
 
         # Perform installation with pip
-        subprocess.check_call([sys.executable, "-m", "pip", "install", "llama-cpp-python", "--force-reinstall", "--upgrade", "--no-cache-dir", "--verbose"])
+        subprocess.check_call([sys.executable, "-m", "pip", "install", "llama-cpp-python==0.2.74", "--force-reinstall", "--upgrade", "--no-cache-dir", "--verbose"])
 
         printl("Successfully installed llama-cpp-python.")
+        return True
 
     except subprocess.CalledProcessError as e:
         printl(f"Failed to install llama-cpp-python. Error: {e}")
+        printl(f"Linguflex can run without llama-cpp-python. You can't use llama.cpp as model_provider in the local_llm section of the settings.yaml file. If you want to use local llms please select ollama as provider.")
         printl(f"You may need to copy MSBuildExtensions files for CUDA {cuda_version}.")
         printl(f"Copy all four MSBuildExtensions files from:\n"
                 f"C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v{cuda_version}\\extras\\visual_studio_integration\\MSBuildExtensions\n"
@@ -262,6 +306,7 @@ def install_llama_cpp_python(cuda_version):
                 f"before restarting the installation script or manually executing the following command:\n"
                 f"pip install llama-cpp-python --force-reinstall --upgrade --no-cache-dir --verbose")
         ask_exit("Do you want to continue without a verified installation of llama-cpp-python? (yes/no): ")
+        return False
 
 
 def install_pytorch_torchaudio(cuda_version):
@@ -272,7 +317,10 @@ def install_pytorch_torchaudio(cuda_version):
         "12.1": "torch==2.1.2+cu121 torchaudio==2.1.2+cu121",
     }
 
-    torch_wheel = torch_wheels.get(cuda_version)    
+    if is_greater_version(cuda_version, "12.1"):
+        cuda_version = "12.1"
+
+    torch_wheel = torch_wheels.get(cuda_version)
 
     if torch_wheel:
         # Install the wheel using pip
@@ -287,7 +335,6 @@ def install_pytorch_torchaudio(cuda_version):
                 f"Failed to install PyTorch and Torchaudio. Error: {e}",
                 "Do you want to continue without a verified installation of PyTorch and Torchaudio? (yes/no): ")
     else:
-        printl(f"No matching wheels found for CUDA version {cuda_version}.")
         ask_exit(
             f"No matching wheels found for CUDA version {cuda_version}.",
             "Do you want to continue without a verified installation of PyTorch and Torchaudio? (yes/no): ")
@@ -324,11 +371,15 @@ def download_models():
 if __name__ == "__main__":
 
     perform_download = always_download_models or \
-        ask("Do you want to download pre-trained llm (OpenHermes-2.5-Mistral-7B-GGUF), xtts and rvc models (recommended for tts rvc post processing)?",
+        ask("Do you want to download xtts and rvc models (recommended for tts rvc post processing)?",
             "Please enter yes or no: ")
 
     clear_pip = always_clear_pip or \
         ask("Do you want to clear the pip cache? This can resolve some installation issues.", "Please enter yes or no: ")
+
+    perform_deepspeed_install = \
+        ask("Do you want to install a deepspeed wheel? (not recommended wheels might not work on lots of systems, also only coqui tts on linux really benefits from it and gets bit faster)",
+            "Please enter yes or no: ")
 
     printl("\nChecking system requirements ...")
     python_version = check_python_version()
@@ -345,14 +396,25 @@ if __name__ == "__main__":
     install_libraries_from_requirements(requirements_file_path)
     printl("\nInstalling torch with CUDA ...")
     install_pytorch_torchaudio(cuda_version)
-    printl("\nInstalling required deepspeed ...")
-    install_deepspeed("0.11.2", cuda_version, python_version)
-    printl("\nInstalling required llama.cpp ...")
-    install_llama_cpp_python(cuda_version)
+    if perform_deepspeed_install:
+        printl("\nInstalling deepspeed ...")
+        if install_deepspeed("0.11.2", cuda_version, python_version):
+            import yaml
+            file_path = 'lingu/settings.yaml'
+            # Load the YAML file
+            with open(file_path, 'r') as file:
+                data = yaml.safe_load(file)
+
+            # Modify the 'coqui_use_deepspeed' setting under 'speech'
+            if 'speech' in data and 'coqui_use_deepspeed' in data['speech']:
+                data['speech']['coqui_use_deepspeed'] = True
+
+            # Write the modified data back to the YAML file
+            with open(file_path, 'w') as file:
+                yaml.safe_dump(data, file, default_flow_style=False)
+
     printl("\nSetting numpy version ...")
     install_library("numpy==1.23.5")
 
     if perform_download:
         download_models()
-
-    # vram_mb = detect_vram()

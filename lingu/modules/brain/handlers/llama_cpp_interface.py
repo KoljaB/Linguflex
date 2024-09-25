@@ -45,7 +45,7 @@ class FunctionName(BaseModel):
     )
 
 
-class LocalLLMInterface(LLM_Base):
+class LLamaCppInterface(LLM_Base):
     def __init__(
             self,
             history: History,

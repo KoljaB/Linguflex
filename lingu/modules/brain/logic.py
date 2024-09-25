@@ -1,5 +1,3 @@
-from .handlers.openai_interface import OpenaiInterface
-from .handlers.local_llm_interface import LocalLLMInterface
 from .handlers.history import History
 from lingu import log, cfg, prompt, Logic
 from .state import state
@@ -10,7 +8,10 @@ max_history_messages = int(cfg("max_history_messages", default=12))
 max_tokens_per_msg = int(cfg("max_tokens_per_msg", default=1000))
 max_history_tokens = int(cfg("max_history_tokens", default=7000))
 use_local_llm = bool(cfg("local_llm", "use_local_llm", default=False))
-
+model_provider = cfg("local_llm", "model_provider", default="llama.cpp")
+model_name = cfg(
+    "local_llm", "model_name",
+    default="openhermes-2.5-mistral-7b.Q5_K_M.gguf")
 
 class BrainLogic(Logic):
     """
@@ -31,10 +32,20 @@ class BrainLogic(Logic):
             )
 
         if use_local_llm:
-            log.inf("  [brain] using local language model")
-            self.llm = LocalLLMInterface(self.history)
+            if model_provider == "ollama":
+                log.inf(f"  [brain] using local language model \"{model_name}\" with ollama provider")
+                from .handlers.ollama_interface import OllamaInterface
+                self.llm = OllamaInterface(self.history)
+            elif model_provider == "lmstudio":
+                log.inf(f"  [brain] using local language model \"{model_name}\" with lmstudio provider")
+                from .handlers.lmstudio_interface import LMStudioInterface
+                self.llm = LMStudioInterface(self.history)
+            else:
+                log.err(f"  [brain] Invalid model provider: {model_provider}. Please use 'ollama' or 'lmstudio'.")
+                raise ValueError(f"Invalid model provider: {model_provider}. Please use 'ollama' or 'lmstudio'.")
         else:
             log.inf("  [brain] using openai language model")
+            from .handlers.openai_interface import OpenaiInterface
             self.llm = OpenaiInterface()
 
         self.tools = None
@@ -169,12 +180,14 @@ class BrainLogic(Logic):
             functions,
             state.model)
 
-        self.history.user(text)
+        if text:
+            self.history.user(text)
 
         log.inf(f"  history: {self.history.history}")
 
         assistant_response_stream = self.llm.generate(
-            [system_prompt_message] + self.history.get(),
+            text,
+            [system_prompt_message] + self.history.get(purge_images=True),
             tools_for_usertext)
 
         return assistant_response_stream
@@ -182,7 +195,8 @@ class BrainLogic(Logic):
     def generate_image(
             self,
             text,
-            image_path):
+            image_path,
+            image_source):
 
         """
         Generates an image-based response.
@@ -204,15 +218,11 @@ class BrainLogic(Logic):
             None,
             state.model)
 
-        self.history.user(text, image_path)
-
-        system_prompt_message = {
-            'role': 'system',
-            'content': prompt.get()
-        }
-
         assistant_response_stream = self.llm.generate_image(
-            [system_prompt_message] + self.history.get(1))
+            messages = [system_prompt_message] + self.history.get(),
+            prompt = text,
+            image_path = image_path,
+            image_source = image_source)
 
         return assistant_response_stream
 
@@ -266,22 +276,26 @@ class BrainLogic(Logic):
     def create_assistant_image_answer(
             self,
             user_text,
-            image_to_process):
+            image_to_process,
+            image_source):
         """
-        Creates an assistant image answer for the given user text.
+        Creates and processes vision answer for the given request.
 
         Args:
-            user_text: The user text to process.
+            user_text: The request / user text to process.
             image_to_process: The image to process.
         """
         self.state.set_active(True)
 
         self.trigger("assistant_text_start")
 
+        # gets vision answer generator from llm
         assistant_response_stream = self.generate_image(
             user_text,
-            image_to_process)
+            image_to_process,
+            image_source)
 
+        # realtime vision answer processing
         assistant_text = ""
         for chunk in assistant_response_stream:
             assistant_text += chunk
@@ -301,10 +315,6 @@ class BrainLogic(Logic):
         Args:
             tools: The executed tools.
         """
-        self.history.add_executed_tools(
-            self.llm.tool_calls_message,
-            tools
-        )
-
+        self.llm.add_tools_to_history(tools, self.history)
 
 logic = BrainLogic()

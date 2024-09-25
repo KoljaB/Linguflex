@@ -10,6 +10,14 @@ from RealtimeTTS import (
 import logging
 import os
 
+deepspeed_installed = False
+try:
+    import deepspeed
+    deepspeed_installed = True
+    print("DeepSpeed is installed.")
+except ImportError:
+    print("DeepSpeed is not installed.")
+
 language = cfg("speech", "language", default="en")
 startvoice_azure = cfg(
     "speech", "startvoice_azure", default="en-US-JennyNeural")
@@ -20,7 +28,12 @@ startvoice_elevenlabs = cfg(
 startvoice_system = cfg(
     "speech", "startvoice_system", default="Katja")
 model_path = cfg("speech", "xtts_model_path")
+
 coqui_use_deepspeed = bool(cfg("speech", "coqui_use_deepspeed", default=True))
+
+if coqui_use_deepspeed and not deepspeed_installed:
+    log.err("DeepSpeed is not installed. speech/coqui_use_deepspeed=True will be ignored, DeepSpeed disabled.")
+    coqui_use_deepspeed = False
 
 # coqui default temp is 0.75, we raise to 0.9 to get it more emotional
 coqui_temperature = float(cfg("speech", "coqui_temperature", default=0.9))
@@ -97,6 +110,8 @@ class Engines():
                 wait_notify()
 
                 log.dbg(f"Coqui loading language: {language}")
+                print(f"specific_model: {self.state.coqui_model}")
+                print(f"local_models_path: {self.model_path}")
                 self.coqui_engine = CoquiEngine(
                     language=language,
                     speed=1.0,
@@ -112,9 +127,9 @@ class Engines():
                     add_sentence_filter=True,
                     use_deepspeed=coqui_use_deepspeed,
                     pretrained=coqui_pretrained,
-                    comma_silence_duration=0.3,
-                    sentence_silence_duration=0.6,
-                    default_silence_duration=0.3)
+                    comma_silence_duration=0.1,
+                    sentence_silence_duration=0.2,
+                    default_silence_duration=0.1)
                 denotify()
             else:
                 self.set_coqui_model(self.state.coqui_model)

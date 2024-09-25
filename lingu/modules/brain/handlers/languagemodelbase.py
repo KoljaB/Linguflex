@@ -23,14 +23,16 @@ class LLM_Base():
     def set_temperature(self, temperature):
         raise NotImplementedError("The set_temperature method must be implemented by the derived class.")
 
-    def generate(self, messages, functions=None):
+    def generate(self, user_text, messages, functions=None):
         raise NotImplementedError("The get_stream_info method must be implemented by the derived class.")
 
-    def generate_image(self, messages):
-        raise NotImplementedError("The generate_image method must be implemented by the derived class.")
-
-    # def get_execution_function(self):
-    #     raise NotImplementedError("The get_execution_function method must be implemented by the derived class.")
+    def generate_image(self, messages, prompt: str, image_path: str, image_source: str):
+        unavail_str = "Image processing is not yet available for this llm provider, please switch to openai or ollama."
+        for chunk in unavail_str:
+            yield chunk
 
     def set_model(self, model_name):
         raise NotImplementedError("The set_model method must be implemented by the derived class.")
+
+    def add_tools_to_history(self, tools, history):
+        raise NotImplementedError("The add_executed_tools method must be implemented by the derived class.")        

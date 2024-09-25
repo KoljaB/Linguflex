@@ -1,51 +1,245 @@
 {
-	"play_music_by_name": 
-	{
-		"keywords": ["spiel*", "lied*", "song*", "album*", "alben", "musik*", "clip*", "film*", "stream*", "audio*", "sound*", "*list*", "titel*", "track*", "medien*", "künstler*", "interpret*", "band*", "youtube*", "hörb*", "podcast*", "play*", "hören*", "start*", "anfang*", "beginn*", "jams*", "beats*", "komposition*"],
-		"init_prompt": "",
-		"success_prompt": "Du bist ein Radiomoderator. Kündige die Musik in einem kurzen Satz an, der perfekt für die Ausstrahlung im Radio wäre (der Satz sollte also KEINE URLS ODER LINKS enthalten), indem du aus den Daten maximal den Künstler und überarbeiteten Songtitel (entferne überflüssige Zusätze wie zB \"remastered\") nennst und dabei Spannung aufbaust, Begeisterung weckst und neugierig auf das Stück machst.",
-		"fail_prompt": ""
+	"play_music_by_name":{
+	   "keywords":[
+		  "spiel*",
+		  "lied*",
+		  "song*",
+		  "album*",
+		  "alben",
+		  "musik*",
+		  "clip*",
+		  "film*",
+		  "stream*",
+		  "audio*",
+		  "sound*",
+		  "*list*",
+		  "titel*",
+		  "track*",
+		  "medien*",
+		  "künstler*",
+		  "interpret*",
+		  "band*",
+		  "youtube*",
+		  "hörb*",
+		  "podcast*",
+		  "play*",
+		  "hören*",
+		  "start*",
+		  "anfang*",
+		  "beginn*",
+		  "jams*",
+		  "beats*",
+		  "komposition*"
+	   ],
+	   "init_prompt":"",
+	   "success_prompt":"Du bist ein Radiomoderator. Kündige die Musik in einem kurzen Satz an, der perfekt für die Ausstrahlung im Radio wäre (der Satz sollte also KEINE URLS ODER LINKS enthalten), indem du aus den Daten maximal den Künstler und überarbeiteten Songtitel (entferne überflüssige Zusätze wie zB \"remastered\") nennst und dabei Spannung aufbaust, Begeisterung weckst und neugierig auf das Stück machst.",
+	   "fail_prompt":"",
+	   "examples":[
+		  {
+			 "user":"Kannst du bitte Sydney Sweeney von Ken Carson spielen?",
+			 "assistant":"name_or_search_terms='Ken Carson - Sydney Sweeney', single_song='True'"
+		  },
+		  {
+			 "user":"Hey, bitte spiele eine Playlist mit Kylie Minogue Songs.",
+			 "assistant":"name_or_search_terms='Kylie Minogue', single_song='False'"
+		  },
+		  {
+			 "user":"Spiele etwas von Future.",
+			 "assistant":"name_or_search_terms='Future', single_song='False'"
+		  },
+		  {
+			 "user":"Spiele Million Dollar Baby.",
+			 "assistant":"name_or_search_terms='Million Dollar Baby', single_song='False'"
+		  }
+	   ]
 	},
-	"play_music_by_playlist_index":
-	{
-		"keywords": ["spiel*", "lied*", "song*", "album*", "alben*", "musik*", "clip*", "film*", "stream*", "audio*", "sound*", "list*", "titel*", "track*", "pos*", "nummer*", "play*", "index*", "platz*"],
-		"init_prompt": "",
-		"success_prompt": "Audio wird ausgespielt. Erwähne keine URLs.",
-		"fail_prompt": ""
+	"play_music_by_playlist_index":{
+	   "keywords":[
+		  "spiel*",
+		  "lied*",
+		  "song*",
+		  "album*",
+		  "alben*",
+		  "musik*",
+		  "clip*",
+		  "film*",
+		  "stream*",
+		  "audio*",
+		  "sound*",
+		  "list*",
+		  "titel*",
+		  "track*",
+		  "pos*",
+		  "nummer*",
+		  "play*",
+		  "index*",
+		  "platz*"
+	   ],
+	   "init_prompt":"",
+	   "success_prompt":"Audio wird ausgespielt. Erwähne keine URLs.",
+	   "fail_prompt":"",
+	   "examples":[
+		  {
+			 "user":"Spiele das dritte Lied in der Playlist.",
+			 "assistant":"audio_index=2"
+		  },
+		  {
+			 "user":"Starte das Abspielen vom fünften Track.",
+			 "assistant":"audio_index=4"
+		  }
+	   ]
 	},
-	"skip_audio":
-	{
-		"keywords": ["*spring*", "skip*", "weit*", "wechsel*", "nächst*", "sprung*", "durchgeh*", "vorwärts*", "*vor", "rückwär*", "zurück", "vorig*", "spul*", "hüpf*", "letzt*"],
-		"init_prompt": "",
-		"success_prompt": "Audio wird ausgespielt. Erwähne keine URLs.",
-		"fail_prompt": ""
+	"skip_audio":{
+	   "keywords":[
+		  "*spring*",
+		  "skip*",
+		  "weit*",
+		  "wechsel*",
+		  "nächst*",
+		  "sprung*",
+		  "durchgeh*",
+		  "vorwärts*",
+		  "*vor",
+		  "rückwär*",
+		  "zurück",
+		  "vorig*",
+		  "spul*",
+		  "hüpf*",
+		  "letzt*"
+	   ],
+	   "init_prompt":"",
+	   "success_prompt":"Audio wird ausgespielt. Erwähne keine URLs.",
+	   "fail_prompt":"",
+	   "examples":[
+		  {
+			 "user":"Überspringe dieses Lied.",
+			 "assistant":"skip_count=1"
+		  },
+		  {
+			 "user":"Gehe ein Lied zurück.",
+			 "assistant":"skip_count=-1"
+		  },
+		  {
+			 "user":"Springe drei Lieder weiter.",
+			 "assistant":"skip_count=3"
+		  }
+	   ]
 	},
-	"get_playlist_information": 
-	{
-		"keywords": ["info*", "detail*", "daten*", "auskunft*", "erkund*", "information*", "wissen*", "playlist*", "liste*"],
-		"init_prompt": "",
-		"success_prompt": "",
-		"fail_prompt": ""
+	"get_playlist_information":{
+	   "keywords":[
+		  "info*",
+		  "detail*",
+		  "daten*",
+		  "auskunft*",
+		  "erkund*",
+		  "information*",
+		  "wissen*",
+		  "playlist*",
+		  "liste*"
+	   ],
+	   "init_prompt":"",
+	   "success_prompt":"",
+	   "fail_prompt":"",
+	   "examples":[
+		  {
+			 "user":"Was ist auf der aktuellen Playlist?"
+		  },
+		  {
+			 "user":"Kannst du mir Details zur Playlist geben?"
+		  }
+	   ]
 	},
-	"stop_music_playback": 
-	{
-		"keywords": ["*stop*", "*end*", "*halt*", "schluss*", "schluß*", "abschalt*", "ausschalt*", "anhalt*", "ruhe*", "pause*", "stopp*", "*brech*", "*brich*"],
-		"init_prompt": "",
-		"success_prompt": "Bestätige das erfolgreiche Beenden des Musikausspiels in ein oder zwei Worten.",
-		"fail_prompt": ""
+	"stop_music_playback":{
+	   "keywords":[
+		  "*stop*",
+		  "*end*",
+		  "*halt*",
+		  "schluss*",
+		  "schluß*",
+		  "abschalt*",
+		  "ausschalt*",
+		  "anhalt*",
+		  "ruhe*",
+		  "pause*",
+		  "stopp*",
+		  "*brech*",
+		  "*brich*"
+	   ],
+	   "init_prompt":"",
+	   "success_prompt":"Bestätige das erfolgreiche Beenden des Musikausspiels in ein oder zwei Worten.",
+	   "fail_prompt":"",
+	   "examples":[
+		  {
+			 "user":"Stoppe die Musik jetzt."
+		  },
+		  {
+			 "user":"Ich muss telefonieren, bitte halte die Musik an."
+		  }
+	   ]
 	},
-	"change_music_volume": 
-	{
-		"keywords": ["leise*", "laut*", "volume*", "*stärke*", "ton*", "geräusch*", "pegel*", "sound*", "audio*", "db*", "dezibel*", "stärke*", "intensität*", "amplitude*", "kräft*", "energie*", "taub", "gehör"],
-		"init_prompt": "",
-		"success_prompt": "Bestätige das erfolgreiche Ändern der Lautstärke in ein oder zwei Worten.",
-		"fail_prompt": ""
+	"change_music_volume":{
+	   "keywords":[
+		  "leise*",
+		  "laut*",
+		  "volume*",
+		  "*stärke*",
+		  "ton*",
+		  "geräusch*",
+		  "pegel*",
+		  "sound*",
+		  "audio*",
+		  "db*",
+		  "dezibel*",
+		  "stärke*",
+		  "intensität*",
+		  "amplitude*",
+		  "kräft*",
+		  "energie*",
+		  "taub",
+		  "gehör"
+	   ],
+	   "init_prompt":"",
+	   "success_prompt":"Bestätige das erfolgreiche Ändern der Lautstärke in ein oder zwei Worten.",
+	   "fail_prompt":"",
+	   "examples":[
+		  {
+			 "user":"Bitte mach die Musik leiser.",
+			 "assistant":"type='down'"
+		  },
+		  {
+			 "user":"Dreh es ein bisschen runter.",
+			 "assistant":"type='down'"
+		  },
+		  {
+			 "user":"Dreh die Musik lauter.",
+			 "assistant":"type='up'"
+		  }
+	   ]
 	},
-	"pause_or_continue_music": 
-	{
-		"keywords": ["pause*", "weiter*", "*halt*", "stopp*", "fortsetz*", "setz", "fort", "fortfahr*", "resume*", "wieder*", "beginn*"],
-		"init_prompt": "",
-		"success_prompt": "Bestätige das erfolgreiche Ändern des Pausemodus in ein oder zwei Worten.",
-		"fail_prompt": ""
+	"pause_or_continue_music":{
+	   "keywords":[
+		  "pause*",
+		  "weiter*",
+		  "*halt*",
+		  "stopp*",
+		  "fortsetz*",
+		  "setz",
+		  "fort",
+		  "fortfahr*",
+		  "resume*",
+		  "wieder*",
+		  "beginn*"
+	   ],
+	   "init_prompt":"",
+	   "success_prompt":"Bestätige das erfolgreiche Ändern des Pausemodus in ein oder zwei Worten.",
+	   "fail_prompt":"",
+	   "examples":[
+		  {
+			 "user":"Pausiere die Musik, bitte."
+		  },
+		  {
+			 "user":"Fahre fort mit der Musikwiedergabe."
+		  }
+	   ]
 	}
-}
+ }

@@ -150,15 +150,24 @@ class MailLogic(Logic):
 
         log.inf(f"  [mail] fetching mails from {mailbox} of {imap_server}")
 
-        imap = self.fetcher.connect_to_server()
-        email_ids = self.fetcher.search_emails(
-            imap,
-            history_hours,
-            mailbox)
-        mails = self.fetcher.fetch_emails(imap, email_ids, history_hours)
-        mails.reverse()
-        self.validate_mails(mails)
-        imap.logout()
+        try:
+            imap = self.fetcher.connect_to_server()
+        except Exception as e:
+            log.err(f"  [mail] Failed to connect to IMAP server (please verify your credentials.json and your username and password for the imap server): {e}")
+            self.state.set_disabled(True)
+            return
+        
+        try:
+            email_ids = self.fetcher.search_emails(imap, history_hours, mailbox)
+            mails = self.fetcher.fetch_emails(imap, email_ids, history_hours)
+            mails.reverse()
+            self.validate_mails(mails)
+            imap.logout()
+        except Exception as e:
+            log.err(f"  [mail] Error during mail fetching or processing: {e}")
+            imap.logout()
+            self.state.set_disabled(True)
+            return
 
         state.mails = mails
         state.last_fetch_time = datetime.today().isoformat()
@@ -210,29 +219,39 @@ class MailLogic(Logic):
                     content,
                     summarize_model)
             except Exception as e:
-                log.err(f"  [mail] error processing mail {subject}, "
+                log.wrn(f"  [mail] error processing mail {subject}, "
                         f"exception {e}")
-                exc(e)
                 state.save()
                 continue
 
-            if result is None:
+            # if result is None or result.summarized_content is None:
+            #     log.wrn("  [mail] summarization inference returned no result "
+            #             f"for mail {subject}. Skipping summarization cycle.")
+            #     tries -= 1
+            #     mail["tries"] = tries
+            #     state.save()
+            #     break
+
+            if result is None or result.summarized_content is None:
+                # log.wrn("  [mail] summarization inference returned no result "
+                #         f"for mail {subject}. Skipping summarization cycle.")
                 log.wrn("  [mail] summarization inference returned no result "
-                        f"for mail {subject}. Skipping summarization cycle.")
+                        f"for mail {subject}.")
                 tries -= 1
                 mail["tries"] = tries
                 state.save()
-                break
+                continue
 
             if debug:
                 log.dbg(f"  [mail] summary result: {result}")
 
             links = []
-            for link in result.links:
-                links.append({
-                    "name": link.name,
-                    "url": link.url
-                })
+            if result.links is not None:
+                for link in result.links:
+                    links.append({
+                        "name": link.name,
+                        "url": link.url
+                    })
 
             if result.importance_mail is None:
                 result.importance_mail = 0

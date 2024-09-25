@@ -1,0 +1,412 @@
+{
+	"get_states_of_all_devices":{
+	   "keywords":[
+		  "check",
+		  "color",
+		  "light*",
+		  "bulb*",
+		  "lamp*",
+		  "status*",
+		  "state*",
+		  "condition*",
+		  "device*",
+		  "appliance*",
+		  "equipment*",
+		  "machine*",
+		  "unit*",
+		  "gadget*",
+		  "tool*",
+		  "instrument*",
+		  "monitor*",
+		  "control*",
+		  "manage*",
+		  "home*",
+		  "assistant*",
+		  "smart*",
+		  "automation*",
+		  "connected*",
+		  "system*",
+		  "technology*",
+		  "integration*"
+	   ],
+	   "init_prompt":"",
+	   "success_prompt":"Here is the status of all your Home Assistant devices.",
+	   "fail_prompt":"I'm sorry, I couldn't retrieve the status of your Home Assistant devices at this time.",
+	   "examples":[
+		  {
+			 "user":"Can you check the status of my smart home devices?"
+		  },
+		  {
+			 "user":"Check the state of my home automation devices."
+		  },
+		  {
+			 "user":"Show me the current status of my connected devices."
+		  }
+	   ]
+	},
+	"turn_on_light":{
+	   "keywords":[
+		  "turn",
+		  "on",
+		  "light*",
+		  "bulb*",
+		  "lamp*"
+	   ],
+	   "init_prompt":"",
+	   "success_prompt":"The light has been turned on, report that.",
+	   "fail_prompt":"I'm sorry, I couldn't turn the light of this Home Assistant device on at this time.",
+	   "examples":[
+		  {
+			 "user":"Can you turn the light at the altar on?",
+			 "assistant":"light_entity_id='light.altar'"
+		  },
+		  {
+			 "user":"Make the lamp for Couch Unten on.",
+			 "assistant":"light_entity_id='light.couch_unten'"
+		  },
+		  {
+			 "user":"I want the bulb for the PC Ecke to be switched on.",
+			 "assistant":"light_entity_id='light.pc_ecke'"
+		  }
+	   ]
+	},
+	"turn_off_light":{
+	   "keywords":[
+		  "turn",
+		  "off",
+		  "light*",
+		  "bulb*",
+		  "lamp*"
+	   ],
+	   "init_prompt":"",
+	   "success_prompt":"The light has been turned off, report that.",
+	   "fail_prompt":"I'm sorry, I couldn't turn the light of this Home Assistant device off at this time.",
+	   "examples":[
+		  {
+			 "user":"Can you turn the light at the altar off?",
+			 "assistant":"light_entity_id='light.altar'"
+		  },
+		  {
+			 "user":"Make the lamp for Couch Unten off.",
+			 "assistant":"light_entity_id='light.couch_unten'"
+		  },
+		  {
+			 "user":"I want the bulb for the PC Ecke to be switched off.",
+			 "assistant":"light_entity_id='light.pc_ecke'"
+		  }
+	   ]
+	},
+	"turn_on_switch":{
+	   "keywords":[
+		  "turn",
+		  "on",
+		  "switch*",
+		  "outlet*",
+		  "socket*",
+		  "power*"
+	   ],
+	   "init_prompt":"",
+	   "success_prompt":"The switch has been turned on, report that.",
+	   "fail_prompt":"I'm sorry, I couldn't turn the switch of this Home Assistant device on at this time.",
+	   "examples":[
+		  {
+			 "user":"Turn the switch for the Kaffeemaschine on.",
+			 "assistant":"switch_entity_id='switch.kaffeemaschine'"
+		  },
+		  {
+			 "user":"Can you turn on the switch for the Ventilator?",
+			 "assistant":"switch_entity_id='switch.ventilator'"
+		  },
+		  {
+			 "user":"I want the Duftlampe to be switched on.",
+			 "assistant":"switch_entity_id='switch.duftlampe'"
+		  }
+	   ]
+	},
+	"turn_off_switch":{
+	   "keywords":[
+		  "turn",
+		  "off",
+		  "switch*",
+		  "outlet*",
+		  "socket*",
+		  "power*"
+	   ],
+	   "init_prompt":"",
+	   "success_prompt":"The switch has been turned off, report that.",
+	   "fail_prompt":"I'm sorry, I couldn't turn the switch of this Home Assistant device off at this time.",
+	   "examples":[
+		  {
+			 "user":"Can you turn the switch for the Kaffeemaschine off?",
+			 "assistant":"switch_entity_id='switch.kaffeemaschine'"
+		  },
+		  {
+			 "user":"Can you turn off the switch for the Ventilator?",
+			 "assistant":"switch_entity_id='switch.ventilator'"
+		  },
+		  {
+			 "user":"I want the Duftlampe to be switched off.",
+			 "assistant":"switch_entity_id='switch.duftlampe'"
+		  }
+	   ]
+	},
+	"set_light_color":{
+	   "keywords":[
+		  "color*",
+		  "light*",
+		  "bulb*",
+		  "lamp*"
+	   ],
+	   "init_prompt":"",
+	   "success_prompt":"The light color has been set, report that.",
+	   "fail_prompt":"I'm sorry, I couldn't set the light color of this Home Assistant device on at this time.",
+	   "examples":[
+		  {
+			 "user":"Can you make the light at the altar green?",
+			 "assistant":"light_entity_id='light.altar' color_name='green'"
+		  },
+		  {
+			 "user":"Make the lamp for Couch Unten shine in a nice mellow orange way.",
+			 "assistant":"light_entity_id='light.couch_unten' rgb_color=[248, 166, 91]"
+		  },
+		  {
+			 "user":"I want the bulb for the PC Ecke to be somewhat cherry red.",
+			 "assistant":"light_entity_id='light.pc_ecke' rgb_color=[222, 49, 99]"
+		  }
+	   ]
+	},
+	"set_temperature":{
+	   "keywords":[
+		  "temperatur*",
+		  "climate*",
+		  "thermostat*"
+	   ],
+	   "init_prompt":"",
+	   "success_prompt":"The temperature has been set, report that.",
+	   "fail_prompt":"I'm sorry, I couldn't set the temperature of this Home Assistant device at this time.",
+	   "examples":[
+		  {
+			 "user":"Can you set the living room temperature to 22 degrees?",
+			 "assistant":"entity_id='climate.living_room' temperature=22"
+		  },
+		  {
+			 "user":"Adjust the temperature in the bedroom to 20 degrees.",
+			 "assistant":"entity_id='climate.bedroom' temperature=20"
+		  },
+		  {
+			 "user":"I want to set the thermostat in the kitchen to 18 degrees.",
+			 "assistant":"entity_id='climate.kitchen' temperature=18"
+		  }
+	   ]
+	},
+	"lock":{
+	   "keywords":[
+		  "lock",
+		  "secure",
+		  "door*",
+		  "lock*"
+	   ],
+	   "init_prompt":"",
+	   "success_prompt":"The lock has been secured, report that.",
+	   "fail_prompt":"I'm sorry, I couldn't secure the lock of this Home Assistant device at this time.",
+	   "examples":[
+		  {
+			 "user":"Can you lock the front door?",
+			 "assistant":"entity_id='lock.front_door'"
+		  },
+		  {
+			 "user":"Secure the back door.",
+			 "assistant":"entity_id='lock.back_door'"
+		  },
+		  {
+			 "user":"I want to lock the garage door.",
+			 "assistant":"entity_id='lock.garage_door'"
+		  }
+	   ]
+	},
+	"unlock":{
+	   "keywords":[
+		  "unlock",
+		  "unsecure",
+		  "door*",
+		  "lock*",
+		  "device*"
+	   ],
+	   "init_prompt":"",
+	   "success_prompt":"The lock has been unsecured, report that.",
+	   "fail_prompt":"I'm sorry, I couldn't unsecure the lock of this Home Assistant device at this time.",
+	   "examples":[
+		  {
+			 "user":"Can you unlock the front door?",
+			 "assistant":"entity_id='lock.front_door'"
+		  },
+		  {
+			 "user":"Unsecure the back door.",
+			 "assistant":"entity_id='lock.back_door'"
+		  },
+		  {
+			 "user":"I want to unlock the garage door.",
+			 "assistant":"entity_id='lock.garage_door'"
+		  }
+	   ]
+	},
+	"get_config":{
+	   "keywords":[
+		  "config*",
+		  "setting*",
+		  "system*"
+	   ],
+	   "init_prompt":"",
+	   "success_prompt":"Here is the current configuration of your Home Assistant system.",
+	   "fail_prompt":"I'm sorry, I couldn't retrieve the configuration of your Home Assistant system at this time.",
+	   "examples":[
+		  {
+			 "user":"Can you show me the current configuration of my Home Assistant system?"
+		  },
+		  {
+			 "user":"Show me the settings of my smart home system."
+		  },
+		  {
+			 "user":"I want to see the current configuration settings of my home automation system."
+		  }
+	   ]
+	},
+	"get_events":{
+	   "keywords":[
+		  "event*",
+		  "activit*"
+	   ],
+	   "init_prompt":"",
+	   "success_prompt":"Here are the events in your Home Assistant system.",
+	   "fail_prompt":"I'm sorry, I couldn't retrieve the events of your Home Assistant system at this time.",
+	   "examples":[
+		  {
+			 "user":"Can you show me the events in my Home Assistant system?"
+		  },
+		  {
+			 "user":"Show me the recent activities in my smart home system."
+		  },
+		  {
+			 "user":"I want to see the events in my home automation system."
+		  }
+	   ]
+	},
+	"get_services":{
+	   "keywords":[
+		  "service*",
+		  "action*",
+		  "operation*",
+		  "function*"
+	   ],
+	   "init_prompt":"",
+	   "success_prompt":"Here are the available services in your Home Assistant system.",
+	   "fail_prompt":"I'm sorry, I couldn't retrieve the services of your Home Assistant system at this time.",
+	   "examples":[
+		  {
+			 "user":"Can you show me the services available in my Home Assistant system?"
+		  },
+		  {
+			 "user":"Show me the available actions in my smart home system."
+		  },
+		  {
+			 "user":"I want to see the services available in my home automation system."
+		  }
+	   ]
+	},
+	"get_history":{
+	   "keywords":[
+		  "history",
+		  "show history",
+		  "retrieve history"
+	   ],
+	   "init_prompt":"",
+	   "success_prompt":"Here is the history of the specified entity in your Home Assistant system.",
+	   "fail_prompt":"I'm sorry, I couldn't retrieve the history of the specified entity in your Home Assistant system at this time.",
+	   "examples":[
+		  {
+			 "user":"Can you show me the history of the living room light for the past day?",
+			 "assistant":"start_time='2024-06-23T00:00:00Z' end_time='2024-06-24T00:00:00Z' filter_entity_id='light.living_room'"
+		  },
+		  {
+			 "user":"Retrieve the history of my bedroom thermostat for the past week.",
+			 "assistant":"start_time='2024-06-17T00:00:00Z' end_time='2024-06-24T00:00:00Z' filter_entity_id='climate.bedroom'"
+		  },
+		  {
+			 "user":"I want to see the history of the kitchen door lock for the past month.",
+			 "assistant":"start_time='2024-05-24T00:00:00Z' end_time='2024-06-24T00:00:00Z' filter_entity_id='lock.kitchen_door'"
+		  }
+	   ]
+	},
+	"get_logbook":{
+	   "keywords":[
+		  "log*",
+		  "entries"
+	   ],
+	   "init_prompt":"",
+	   "success_prompt":"Here are the logbook entries in your Home Assistant system.",
+	   "fail_prompt":"I'm sorry, I couldn't retrieve the logbook entries of your Home Assistant system at this time.",
+	   "examples":[
+		  {
+			 "user":"Can you show me the logbook entries for the living room light for the past day?",
+			 "assistant":"start_time='2024-01-01T00:00:00Z' end_time='2024-01-02T00:00:00Z' entity='light.living_room'"
+		  },
+		  {
+			 "user":"Retrieve the logbook entries for my bedroom thermostat for the past week.",
+			 "assistant":"start_time='2024-01-01T00:00:00Z' end_time='2024-01-08T00:00:00Z' entity='climate.bedroom'"
+		  },
+		  {
+			 "user":"I want to see the logbook entries for the kitchen door lock for the past month.",
+			 "assistant":"start_time='2024-01-01T00:00:00Z' end_time='2024-02-01T00:00:00Z' entity='lock.kitchen_door'"
+		  }
+	   ]
+	},
+	"update_state":{
+	   "keywords":[
+		  "update*",
+		  "change*",
+		  "state*",
+		  "on",
+		  "off",
+		  "turn"
+	   ],
+	   "init_prompt":"",
+	   "success_prompt":"The state has been updated, report that.",
+	   "fail_prompt":"I'm sorry, I couldn't update the state of this Home Assistant device at this time.",
+	   "examples":[
+		  {
+			 "user":"Can you update the state of the living room light to on?",
+			 "assistant":"entity_id='light.living_room' state='on'"
+		  },
+		  {
+			 "user":"Turn the bedroom thermostat off.",
+			 "assistant":"entity_id='climate.bedroom' state='off'"
+		  },
+		  {
+			 "user":"I want to change the state of the kitchen door lock to locked.",
+			 "assistant":"entity_id='lock.kitchen_door' state='locked'"
+		  }
+	   ]
+	},
+	"fire_event":{
+	   "keywords":[
+		  "fire",
+		  "trigger",
+		  "initiate",
+		  "event*"
+	   ],
+	   "init_prompt":"",
+	   "success_prompt":"The event has been fired, report that.",
+	   "fail_prompt":"I'm sorry, I couldn't fire the event in your Home Assistant system at this time.",
+	   "examples":[
+		  {
+			 "user":"Can you trigger the custom_event event in my Home Assistant system?"
+		  },
+		  {
+			 "user":"Initiate the alarm_triggered event in my smart home system."
+		  },
+		  {
+			 "user":"I want to fire the motion_detected event in my home automation system."
+		  }
+	   ]
+	}
+ }

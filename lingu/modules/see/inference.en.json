@@ -1,0 +1,48 @@
+{
+	"LookAtWebcam":{
+	   "keywords":[
+		  "see",
+		  "look",
+		  "watch",
+		  "screenshot",
+		  "webcam"
+	   ],
+	   "init_prompt":"",
+	   "success_prompt":"Sum up what is seen in the webcam image.",
+	   "fail_prompt":"",
+	   "examples":[
+		  {
+			 "user":"What are you seeing right now?"
+		  },
+		  {
+			 "user":"Look what is in my hand right now."
+		  },
+		  {
+			 "user":"Can you see what I am holding in my hand right now?"
+		  }
+	   ]
+	},
+	"LookAtDesktop":{
+	   "keywords":[
+		  "see",
+		  "look",
+		  "watch",
+		  "screenshot",
+		  "desktop"
+	   ],
+	   "init_prompt":"",
+	   "success_prompt":"Sum up what is seen in the desktop screenshot.",
+	   "fail_prompt":"",
+	   "examples":[
+		  {
+			 "user":"Look at the desktop."
+		  },
+		  {
+			 "user":"What can you see on my PC?"
+		  },
+		  {
+			 "user":"Look what's going on at my PC."
+		  }
+	   ]
+	}
+ }

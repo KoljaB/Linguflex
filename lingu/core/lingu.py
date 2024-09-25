@@ -5,9 +5,9 @@ from .modules import Modules
 from .events import events
 from .prompt import prompt
 from lingu import cfg, log, notify
-from pynput import keyboard
 from .tools import Tools
 import threading
+import keyboard
 import time
 
 
@@ -30,8 +30,7 @@ class Lingu:
             app: The main application object to be used with Lingu.
         """
         self.app = app
-        self.listener = keyboard.Listener(on_press=self.on_press)
-        self.listener.start()
+        keyboard.on_press_key("esc", self.on_press)
         
         events.add_listener(
             "user_text_complete",
@@ -43,13 +42,7 @@ class Lingu:
         )
 
     def on_press(self, key):
-        """
-        Function called when a key is pressed.
-        If Escape key is pressed, a message is printed.
-        """
-        if key == keyboard.Key.esc:
-            events.trigger("escape_key_pressed", "ui")
-            return True
+        events.trigger("escape_key_pressed", "ui")
 
     def start(self):
         """
@@ -143,11 +136,15 @@ class Lingu:
             # prepare final answer (or call tools again)
             self.tools.executed_tools = []
             prompt.start()
+
+            # check for vision (module there plus image provided)
             if seelogic and seelogic.image_to_process:
-                # if executed tool needs vision, call vision
+
+                # let vision llm process and answer that image
                 self.brainlogic.create_assistant_image_answer(
                     text,
-                    seelogic.image_to_process
+                    seelogic.image_to_process,
+                    seelogic.image_source
                 )
             else:
                 tools_for_usertext, functions = self.tools.get_tools(text)

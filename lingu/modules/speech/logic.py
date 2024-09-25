@@ -1,17 +1,44 @@
+"""
+Triggers:
+- self.trigger("speech_ready")
+    To inform listen logic that the speech module is ready
+- self.trigger("audio_chunk", chunk)
+    To yield an audio chunk to the server module
+- self.trigger("rvc_audio_chunk", sub_chunk)
+    To yield an rvc post processed audio chunk to the server module
+- self.trigger("stop_recorder")
+    To inform listen logic that the recorder should be stopped
+- self.trigger("audio_stream_start")
+    To inform speech and server logic that the audio output started
+    - speech must disable the voice test button
+    - server sends this info to the client
+- self.trigger("audio_stream_stop")
+    To inform about audio output stopped
+- self.trigger("update_ui")
+    To update the UI
+"""
+
 from lingu import log, cfg, Logic, RealtimeRVC
 from .state import state
 from .handlers.feed2stream import BufferStream
 from .handlers.engines import Engines
 from .handlers.voices import Voices
 from .handlers.resample import Resampler
+from scipy.spatial.distance import cosine
 import numpy as np
 import threading
 import os
 import resampy
+import wave
 from scipy.signal import butter, lfilter
 
 force_first_fragment_after_words = \
-    int(cfg("speech", "force_first_fragment_after_words", default=12))
+    int(cfg("speech", "force_first_fragment_after_words", default=99999))
+
+warmup = bool(cfg("speech", "warmup", default=False))
+if warmup:
+    warmup_text = cfg("speech", "warmup_text", default="Hi")
+    warmup_muted = bool(cfg("speech", "warmup_muted", default=False))
 
 # speed-optimized:
 # min_sentence_length = 5
@@ -83,7 +110,7 @@ class SpeechLogic(Logic):
                           self.assistant_text_complete)
         self.add_listener("set_voice",
                           "mimic",
-                          self.voices.mimic_set_voice)
+                          self.mimic_set_voice)
         self.add_listener(
             "escape_key_pressed",
             "*",
@@ -100,6 +127,10 @@ class SpeechLogic(Logic):
             "client_disconnected",
             "server",
             self._stop_yield_playout)
+        self.add_listener(
+            "user_audio_complete",
+            "listen",
+            self._user_audio)
         # Create buffer for output text stream.
         self.text_stream = BufferStream()
 
@@ -116,6 +147,10 @@ class SpeechLogic(Logic):
 
         self.ready()
 
+    def mimic_set_voice(self, voice):
+        self.voices.mimic_set_voice(voice)
+        self.set_rvc_enabled(state.rvc_enabled)
+
     def _yield_playout(self):
         self.state.set_text("🌐")
         log.inf("  [speech] client connected, disabling sound output")
@@ -125,6 +160,22 @@ class SpeechLogic(Logic):
         self.state.set_text("")
         log.inf("  [speech] client disconnected, enabling sound output")
         self.playout_yielded = False
+
+    def _user_audio(self, user_audio_bytes):
+        if not self.engines.engine.engine_name == "coqui":
+            return
+        path_ref_file = "lingu/resources/user_voice/voice_example.wav"
+        if not os.path.exists(path_ref_file):
+            return
+
+        audio_int16 = np.int16(user_audio_bytes * 32767)
+
+        path_cur_file = "user_audio.wav"
+        with wave.open(path_cur_file, 'w') as wav_file:
+            wav_file.setnchannels(1)
+            wav_file.setsampwidth(2)
+            wav_file.setframerate(16000)
+            wav_file.writeframes(audio_int16.tobytes())
 
     def yield_chunk_callback(self, chunk):
 
@@ -149,16 +200,6 @@ class SpeechLogic(Logic):
 
         # Assume chunk is a bytes object containing float32 data
         audio_data = np.frombuffer(chunk, dtype=np.float32)
-
-        # # Create a low-pass filter
-        # nyquist_rate = sample_rate / 2
-        # cutoff_freq = nyquist_rate * 0.9  # Adjust the cutoff frequency as needed
-        # order = 6  # Adjust the filter order as needed
-        # b, a = butter(order, cutoff_freq / nyquist_rate, btype='low', analog=False)
-
-        # # Apply the low-pass filter to the audio data
-        # filtered_audio = lfilter(b, a, audio_data)
-        # audio_data = filtered_audio
 
         # Resample the audio
         resampled_audio = resampy.resample(audio_data, sample_rate, target_sample_rate)
@@ -194,53 +235,12 @@ class SpeechLogic(Logic):
         if remaining_data_start < len(chunk):
             remaining_data = chunk[remaining_data_start:]        
             self.trigger("rvc_audio_chunk", remaining_data)
-        # self.trigger("rvc_audio_chunk", chunk)
-        # Determine the size of each chunk in bytes
-        # chunk_size = 2048
-        
-        # # Calculate the number of full chunks that can be extracted from the input
-        # num_full_chunks = len(chunk) // chunk_size
-        
-        # # Iterate over each full chunk and trigger an event
-        # for i in range(num_full_chunks):
-        #     start = i * chunk_size
-        #     end = start + chunk_size
-        #     sub_chunk = chunk[start:end]
-        #     self.trigger("rvc_audio_chunk", sub_chunk)
-        
-        # # Optional: Handle any remaining data that's less than a full chunk
-        # remaining_data_start = num_full_chunks * chunk_size
-        # if remaining_data_start < len(chunk):
-        #     remaining_data = chunk[remaining_data_start:]
-        #     self.trigger("rvc_audio_chunk", remaining_data)
-            # Here you could either store this and wait until you accumulate enough for a full chunk,
-            # or decide to send it as is (may not be desirable depending on your use case).
-            # For example:
-            # self.trigger("rvc_audio_chunk", remaining_data)
-    # def rvc_yield_chunk_callback(self, chunk):
-
-    #     self.trigger("rvc_audio_chunk", chunk)
-
-        #chunk = self.resample_float32_to_float32(chunk, 40000, 48000)
-        # self.resampler.set_sample_rate(40000, 48000)
-        # np_data = np.frombuffer(chunk, dtype=np.float32)
-        # # Scale float32 data to int16 range
-        # np_data_int16 = (np_data * 32767).astype(np.int16)
-        # np_resampled_data = self.resampler.resample(np_data_int16)
-        # chunk = np_resampled_data.astype(np.float32) / 32767.0
-        # chunk = chunk.newbyteorder('<')  # Force little-endian
-        # chunk = chunk.tobytes()
-        # self.trigger("audio_chunk", chunk)
 
     def post_init_processing(self):
         if not state.engine_name == "coqui":
             return
 
-        warmup = bool(cfg("speech", "warmup", default=False))
         if warmup:
-            warmup_text = cfg("speech", "warmup_text", default="Hi")
-            warmup_muted = bool(cfg("speech", "warmup_muted", default=False))
-
             # delayed execute warmup
             threading.Timer(2, self.test_voice, args=[warmup_text, warmup_muted]).start()
 
@@ -274,10 +274,9 @@ class SpeechLogic(Logic):
             text (str): The text to be synthesized and played.
 
         """
-        # print(f"Playing text: {text}, muted: {muted}")
         self.muted = muted
         self.text_stream.add(text)
-       
+
 
         if not self.engines.stream.is_playing():
             self.engines.stream.feed(self.text_stream.gen())
@@ -296,7 +295,6 @@ class SpeechLogic(Logic):
                     )
             else: 
                 if not self.playout_yielded:
-                    # log.inf(f"  [speech] normal playing text: {text}, 'muted': {muted}")
                     self.engines.stream.play_async(
                         fast_sentence_fragment=fast_sentence_fragment,
                         minimum_sentence_length=min_sentence_length,
@@ -308,7 +306,6 @@ class SpeechLogic(Logic):
                         force_first_fragment_after_words=force_first_fragment_after_words,
                         )
                 else:
-                    # log.inf(f"  [speech] yield_chunk_callback playing text 'text': {text}")
                     self.engines.stream.play_async(
                         fast_sentence_fragment=fast_sentence_fragment,
                         minimum_sentence_length=min_sentence_length,
@@ -328,9 +325,8 @@ class SpeechLogic(Logic):
             text (str): The text to be synthesized and played for testing.
 
         """
-        print(f"Testing voice: {text}, muted: {muted}")
+        # print(f"Testing voice: {text}, muted: {muted}")
         self.trigger("stop_recorder")
-        print("self.state.set_active(True)")
         self.state.set_active(True)
 
         self.text_stream = BufferStream()
@@ -386,8 +382,6 @@ class SpeechLogic(Logic):
         if not self.muted:
             _, _, sample_rate = self.engines.engine.get_stream_info()
             if self.playout_yielded:
-                # yield up to 60000 ?
-                # print("yielding chunk to rvc")
                 self.rvc.feed(chunk, sample_rate, 48000)
             else:
                 self.rvc.feed(chunk, sample_rate)
@@ -410,6 +404,7 @@ class SpeechLogic(Logic):
             enabled (bool): A boolean indicating whether RVC should
               be enabled or disabled.
         """
+        print(f"Setting RVC enabled: {enabled}")
         state.rvc_enabled = enabled
 
         if enabled and not self.rvc.started:

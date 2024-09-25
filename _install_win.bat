@@ -1,7 +1,6 @@
 @echo off
 set PYTHON_EXE=python.exe
 
-
 cd /d %~dp0
 
 set LOGFILE=%~dp0log_install_shell.txt
@@ -17,7 +16,7 @@ call test_env\Scripts\activate.bat >> %LOGFILE% 2>&1
 
 echo Upgrading PIP
 echo Upgrading PIP >> %LOGFILE%
-test_env\Scripts\python -m pip install --upgrade pip >> %LOGFILE% 2>&1
+test_env\Scripts\python -m pip install "pip<24.1" --upgrade pip >> %LOGFILE% 2>&1
 
 echo Starting windows installation script
 echo Starting windows installation script >> %LOGFILE%

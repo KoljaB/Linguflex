@@ -1,0 +1,59 @@
+{
+	"LookAtWebcam":{
+	   "keywords":[
+		  "schau*",
+		  "sieh",
+		  "guck*",
+		  "seh*",
+		  "screenshot",
+		  "erkenn*",
+		  "blick*",
+		  "beobacht*",
+		  "webcam"
+	   ],
+	   "init_prompt":"",
+	   "success_prompt":"Fasse zusammen, was auf dem Webcam Bild zu sehen ist.",
+	   "fail_prompt":"",
+	   "examples":[
+		  {
+			 "user":"Was siehst du gerade?"
+		  },
+		  {
+			 "user":"Schau jetzt in die Webcam."
+		  },
+		  {
+			"user":"Zeige, was die Webcam sieht."
+		  },
+		  {
+			"user":"Kannst du sehen, was ich gerade in der Hand halte?"
+		  }		
+	   ]
+	},
+	"LookAtDesktop":{
+	   "keywords":[
+		  "schau*",
+		  "sieh",
+		  "guck*",
+		  "seh",
+		  "screenshot",
+		  "erkenn*",
+		  "blick*",
+		  "beobacht*",
+		  "desktop"
+	   ],
+	   "init_prompt":"",
+	   "success_prompt":"Fasse zusammen, was auf dem Desktop Screenshot zu sehen ist.",
+	   "fail_prompt":"",
+	   "examples":[
+		  {
+			 "user":"Schau auf den Desktop."
+		  },
+		  {
+			 "user":"Was siehst du auf meinem PC?"
+		  },
+		  {
+			 "user":"Schau, was auf meinem PC passiert."
+		  }
+	   ]
+	}
+ }
