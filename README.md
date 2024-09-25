@@ -1,9 +1,4 @@
-<h1>WARNING! You are on the SLICK branch.</h1>
-<h3>This branch is where Slick (@cosmosai) will commit his changes to. It's not very stable and we don't recommend using it unless you know what you're doing!</h3>
-
-<br>
-
-*Bringing the sci-fi dream of a Jarvis-style AI companion into reality.*
+*Bringing the sci-fi dream of a capable Jarvis-style AI companion into reality.*
 
 [![Discord](https://img.shields.io/discord/1223234851914911754)](https://discord.gg/f556hqRjpv)
 [![YouTube](https://img.shields.io/youtube/channel/subscribers/UCLeuwdsZO8txzFSSAeLjGlQ?style=social&label=Subscribe%20on%20YouTube)](https://www.youtube.com/channel/UCLeuwdsZO8txzFSSAeLjGlQ)
@@ -27,6 +22,23 @@ I invite you to explore the framework, whether you're a user seeking an innovati
 <br>  
 
 > **[📓 Linguflex 2.0 installation ](./docs/installation.md)**  
+
+<details>
+<summary><strong>Understanding Installation Challenges</strong> (Click to expand)</summary>
+<br>
+
+Sometimes people suggest, "Just provide a Docker container; installation is so hard." I understand the frustration, but here's why that is challenging:
+
+1. **Complex Integration**: Linguflex is a substantial framework combining advanced TTS technologies like realtime local neural TTS voice generation with realtime RVC fine-tuning, alongside a plethora of other features. Ensuring that all these elements work together in a single environment is like finding the lowest common denominator for your favorite 60 Python libraries instead of just three. Moreover, this system must operate consistently across various platforms, OS versions, Python environments, CUDA versions, and CuDNN versions. It's a complex puzzle.
+2. **Dependency Management**: The nature of Python creates an inherently unstable environment. Even with fixed versions in requirements this does not ensure stability, as transitive dependencies - libraries our direct dependencies rely on - may update independently, potentially leading to incompatibilities or disruptions. This indirect dependency instability can introduce breaking changes over time, often requiring reinstall libraries or adjusting the dependency tree to resolve new conflicts.  
+
+
+**Patience Is Key:** Please have patience with the installation process. Things might not work on the first try. Sometimes, I just need a hint to things so I can fix them, and sometimes you might be able to solve issues by yourself. While it’s rare, there are instances where there might be nothing we can do. Trying to reduce those rare cases step by step.
+
+> **Note**: I constantly try to explore more user-friendly installation methods (and yes including docker).
+
+</details>
+
 > **[🎥 Installation video guide ](https://www.youtube.com/watch?v=KJ4HQ5Ud9L8)**  
 > **[🎥 See in action (short clip)](https://www.youtube.com/watch?v=w5_dA5cSeLo)**  
 
@@ -34,10 +46,11 @@ I invite you to explore the framework, whether you're a user seeking an innovati
 
 ## Key Features
 
+- **🆕NEW🆕:** Now featuring **Ollama** support, thanks to the exceptional **🌟[Philip Ehrbright](https://github.com/SlickTorpedo)🌟** for his incredible work in developing this feature!
+- **Local Operation:** Full functionality is maintained locally, with local speech-to-text, local TTS, and local language model inference, ensuring privacy and reliability.
 - **Ultra-Low Latency:** Every aspect of Linguflex was fine-tuned to minimize response times, achieving unparalleled speed in both language model communication and text-to-speech (TTS) generation.
-- **Local Operation:** Full functionality is maintained locally, encompassing speech-to-text, TTS, and language model inference, ensuring privacy and reliability.
-- **High-Quality Audio:** Integrating advanced voice clone technology for real-time post-processing, Linguflex offers a near-Elevenlabs quality in local TTS synthesis.
-- **Enhanced Functionality:** Streamlined function selection allows Linguflex to quickly adapt and respond to a wide range of text-based commands and queries.
+- **High-Quality Audio:** Using voice clone technology and combining finetuned XTTS with finetuned RVC post-processing AI models, Linguflex offers a near-Elevenlabs quality in local TTS synthesis.
+- **Enhanced Functionality:** Streamlined function selection allows Linguflex to quickly adapt and respond to a wide range of text-based commands and queries. We use keyword pre-parsing of user inputs to minimize the overload on the language model, making it easier to select the right functions and reducing confusion.
 - **Developer-Friendly:** Building new modules is more intuitive and efficient, thanks to the minimalistic and clear coding framework.
 
 ## [Modules](./docs/modules.md)
