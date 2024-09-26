@@ -36,6 +36,7 @@ Before you begin, ensure you have the following:
   macOS and Linux: `export OPENAI_API_KEY='your-api-key-here'`
 
 Additional components that may be required:
+- VLC Player installed
 - eSpeak NG (possibly needed for certain text-to-speech functionalities in Coqui TTS / RealtimeTTS)
 - Visual Studio Build Tools (may be necessary for compiling Coqui TTS / RealtimeTTS)  
 
