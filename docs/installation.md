@@ -38,12 +38,6 @@ Before you begin, ensure you have the following:
 Additional components that may be required:
 - eSpeak NG (possibly needed for certain text-to-speech functionalities in Coqui TTS / RealtimeTTS)
 - Visual Studio Build Tools (may be necessary for compiling Coqui TTS / RealtimeTTS)  
-  **Ensure Visual Studio Build Tools are Installed and Configured Properly**  
-   - Make sure you have the **Desktop development with C++** workload installed in Visual Studio.
-   - Open Visual Studio Installer and check that the following components are installed:
-     - MSVC v143 - VS 2022 C++ x64/x86 build tools.
-     - Windows 10 SDK (10.0.19041.0 or later).
-   - Restart your machine after installing or updating these tools.
 
 If you've encountered any issues with the installation process, here are a few ways you can contribute:
 
