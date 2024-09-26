@@ -76,7 +76,7 @@ gruut-lang-fr==2.0.2
 hangul-romanize==0.1.0
 html2text==2024.2.26
 inflect==7.0.0
-instructor==1.1.0
+instructor==1.4.3
 jieba==0.42.1
 json5==0.9.22
 langcodes==3.3.0
