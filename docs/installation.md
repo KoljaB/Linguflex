@@ -37,7 +37,7 @@ Before you begin, ensure you have the following:
 
 Additional components that may be required:
 - eSpeak NG (possibly needed for certain text-to-speech functionalities in Coqui TTS / RealtimeTTS)
-- Visual Studio Build Tools (may be necessary for compiling Coqui TTS / RealtimeTTS)
+- Visual Studio Build Tools (may be necessary for compiling Coqui TTS / RealtimeTTS)  
   **Ensure Visual Studio Build Tools are Installed and Configured Properly**  
    - Make sure you have the **Desktop development with C++** workload installed in Visual Studio.
    - Open Visual Studio Installer and check that the following components are installed:
