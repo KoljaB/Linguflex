@@ -286,6 +286,52 @@ def download_models():
         printl(f"Failed to download pre-trained models. Error: {e}")
         ask_exit("Do you want to continue without downloading pre-trained models? (yes/no): ")
 
+def download_file(url, destination):
+    import requests
+    from tqdm import tqdm as tqdm_lib
+    response = requests.get(url, stream=True)
+    total_size_in_bytes = int(response.headers.get('content-length', 0))
+    block_size = 1024
+
+    progress_bar = tqdm_lib(total=total_size_in_bytes, unit='iB', unit_scale=True)
+
+    with open(destination, 'wb') as file:
+        for data in response.iter_content(block_size):
+            progress_bar.update(len(data))
+            file.write(data)
+
+    progress_bar.close()
+
+def download_xtts_base_model(model_name="v2.0.2", local_models_path="models/xtts"):
+
+    # Creating a unique folder for each model version
+    if local_models_path and len(local_models_path) > 0:
+        model_folder = os.path.join(local_models_path, f'{model_name}')
+        print(f"Local models path: \"{model_folder}\"")
+    else:
+        model_folder = os.path.join(os.getcwd(), 'models', f'{model_name}')
+        print(f"Checking for models within application directory: \"{model_folder}\"")
+
+    os.makedirs(model_folder, exist_ok=True)
+
+    files = {
+        "config.json": f"https://huggingface.co/coqui/XTTS-v2/raw/{model_name}/config.json",
+        "model.pth": f"https://huggingface.co/coqui/XTTS-v2/resolve/{model_name}/model.pth?download=true",
+        "vocab.json": f"https://huggingface.co/coqui/XTTS-v2/raw/{model_name}/vocab.json",
+        "speakers_xtts.pth": f"https://huggingface.co/coqui/XTTS-v2/resolve/{model_name}/speakers_xtts.pth",
+    }
+
+    for file_name, url in files.items():
+        file_path = os.path.join(model_folder, file_name)
+        if not os.path.exists(file_path):
+            print(f"Downloading {file_name} to {file_path}...")
+            download_file(url, file_path)
+            print(f"{file_name} downloaded successfully.")
+        else:
+            print(f"{file_name} exists in {file_path} (no download).")
+
+    return model_folder
+
 
 def launch_linguflex():
     run_cmd("python -m lingu.core.run", assert_success=True)
@@ -300,4 +346,5 @@ if __name__ == "__main__":
     install_flash_attention()
     install_transformers()
     download_models()
+    download_xtts_base_model()
     launch_linguflex()
