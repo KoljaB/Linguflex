@@ -278,6 +278,15 @@ def install_requirements():
     printl("Installing required libraries")
     install_libraries_from_requirements(requirements_file_path)
 
+
+def download_models():
+    try:
+        subprocess.run(['python', 'download_models.py'])
+    except subprocess.CalledProcessError as e:
+        printl(f"Failed to download pre-trained models. Error: {e}")
+        ask_exit("Do you want to continue without downloading pre-trained models? (yes/no): ")
+
+
 def launch_linguflex():
     run_cmd("python -m lingu.core.run", assert_success=True)
 
@@ -290,4 +299,5 @@ if __name__ == "__main__":
     install_deepspeed()
     install_flash_attention()
     install_transformers()
+    download_models()
     launch_linguflex()
