@@ -67,7 +67,6 @@ class OllamaInterface(LLMInterfaceBase):
             if "model" in str(e):
                 log.inf(f"  [brain] model {self.model_name} not found. Attempting to pull the model...")
                 self.pull_model(self.model_name)
-                self.run_model(self.model_name)
                 self.warm_up()
             else:
                 log.err(f"  [brain] Unexpected OpenAI error: {e}")
@@ -78,31 +77,6 @@ class OllamaInterface(LLMInterfaceBase):
             log.err(f"  [brain] An unknown error occurred: {e}")
             log.err(f"  [brain] Exception type: {type(e).__name__}")  # Log the exception type
             sys.exit(1)
-
-    # def warm_up_with_error_handling(self, last_try = False):
-    #     log.dbg("  performing warmup with error handling")
-    #     try:
-    #         self.warm_up()
-    #     except OpenAIError as e:
-    #         # Check if the error is specifically about the model not being found
-    #         if "model" in str(e):
-    #             log.inf(f"  [brain] model {self.model_name} not found. Attempting to pull the model...")
-    #             self.pull_model(self.model_name)
-    #             self.run_model(self.model_name)
-    #             self.warm_up()
-    #         else:
-    #             if last_try:
-    #                 log.err(f"  [brain] Unexpected OpenAI error: {e}")
-    #                 log.err(f"  [brain] Exception type: {type(e).__name__}")  # Log the exception type
-    #                 sys.exit(1)
-
-    #             self.run_model(self.model_name)
-    #             self.warm_up_with_error_handling(True)
-
-    #     except Exception as e:  # Catch any other unknown error
-    #         log.err(f"  [brain] An unknown error occurred: {e}")
-    #         log.err(f"  [brain] Exception type: {type(e).__name__}")  # Log the exception type
-    #         sys.exit(1)
 
     def run_model(self, model_name):
         try:
