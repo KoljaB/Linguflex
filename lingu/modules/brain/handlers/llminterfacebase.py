@@ -49,7 +49,7 @@ class LLMInterfaceBase(LLM_Base):
         log.dbg("  [brain] warm up llm")
 
         if model_name:
-            self.warm_up()
+            self.warm_up_safe()
 
     def abort_immediately(self):
         self.abort = True
@@ -64,6 +64,9 @@ class LLMInterfaceBase(LLM_Base):
             if not self.sleep:
                 break
             time.sleep(0.1)
+
+    def warm_up_safe(self):
+        self.warm_up()
 
     def warm_up(self):
         self.wait_wake()

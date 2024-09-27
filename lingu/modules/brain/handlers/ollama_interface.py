@@ -1,12 +1,25 @@
+#from openai.error import OpenAIError, InvalidRequestError
+from openai import OpenAI, OpenAIError
 from .llminterfacebase import LLMInterfaceBase
 from lingu import cfg, log
-from openai import OpenAI
+#from openai import OpenAI
+import subprocess
 import instructor
 import ollama
 import json
+import sys
+
+def check_ollama_installed():
+    try:
+        subprocess.run(["ollama", "--version"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+    except FileNotFoundError:
+        log.err("Ollama is not installed. Please download and install it from: https://ollama.ai/download")
+        sys.exit(1)
 
 class OllamaInterface(LLMInterfaceBase):
     def __init__(self, history, model_path=None, model_name=None, vision_model_name=None):
+        check_ollama_installed()
+
         model_name = model_name or cfg("local_llm", "model_name", default="llama3.1:8b")
         vision_model_name = vision_model_name or cfg("see", "model_name", default="llava")
         self.vision_model = vision_model_name
@@ -20,6 +33,57 @@ class OllamaInterface(LLMInterfaceBase):
             mode=instructor.Mode.JSON_SCHEMA
         )
         super().__init__(history, model_name, function_calling_model_name, llama, create)
+
+    def warm_up_safe(self):
+        self.warm_up_with_error_handling()
+
+    def warm_up(self):
+        """
+        A simple warmup function that sends a basic prompt to the model
+        to ensure it's working correctly. If there's an error, it raises
+        an OpenAIError.
+        """
+        try:
+            log.inf("  [brain] warming up the Ollama model...")
+            response = self.llama.chat.completions.create(
+                model=self.model_name,
+                messages=[{"role": "system", "content": "Hello, how can I assist you today?"}]
+            )
+            if response and 'choices' in response and len(response['choices']) > 0:
+                log.inf("  [brain] ollama model is ready and responsive")
+            else:
+                raise OpenAIError("Warmup failed: Model did not respond as expected.")
+        except OpenAIError as e:
+            raise OpenAIError(f"Warmup failed: {str(e)}")
+        except Exception as e:
+            raise Exception(f"An unexpected error occurred during warmup: {str(e)}")        
+
+    def warm_up_with_error_handling(self):
+        log.dbg("  performing warmup with error handling")
+        try:
+            self.warm_up()
+        except OpenAIError as e:
+            # Check if the error is specifically about the model not being found
+            if "model" in str(e):
+                log.inf(f"  [brain] model {self.model_name} not found. Attempting to pull the model...")
+                self.pull_model(self.model_name)
+                self.warm_up()
+            else:
+                log.err(f"  [brain] Unexpected OpenAI error: {e}")
+                log.err(f"  [brain] Exception type: {type(e).__name__}")  # Log the exception type
+                sys.exit(1)
+        except Exception as e:  # Catch any other unknown error
+            log.err(f"  [brain] An unknown error occurred: {e}")
+            log.err(f"  [brain] Exception type: {type(e).__name__}")  # Log the exception type
+            sys.exit(1)
+
+    def pull_model(self, model_name):
+        try:
+            subprocess.run(["ollama", "pull", model_name], check=True)
+            log.inf(f"  [brain] successfully pulled model: {model_name}")
+        except subprocess.CalledProcessError as e:
+            log.err(f"  [brain] failed to pull model {model_name}. Error: {e}")
+            sys.exit(1)
 
     def generate_image(
             self,
