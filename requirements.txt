@@ -1,5 +1,5 @@
 RealtimeSTT==0.2.1
-RealtimeTTS[all]==0.4.6
+RealtimeTTS[all]==0.4.7
 PyQt6-Fluent-Widgets==1.5.7
 absl-py==2.1.0
 aiofiles==23.2.1
