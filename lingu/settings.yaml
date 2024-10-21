@@ -182,6 +182,7 @@ modules:
 #  - mail
   - mimic
   - music
+#  - os_apps
 #  - weather
 #  - house 
 #  - search
