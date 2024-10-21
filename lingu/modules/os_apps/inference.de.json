@@ -1,0 +1,61 @@
+{
+    "open_os_app": {
+      "keywords": [
+        "öffnen",
+        "starten",
+        "starten",
+        "ausführen",
+        "beginnen",
+        "initiieren",
+        "booten",
+        "laden",
+        "zugreifen",
+        "verwenden",
+        "Anwendung",
+        "App",
+        "Programm",
+        "Software",
+        "Werkzeug",
+        "Dienstprogramm",
+        "Rechner",
+        "Browser",
+        "Paint",
+        "Texteditor",
+        "Dateimanager",
+        "Terminal",
+        "Systemmonitor"
+      ],
+      "init_prompt": "",
+      "success_prompt": "Die angeforderte OS-Anwendung wurde geöffnet.",
+      "fail_prompt": "Die angeforderte OS-Anwendung konnte nicht geöffnet werden. Bitte stellen Sie sicher, dass es sich um eine der zulässigen Anwendungen handelt.",
+      "examples": [
+        {
+          "user": "Kannst du die Rechner-App öffnen?",
+          "assistant": "app_name='rechner'"
+        },
+        {
+          "user": "Ich möchte den Webbrowser starten.",
+          "assistant": "app_name='browser'"
+        },
+        {
+          "user": "Bitte das Paint-Programm starten.",
+          "assistant": "app_name='paint'"
+        },
+        {
+          "user": "Führe die Texteditor-Anwendung aus.",
+          "assistant": "app_name='text_editor'"
+        },
+        {
+          "user": "Öffne den Dateimanager für mich.",
+          "assistant": "app_name='dateimanager'"
+        },
+        {
+          "user": "Starte die Terminal-Anwendung.",
+          "assistant": "app_name='terminal'"
+        },
+        {
+          "user": "Kannst du den Systemmonitor starten?",
+          "assistant": "app_name='system_monitor'"
+        }
+      ]
+    }

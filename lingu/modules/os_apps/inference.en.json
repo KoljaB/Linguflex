@@ -1,0 +1,63 @@
+{
+    "open_os_app": {
+      "keywords": [
+        "open",
+        "start",
+        "launch",
+        "run",
+        "execute",
+        "begin",
+        "initiate",
+        "boot",
+        "load",
+        "access",
+        "use",
+        "application",
+        "app",
+        "program",
+        "software",
+        "tool",
+        "utility",
+        "calculator",
+        "browser",
+        "paint",
+        "text editor",
+        "file manager",
+        "terminal",
+        "system monitor"
+      ],
+      "init_prompt": "",
+      "success_prompt": "The requested OS application has been opened.",
+      "fail_prompt": "Unable to open the requested OS application. Please make sure it's one of the allowed applications.",
+      "examples": [
+        {
+          "user": "Can you open the calculator app?",
+          "assistant": "app_name='calculator'"
+        },
+        {
+          "user": "I'd like to start the web browser.",
+          "assistant": "app_name='browser'"
+        },
+        {
+          "user": "Launch the paint program please.",
+          "assistant": "app_name='paint'"
+        },
+        {
+          "user": "Run the text editor application.",
+          "assistant": "app_name='text_editor'"
+        },
+        {
+          "user": "Open the file manager for me.",
+          "assistant": "app_name='file_manager'"
+        },
+        {
+          "user": "Start the terminal application.",
+          "assistant": "app_name='terminal'"
+        },
+        {
+          "user": "Can you launch the system monitor?",
+          "assistant": "app_name='system_monitor'"
+        }
+      ]
+    }
+  }
