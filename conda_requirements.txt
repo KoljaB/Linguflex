@@ -1,9 +1,9 @@
 # core functionality
-RealtimeSTT==0.2.42
-RealtimeTTS[all]==0.4.5
-PyQt6-Fluent-Widgets==1.6.5
+RealtimeTTS[all]==0.4.7
+RealtimeSTT==0.3.1
+PyQt6-Fluent-Widgets==1.7.0
 openai-token-counter==1.0.2
-instructor==1.4.3
+instructor==1.6.3
 ollama==0.3.3
 
 # rvc post processing

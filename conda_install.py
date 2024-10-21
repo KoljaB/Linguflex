@@ -112,8 +112,10 @@ def get_cuda_version():
         return None
 
 def get_install_pytorch_command(selected_gpu):
-    TORCH_VERSION = "2.1.2"
-    TORCHAUDIO_VERSION = "2.1.2"
+    TORCH_VERSION = "2.5.0"
+    TORCHAUDIO_VERSION = "2.5.0"
+    # TORCH_VERSION = "2.1.2"
+    # TORCHAUDIO_VERSION = "2.1.2"
     install_pytorch = f"python -m pip install torch=={TORCH_VERSION} torchaudio=={TORCHAUDIO_VERSION} "
     if selected_gpu == "NVIDIA":
         cuda_version = get_cuda_version()
@@ -186,16 +188,16 @@ def install_deepspeed():
         printl("Installing DeepSpeed using pip.")
         run_cmd("python -m pip install deepspeed", assert_success=True)
 
-def install_flash_attention():
-    if is_windows():
-        FLASH_ATTN_VERSION = "2.5.6"
-        python_version = f"cp{sys.version_info.major}{sys.version_info.minor}"
-        wheel_url = f"https://github.com/oobabooga/flash-attention/releases/download/v{FLASH_ATTN_VERSION}/flash_attn-{FLASH_ATTN_VERSION}+cu122torch2.1.2cxx11abiFALSE-{python_version}-{python_version}-win_amd64.whl"
-        printl(f"Installing Flash Attention from wheel: {wheel_url}")
-        run_cmd(f"python -m pip install {wheel_url}", assert_success=True)
-    else:
-        printl("Installing Flash Attention using pip.")
-        run_cmd("python -m pip install flash-attn", assert_success=True)
+# def install_flash_attention():
+#     if is_windows():
+#         FLASH_ATTN_VERSION = "2.5.6"
+#         python_version = f"cp{sys.version_info.major}{sys.version_info.minor}"
+#         wheel_url = f"https://github.com/oobabooga/flash-attention/releases/download/v{FLASH_ATTN_VERSION}/flash_attn-{FLASH_ATTN_VERSION}+cu122torch2.1.2cxx11abiFALSE-{python_version}-{python_version}-win_amd64.whl"
+#         printl(f"Installing Flash Attention from wheel: {wheel_url}")
+#         run_cmd(f"python -m pip install {wheel_url}", assert_success=True)
+#     else:
+#         printl("Installing Flash Attention using pip.")
+#         run_cmd("python -m pip install flash-attn", assert_success=True)
 
 def install_transformers():
     printl("Installing transformers==4.38.2")
@@ -263,7 +265,12 @@ def install_libraries_from_requirements(file_path):
 
 def set_pip_version():
     printl("Setting pip version")
-    run_cmd("python -m pip install pip==24.0", assert_success=True)
+    
+    # WE NEED pip 24.1 because latest fairseq==0.12.2 needed for rvc post processing does only support pip<24.1 currently
+    run_cmd("python -m pip install \"pip<24.1\"", assert_success=True)
+    #run_cmd("python -m pip install \"pip==24.0.0\"", assert_success=True)
+
+    #run_cmd("python -m pip install --upgrade pip", assert_success=True)
 
 def install_requirements():
     set_pip_version()
@@ -342,9 +349,9 @@ if __name__ == "__main__":
     selected_gpu = select_gpu()
     install_requirements()
     install_torch(selected_gpu)
-    install_deepspeed()
-    install_flash_attention()
-    install_transformers()
+    # install_deepspeed()
+    # install_flash_attention()
+    #install_transformers()
     download_models()
     download_xtts_base_model()
     launch_linguflex()

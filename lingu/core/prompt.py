@@ -32,8 +32,8 @@ class Prompt():
         """
         super().__init__()
 
+        self.reset()
         self.set_base_prompt(base_prompt)
-        self.start()
 
     def set_base_prompt(self, prompt):
         """
@@ -45,13 +45,27 @@ class Prompt():
         self.init_prompt = prompt
         self.start()
 
+    def reset(self):
+        self.pre_normal_prompts = []
+        self.pre_prio_prompts = []
+
     def start(self):
         """
-        Reset the prompt construction process.
+        Reset the prompt construction process and append pre-prompts.
         """
-        self.normal_prompts = []
-        self.prio_prompts = []
+        self.normal_prompts = self.pre_normal_prompts.copy()
+        self.prio_prompts = self.pre_prio_prompts.copy()
         self.prompt = self.init_prompt
+
+    def pre_add(self, text, prioritize=False):
+        if not text:
+            return
+        if text in self.pre_normal_prompts or text in self.pre_prio_prompts:
+            return
+        if prioritize:
+            self.pre_prio_prompts.append(text)
+        else:
+            self.pre_normal_prompts.append(text)
 
     def add(self, text, prioritize=False):
         """
@@ -72,51 +86,35 @@ class Prompt():
             self.normal_prompts.append(text)
 
     def build_prompt(self):
-        # print("Joining priority prompts...")
         prio_prompt_str = " ".join(self.prio_prompts)
-        # print(f"Priority prompts joined: '{prio_prompt_str}'")
 
         # Strip any leading or trailing whitespace
         # from the priority prompt string
         prio_prompt_str = prio_prompt_str.strip()
-        # print(f"Priority prompt stripped: '{prio_prompt_str}'")
-
-        # # Add a space at the end if the priority prompt string is not empty
-        # if prio_prompt_str:
-        #     prio_prompt_str = prio_prompt_str.rstrip() + " "
-        #     print(f"Priority prompt after adding space: '{prio_prompt_str}'")
 
         # Add a space at the end if the init prompt string is not empty
         init_prompt = self.init_prompt
         if init_prompt:
             init_prompt = init_prompt.rstrip() + " "
-            # print(f"Init prompt after adding space: '{init_prompt}'")
 
         # Initialize the final prompt with the priority prompt
         # and the initial prompt
         prompt = init_prompt + prio_prompt_str
-        # print(f"Initial prompt: '{init_prompt}'")
-        # print(f"Prompt after adding initial prompt: '{prompt}'")
 
         # Initialize the normal prompt string by
         # joining the normal prompts list
-        # print("Joining normal prompts...")
         normal_prompt_str = " ".join(self.normal_prompts)
-        # print(f"Normal prompts joined: '{normal_prompt_str}'")
 
         # Strip any leading or trailing whitespace
         # from the normal prompt string
         normal_prompt_str = normal_prompt_str.strip()
-        # print(f"Normal prompt stripped: '{normal_prompt_str}'")
 
         # Add the normal prompt string to the final prompt if it's not empty
         if normal_prompt_str:
             prompt += " " + normal_prompt_str
-            # print(f"Prompt after adding normal prompt: '{prompt}'")
 
         # Strip any leading or trailing whitespace from the final prompt
         prompt = prompt.strip()
-        # print(f"Final prompt after stripping: '{prompt}'")
 
         # Return the final prompt
         return prompt
@@ -129,17 +127,6 @@ class Prompt():
             str: The constructed prompt string.
         """
         return self.build_prompt()
-        # prio_prompt_str = " ".join(self.prio_prompts)
-        # prio_prompt_str = prio_prompt_str.strip()
-        # if prio_prompt_str:
-        #     prio_prompt_str += " "
-        # prompt = prio_prompt_str + self.init_prompt
-        # normal_prompt_str = " ".join(self.normal_prompts)
-        # normal_prompt_str = normal_prompt_str.strip()
-        # if normal_prompt_str:
-        #     prompt += " " + normal_prompt_str
-        # prompt = prompt.strip()
-        # return prompt
 
     def system_prompt(self):
         """
@@ -157,11 +144,12 @@ class Prompt():
         if prompt_content:
             prompt_content += "\n\n"
 
-        # Get the current date and day of the week.
-        current_date = datetime.datetime.now().strftime("%A, %Y-%m-%d")
+        # Get the current date, day, and time
+        current_datetime = datetime.datetime.now()
+        formatted_datetime = current_datetime.strftime("%A, %Y-%m-%d %H:%M:%S")
 
-        # Append the current date to the prompt content.
-        prompt_content += "Current date: " + current_date
+        # Construct the prompt content
+        prompt_content += f"Current date and time: {formatted_datetime}"
 
         return prompt_content
 
