@@ -101,14 +101,6 @@ class Engines():
             return self.elevenlabs_engine
         elif engine_name == "coqui":
             if not self.coqui_engine:
-                notify(
-                    "Coqui",
-                    f"Loading model {self.state.coqui_model}.",
-                    -1,
-                    "warn",
-                    "⏳")
-                wait_notify()
-
                 log.dbg(f"Coqui loading language: {language}")
                 print(f"specific_model: {self.state.coqui_model}")
                 print(f"local_models_path: {self.model_path}")
@@ -130,7 +122,6 @@ class Engines():
                     comma_silence_duration=0.1,
                     sentence_silence_duration=0.2,
                     default_silence_duration=0.1)
-                denotify()
             else:
                 self.set_coqui_model(self.state.coqui_model)
             return self.coqui_engine
