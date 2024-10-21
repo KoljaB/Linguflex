@@ -13,7 +13,7 @@ max_history_tokens: 64000
 called_tool_messages: 2
 retry_attempts: 7
 timeout_increase: 5
-rvc_model_path: D:/Data/Models/rvc/models
+rvc_model_path: models/rvc/models
 prompt: >
   You are Linguflex, a large language model and personal assistant.
 
