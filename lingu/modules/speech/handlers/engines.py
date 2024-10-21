@@ -249,10 +249,14 @@ class Engines():
         if self.coqui_engine:
             self.state.coqui_model = model
             if self.coqui_engine.specific_model != model:
-                notify("Coqui", f"Loading model {model}.", -1, "warn", "⏳")
-                wait_notify()
+                # shutdown
+
+
+                
+                # notify("Coqui", f"Loading model {model}.", -1, "warn", "⏳")
+                # wait_notify()
                 self.coqui_engine.set_model(model)
-                denotify()
+                # denotify()
 
     def set_coqui_speed(self, speed):
         if self.coqui_engine:

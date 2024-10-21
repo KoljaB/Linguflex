@@ -13,12 +13,16 @@ Triggers:
 """
 
 
-from RealtimeSTT import AudioToTextRecorder
-from lingu import cfg, log, Logic
+from RealtimeSTT import AudioToTextRecorderClient
+from lingu import cfg, log, Logic, prompt, is_testmode
 import numpy as np
 import threading
+import base64
 import time
 import gc
+from typing import Deque, List
+from dataclasses import dataclass
+
 
 main_recorder_model = cfg(
     "listen", "main_recorder_model", default="large-v2")
@@ -66,7 +70,35 @@ wake_word_buffer_duration = float(cfg(
     "listen", "wake_word_buffer_duration", default=1.0))
 wake_words_sensitivity = float(cfg(
     "listen", "wake_words_sensitivity", default=0.35))
+silero_deactivity_detection = bool(cfg(
+    "listen", "silero_deactivity_detection", default=False))
+beam_size = int(cfg(
+    "listen", "beam_size", default=5))
+beam_size_realtime = int(cfg(
+    "listen", "beam_size", default=3))
+delay_wakeup_after_assistant_speech = float(cfg(
+    "listen", "delay_wakeup_after_assistant_speech", default=0.1)) # compensate for room hall etc
+rapid_sentence_end_duration = float(cfg(
+    "listen", "rapid_sentence_end_duration", default=0.1))
+fast_sentence_end_silence_duration = float(cfg(
+    "listen", "fast_sentence_end_silence_duration", default=0.1))
+input_device_index = int(cfg(
+    "listen", "input_device_index", default=-1))
+use_main_model_for_realtime = bool(cfg(
+    "listen", "use_main_model_for_realtime", default=False))
 
+print(f"input_device_index: {input_device_index}")
+    
+compute_type = cfg(
+    "listen", "compute_type",
+    default = "default"
+    )
+
+
+@dataclass
+class TextEntry:
+    text: str
+    timestamp: float
 
 
 class ListenLogic(Logic):
@@ -82,6 +114,9 @@ class ListenLogic(Logic):
         self.recorder_active = True
         self.long_term_noise_level = 0.0
         self.current_noise_level = 0.0
+        self.prob_sentence_end_start_time = None
+        self.text_history: Deque[TextEntry] = Deque()
+        self.max_history_age = 1.0  # 1 second
 
         self.add_listener("playback_start", "music", self._on_playback_start)
         self.add_listener("playback_stop", "music", self._on_playback_stop)
@@ -132,11 +167,14 @@ class ListenLogic(Logic):
         self.state.set_disabled(True)
 
     def wakeup(self):
-        self.recorder.recording_stop_time = 0
+        self.recorder.clear_audio_queue()
+        self.recorder.set_parameter("recording_stop_time", 0)
+        # self.recorder.recording_stop_time = 0
         self.state.set_disabled(False)
         self.recorder.wakeup()
         self.start_listen_event.set()
-        self.recorder.listen_start = time.time()
+        self.recorder.set_parameter("listen_start",time.time())
+        #self.recorder.listen_start = 
 
     def set_lang_shortcut(self, lang_shortcut):
         log.inf(f"  [listen] setting language shortcut to {lang_shortcut}")
@@ -149,45 +187,89 @@ class ListenLogic(Logic):
         log.inf("  [listen] stop recorder")
         self.sleep()
 
+    def delayed_wakeup(self):
+        log.dbg(f"Delaying wakeup for {delay_wakeup_after_assistant_speech} seconds")
+        time.sleep(delay_wakeup_after_assistant_speech)
+        self.wakeup()
+
     def _on_audio_stream_stop(self):
         log.dbg("  [listen] audio stream stop")
-        self.wakeup()
+        threading.Thread(
+            target=self.delayed_wakeup
+        ).start()
 
     def _on_speech_ready(self):
         self.speech_ready_event.set()
 
     def _on_wake_up(self):
-        self.recorder.listen_start = time.time()
+        self.recorder.set_parameter("listen_start",time.time())        
+        #self.recorder.listen_start = time.time()
 
     def _realtime_transcription(self, text: str):
+        print(f"hmm")
         text = text.strip()
+        current_time = time.time()
+
+        # Remove old entries
+        self.text_history = Deque([entry for entry in self.text_history if current_time - entry.timestamp <= self.max_history_age])
+
+        # Add new entry
+        self.text_history.append(TextEntry(text, current_time))
+
         prob_sentence_end = False
+        candidate_entries: List[TextEntry] = []
 
         if text:
-            prob_sentence_end = (
-                len(self.last_realtime_text) > 0
+            # Find candidate entries
+            candidate_entries = [
+                entry for entry in self.text_history
+                if len(entry.text) >= 10 and len(text) >= 10
+                and entry.text[-1] in sentence_delimiters
                 and text[-1] in sentence_delimiters
-                and self.last_realtime_text[-1] in sentence_delimiters
-            )
+                and entry.text[-11:-1] == text[-11:-1]
+            ]
 
-            if prob_sentence_end:
-                self.recorder.post_speech_silence_duration = (
-                    fast_silence_duration
-                )
+            prob_sentence_end = bool(candidate_entries)
 
-            self.last_realtime_text = text
+        # if prob_sentence_end:
+        #     oldest_candidate = min(candidate_entries, key=lambda entry: entry.timestamp)
+        #     time_since_candidate = current_time - oldest_candidate.timestamp
 
-        if not prob_sentence_end:
-            self.recorder.post_speech_silence_duration = \
-                self.state.end_of_speech_silence
+        #     if time_since_candidate >= rapid_sentence_end_duration:
+        #         print("Rapid sentence end")
+        #         self.recorder.post_speech_silence_duration = self.state.end_of_speech_silence
+        #         self.recorder.stop()
+        #     elif time_since_candidate >= fast_sentence_end_silence_duration:
+        #         print(f"Fast sentence end, setting {fast_silence_duration}")
+        #         self.recorder.post_speech_silence_duration = fast_silence_duration
+        # else:
+        #     self.prob_sentence_end_start_time = None
+        #     if self.recorder.post_speech_silence_duration != self.state.end_of_speech_silence:
+        #         print(f"Normal sentence end, setting {self.state.end_of_speech_silence}")
+        #         self.recorder.post_speech_silence_duration = self.state.end_of_speech_silence
 
+        print(f"USERTEXT {text}")
         self.trigger("user_text", text)
 
+
     def _final_text(self, text):
+        post_speech_silence_duration = self.recorder.get_parameter("post_speech_silence_duration")
+        log.inf(f"  [listen] speech end detected, post_speech_silence_duration: {post_speech_silence_duration}")
+        prompt.reset()
+
+        self.trigger("before_user_text_complete", text)
         self.trigger("user_text_complete", text)
 
-        user_bytes = self.recorder.last_transcription_bytes
-        self.trigger("user_audio_complete", user_bytes)
+        # last_transcription_bytes = self.recorder.get_parameter("last_transcription_bytes_b64")
+        # decoded_bytes = base64.b64decode(last_transcription_bytes)
+
+        # # Step 2: Reconstruct the np.int16 array from the decoded bytes
+        # audio_array = np.frombuffer(decoded_bytes, dtype=np.int16)
+
+        # # Step 3: (Optional) If the original data was normalized, convert to np.float32 and normalize
+        # INT16_MAX_ABS_VALUE = 32768.0
+        # normalized_audio = audio_array.astype(np.float32) / INT16_MAX_ABS_VALUE        
+        # self.trigger("user_audio_complete", normalized_audio)
 
         if hasattr(self, 'on_final_text'):
             self.on_final_text(text)
@@ -217,14 +299,19 @@ class ListenLogic(Logic):
             self.recording_worker_thread = None
 
     def _on_playback_start(self):
-        self.recorder.silero_sensitivity = silero_sensitivity_music
+        self.recorder.set_parameter("silero_sensitivity",silero_sensitivity_music)
+        # self.recorder.silero_sensitivity = silero_sensitivity_music
 
-        self.recorder.wake_word_activation_delay = 0
+        self.recorder.set_parameter("wake_word_activation_delay", 0)
+        #self.recorder.wake_word_activation_delay = 0
 
     def _on_playback_stop(self):
-        self.recorder.silero_sensitivity = silero_sensitivity_normal
-        self.recorder.wake_word_activation_delay = \
-            return_to_wakewords_after_silence
+        self.recorder.set_parameter("silero_sensitivity",silero_sensitivity_normal)
+        # self.recorder.silero_sensitivity = silero_sensitivity_normal
+
+        self.recorder.set_parameter("wake_word_activation_delay", return_to_wakewords_after_silence)
+        # self.recorder.wake_word_activation_delay = \
+        #     return_to_wakewords_after_silence
 
     def toggle_mute(self):
         self.state.is_muted = not self.state.is_muted
@@ -236,8 +323,10 @@ class ListenLogic(Logic):
 
     def _recording_start(self):
         log.dbg("  [listen] recording start")
-        self.recorder.post_speech_silence_duration = \
-            self.state.end_of_speech_silence
+        self.recorder.set_parameter("post_speech_silence_duration", self.state.end_of_speech_silence)
+
+        # self.recorder.post_speech_silence_duration = \
+        #     self.state.end_of_speech_silence
         self.last_realtime_text = ""
         self.state.set_active(True)
         self.trigger("recording_start")
@@ -248,6 +337,7 @@ class ListenLogic(Logic):
         self.start_listen_event.clear()
         self.state.set_disabled(True)
         self.trigger("recording_stop")
+        log.dbg("  [listen] recording stop triggered")
 
     def _vad_start(self):
         self.trigger("vad_start")
@@ -266,13 +356,16 @@ class ListenLogic(Logic):
 
     def set_start_timeout(self, value):
         log.inf(f"  [listen] setting start timeout to {value:.1f} seconds")
-        self.recorder.wake_word_activation_delay = value
+        self.recorder.set_parameter("wake_word_activation_delay", value)
+        
+        # self.recorder.wake_word_activation_delay = value
         self.state.wake_word_activation_delay = value
         self.state.save()
 
     def set_end_timeout(self, value):
         log.inf(f"  [listen] setting end timeout to {value:.1f} seconds")
-        self.recorder.post_speech_silence_duration = value
+        self.recorder.set_parameter("post_speech_silence_duration", value)
+        # self.recorder.post_speech_silence_duration = value
         self.state.end_of_speech_silence = value
         self.state.save()
 
@@ -309,9 +402,18 @@ class ListenLogic(Logic):
         if lang == "Auto":
             lang = ""
 
+        input_device_index = int(cfg("listen", "input_device_index", default=-1))
+        print(f"input_device_index: {input_device_index}")
+    
+
+        if input_device_index == -1:
+            input_device_index = None
+
         # recorder construction parameters dictionary
         recorder_params = {
             'model': main_recorder_model,
+            'compute_type' : compute_type,
+            'input_device_index': input_device_index,
             'language': lang,
             'wake_words': "Jarvis",
             'wake_words_sensitivity': wake_words_sensitivity,
@@ -338,8 +440,12 @@ class ListenLogic(Logic):
             'enable_realtime_transcription': enable_realtime_transcription,
             'realtime_processing_pause': realtime_processing_pause,
             'realtime_model_type': realtime_recorder_model,
+            'use_main_model_for_realtime' : use_main_model_for_realtime,
             'on_realtime_transcription_update': self._realtime_transcription,
             'on_recorded_chunk': self._recorded_chunk,
+            'silero_deactivity_detection': silero_deactivity_detection,
+            'beam_size': beam_size,
+            'beam_size_realtime': beam_size_realtime,
         }
 
         # log the parameters
@@ -347,17 +453,22 @@ class ListenLogic(Logic):
                 f"{recorder_params}")
 
         # Initialize the recorder with the unpacked parameters
-        self.recorder = AudioToTextRecorder(**recorder_params)
+        self.recorder = AudioToTextRecorderClient(**recorder_params)
 
         self.speech_ready_event.wait()
         self.start_listen_event.wait()
 
         self.ready()
         self.server_ready_event.wait()
-        log.inf("  [listen] start listening")
+        if not is_testmode():
+            log.inf("  [listen] start listening")
+        else:
+            log.inf("  [listen] test mode, listening deactivated")
 
         def final_text(text):
             if text:
+                print(f"FINAL TEXT: {text}")
+                log.inf("  [listen] final text arrived")
                 self._final_text(text)
 
         self.listen_ready_event.set()
@@ -366,7 +477,8 @@ class ListenLogic(Logic):
 
             self.start_listen_event.clear()
 
-            self.recorder.text(final_text)
+            if not is_testmode():
+                self.recorder.text(final_text)
 
         self.start_listen_event.clear()
 
