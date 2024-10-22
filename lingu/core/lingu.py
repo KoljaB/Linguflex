@@ -92,7 +92,8 @@ class Lingu:
 
         if self.use_local_llm:
             self.modules.inference_manager.set_instructor(
-                self.brainlogic.llm.create
+                self.brainlogic.llm.create,
+                self.brainlogic.llm.llama
             )
 
         notify("Ready", "Modules loaded.", 5000, "success", "✅")

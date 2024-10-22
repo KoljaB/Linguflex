@@ -26,6 +26,7 @@ class InferenceManager:
         Initialize the InferenceManager with an OpenAI client.
         """
         self.instructor = None
+        self.llama = None
         self.openai_instructor = None
         self.inference_allowed = True
 
@@ -37,6 +38,17 @@ class InferenceManager:
             "audio_stream_stop",
             "speech",
             lambda: self.set_inference_allowed(True))
+
+    def llm(self, **kwargs):
+        """
+        Ask LLM things from logic etc
+
+        Args:
+            **kwargs: Parameters to call.
+        """
+        kwargs['model'] = function_calling_model_name
+        response = self.llama.chat.completions.create(**kwargs)        
+        return response
 
     def set_inference_allowed(self, allowed):
         """
@@ -56,14 +68,16 @@ class InferenceManager:
         """
         self.inf_objs = inference_objects
 
-    def set_instructor(self, instructor):
+    def set_instructor(self, instructor, llama):
         """
         Set the instructor to be used for the inference process.
 
         Args:
             instructor (Instructor): The instructor to be used.
+            llama: LLama object for direct llm communication
         """
         self.instructor = instructor
+        self.llama = llama
 
     def inference(
             self,
@@ -219,8 +233,6 @@ class InferenceManager:
                             final_extraction = None
                             break
                         final_extraction = extraction
-                        # obj = extraction.model_dump()
-                        # log.dbg(f"  [inference] streaming result: {obj}")
                         print(".", end="", flush=True)
 
                     events.trigger("inference_end", "inference")
@@ -231,20 +243,6 @@ class InferenceManager:
                             f"{inf_obj.instance}: {e}")
                     exc(e)
                     raise e
-
-                # try:
-                #     extraction_stream = self.instructor(
-                #         response_model=inf_obj.instance,
-                #         max_retries=MAX_RETRY,
-                #         messages=messages,
-                #         max_tokens=500,
-                #     )
-                #     return extraction_stream
-                # except Exception as e:
-                #     log.err("  [inference] error using tool "
-                #             f"{inf_obj.instance}: {e}")
-                #     exc(e)
-                #     raise e
 
         raise Exception(f"Could not find inference object {inference_object}")
 

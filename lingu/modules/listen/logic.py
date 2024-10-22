@@ -18,10 +18,15 @@ from lingu import cfg, log, Logic, prompt, is_testmode
 import numpy as np
 import threading
 import base64
+import queue
 import time
 import gc
-from typing import Deque, List
+from difflib import SequenceMatcher
 from dataclasses import dataclass
+from typing import Deque
+from collections import deque
+
+IS_DEBUG = False
 
 
 main_recorder_model = cfg(
@@ -48,8 +53,6 @@ silero_sensitivity_normal = float(cfg(
     "listen", "silero_sensitivity_normal", default=0.2))
 silero_sensitivity_music = float(cfg(
     "listen", "silero_sensitivity_music", default=0.01))
-fast_silence_duration = float(cfg(
-    "listen", "fast_post_speech_silence_duration", default=0.25))
 long_term_noise_decay = float(cfg(
     "listen", "long_term_noise_decay", default=0.995))
 short_term_noise_decay = float(cfg(
@@ -84,11 +87,31 @@ fast_sentence_end_silence_duration = float(cfg(
     "listen", "fast_sentence_end_silence_duration", default=0.1))
 input_device_index = int(cfg(
     "listen", "input_device_index", default=-1))
+early_transcription_on_silence = int(cfg(
+    "listen", "early_transcription_on_silence", default=0))
 use_main_model_for_realtime = bool(cfg(
     "listen", "use_main_model_for_realtime", default=False))
 
-print(f"input_device_index: {input_device_index}")
-    
+
+end_of_sentence_detection_pause = float(cfg(
+    "listen", "end_of_sentence_detection_pause", default=1.2))
+mid_sentence_detection_pause = float(cfg(
+    "listen", "mid_sentence_detection_pause", default=2.4))
+unknown_sentence_detection_pause = float(cfg(
+    "listen", "unknown_sentence_detection_pause", default=1.8))
+use_llm_sentence_end_detection = bool(cfg(
+    "listen", "end_of_sentence_detection_pause", default=False))
+rapid_sentence_end_detection = float(cfg(
+    "listen", "rapid_sentence_end_detection", default=0.4))
+hard_break_even_on_background_noise = float(cfg(
+    "listen", "hard_break_even_on_background_noise", default=3.0))
+hard_break_even_on_background_noise_min_texts = int(cfg(
+    "listen", "hard_break_even_on_background_noise_min_texts", default=3))
+hard_break_even_on_background_noise_min_similarity = float(cfg(
+    "listen", "hard_break_even_on_background_noise_min_similarity", default=0.99))
+hard_break_even_on_background_noise_min_chars = int(cfg(
+    "listen", "hard_break_even_on_background_noise_min_chars", default=15))
+
 compute_type = cfg(
     "listen", "compute_type",
     default = "default"
@@ -111,12 +134,17 @@ class ListenLogic(Logic):
         self.start_listen_event = threading.Event()
         self.speech_ready_event = threading.Event()
         self.listen_ready_event = threading.Event()
+        self.text_queue = queue.Queue()
         self.recorder_active = True
         self.long_term_noise_level = 0.0
         self.current_noise_level = 0.0
         self.prob_sentence_end_start_time = None
         self.text_history: Deque[TextEntry] = Deque()
         self.max_history_age = 1.0  # 1 second
+        self.speech_finished_cache = {}
+        self.prev_text = ""
+        self.text_time_deque = deque()
+        # self.abrupt_stop = False
 
         self.add_listener("playback_start", "music", self._on_playback_start)
         self.add_listener("playback_stop", "music", self._on_playback_stop)
@@ -145,6 +173,9 @@ class ListenLogic(Logic):
             "client_chunk_received",
             "server",
             self._client_chunk_received)
+
+        self.worker_thread = threading.Thread(target=self.process_queue, daemon=True)
+        self.worker_thread.start()
 
     def _client_chunk_received(self, data):
         self.recorder.feed_audio(data)
@@ -206,7 +237,6 @@ class ListenLogic(Logic):
         #self.recorder.listen_start = time.time()
 
     def _realtime_transcription(self, text: str):
-        print(f"hmm")
         text = text.strip()
         current_time = time.time()
 
@@ -216,40 +246,8 @@ class ListenLogic(Logic):
         # Add new entry
         self.text_history.append(TextEntry(text, current_time))
 
-        prob_sentence_end = False
-        candidate_entries: List[TextEntry] = []
-
-        if text:
-            # Find candidate entries
-            candidate_entries = [
-                entry for entry in self.text_history
-                if len(entry.text) >= 10 and len(text) >= 10
-                and entry.text[-1] in sentence_delimiters
-                and text[-1] in sentence_delimiters
-                and entry.text[-11:-1] == text[-11:-1]
-            ]
-
-            prob_sentence_end = bool(candidate_entries)
-
-        # if prob_sentence_end:
-        #     oldest_candidate = min(candidate_entries, key=lambda entry: entry.timestamp)
-        #     time_since_candidate = current_time - oldest_candidate.timestamp
-
-        #     if time_since_candidate >= rapid_sentence_end_duration:
-        #         print("Rapid sentence end")
-        #         self.recorder.post_speech_silence_duration = self.state.end_of_speech_silence
-        #         self.recorder.stop()
-        #     elif time_since_candidate >= fast_sentence_end_silence_duration:
-        #         print(f"Fast sentence end, setting {fast_silence_duration}")
-        #         self.recorder.post_speech_silence_duration = fast_silence_duration
-        # else:
-        #     self.prob_sentence_end_start_time = None
-        #     if self.recorder.post_speech_silence_duration != self.state.end_of_speech_silence:
-        #         print(f"Normal sentence end, setting {self.state.end_of_speech_silence}")
-        #         self.recorder.post_speech_silence_duration = self.state.end_of_speech_silence
-
-        print(f"USERTEXT {text}")
         self.trigger("user_text", text)
+        self.text_queue.put(text)
 
 
     def _final_text(self, text):
@@ -273,6 +271,18 @@ class ListenLogic(Logic):
 
         if hasattr(self, 'on_final_text'):
             self.on_final_text(text)
+
+        if IS_DEBUG: print(f"SENTENCE: post_speech_silence_duration: {post_speech_silence_duration}")
+        # self.recorder.post_speech_silence_duration = unknown_sentence_detection_pause
+        print(f"_final_text setting post_speech_silence_duration to {unknown_sentence_detection_pause}")
+        self.recorder.set_parameter("post_speech_silence_duration", unknown_sentence_detection_pause)
+        text = self.preprocess_text(text)
+        text = text.rstrip()
+        self.text_time_deque.clear()
+        if text.endswith("..."):
+            text = text[:-2]
+                
+        self.prev_text = ""
 
     def listen(self):
         self.start_listen_event.set()
@@ -323,6 +333,7 @@ class ListenLogic(Logic):
 
     def _recording_start(self):
         log.dbg("  [listen] recording start")
+        print(f"_recording_start setting post_speech_silence_duration to {self.state.end_of_speech_silence} (self.state.end_of_speech_silence)")
         self.recorder.set_parameter("post_speech_silence_duration", self.state.end_of_speech_silence)
 
         # self.recorder.post_speech_silence_duration = \
@@ -364,6 +375,7 @@ class ListenLogic(Logic):
 
     def set_end_timeout(self, value):
         log.inf(f"  [listen] setting end timeout to {value:.1f} seconds")
+        print(f"set_end_timeout setting post_speech_silence_duration to {value} (value)")
         self.recorder.set_parameter("post_speech_silence_duration", value)
         # self.recorder.post_speech_silence_duration = value
         self.state.end_of_speech_silence = value
@@ -398,12 +410,13 @@ class ListenLogic(Logic):
         self.trigger("recorded_chunk")
 
     def _recording_worker(self):
+
         lang = self.state.language
         if lang == "Auto":
             lang = ""
 
         input_device_index = int(cfg("listen", "input_device_index", default=-1))
-        print(f"input_device_index: {input_device_index}")
+        # print(f"input_device_index: {input_device_index}")
     
 
         if input_device_index == -1:
@@ -446,6 +459,14 @@ class ListenLogic(Logic):
             'silero_deactivity_detection': silero_deactivity_detection,
             'beam_size': beam_size,
             'beam_size_realtime': beam_size_realtime,
+            'initial_prompt': (
+                "End incomplete sentences with ellipses.\n"
+                "Examples:\n"
+                "Complete: The sky is blue.\n"
+                "Incomplete: When the sky...\n"
+                "Complete: She walked home.\n"
+                "Incomplete: Because he...\n"
+            )
         }
 
         # log the parameters
@@ -467,7 +488,6 @@ class ListenLogic(Logic):
 
         def final_text(text):
             if text:
-                print(f"FINAL TEXT: {text}")
                 log.inf("  [listen] final text arrived")
                 self._final_text(text)
 
@@ -486,6 +506,127 @@ class ListenLogic(Logic):
         del self.recorder
         self.recorder = None
         gc.collect()
+
+    def preprocess_text(self, text):
+        # Remove leading whitespaces
+        text = text.lstrip()
+
+        #  Remove starting ellipses if present
+        if text.startswith("..."):
+            text = text[3:]
+
+        # Remove any leading whitespaces again after ellipses removal
+        text = text.lstrip()
+
+        # Uppercase the first letter
+        if text:
+            text = text[0].upper() + text[1:]
+        
+        return text
+
+    def is_speech_finished(self, text):
+         #return False
+        # Check if the result is already in the cache
+        if text in self.speech_finished_cache:
+            if IS_DEBUG:
+                print(f"Cache hit for: '{text}'")
+            return self.speech_finished_cache[text]
+        
+        user_prompt = (
+            "Please reply with only 'c' if the following text is a complete thought (a sentence that stands on its own), "
+            "or 'i' if it is not finished. Do not include any additional text in your reply. "
+            "Consider a full sentence to have a clear subject, verb, and predicate or express a complete idea. "
+            "Examples:\n"
+            "- 'The sky is blue.' is complete (reply 'c').\n"
+            "- 'When the sky' is incomplete (reply 'i').\n"
+            "- 'She walked home.' is complete (reply 'c').\n"
+            "- 'Because he' is incomplete (reply 'i').\n"
+            f"\nText: {text}"
+        )
+
+        response = self.llm(
+            messages=[{"role": "user", "content": user_prompt}],
+            max_tokens=1,
+            temperature=0.0,  # Set temperature to 0 for deterministic output
+        )
+
+        reply = response.choices[0].message.content.strip().lower()
+        if IS_DEBUG:
+            print(f"t:'{reply}'", end="", flush=True)
+
+        result = reply == 'c'
+
+        # Cache the result
+        self.speech_finished_cache[text] = result
+
+        return result
+
+    def process_queue(self):
+        #global  text_time_deque, abrupt_stop
+
+        # Initialize a deque to store texts with their timestamps
+        while True:
+            try:
+                text = self.text_queue.get(timeout=1)  # Wait for text or timeout after 1 second
+            except queue.Empty:
+                continue  # No text to process, continue looping
+
+            if text is None:
+                # Sentinel value to indicate thread should exit
+                break
+
+            post_speech_silence_duration = self.recorder.get_parameter("post_speech_silence_duration")
+            log.inf(f"  [listen] process_queue realtime, post_speech_silence_duration: {post_speech_silence_duration}")
+
+            text = self.preprocess_text(text)
+            current_time = time.time()
+
+            sentence_end_marks = ['.', '!', '?', '。'] 
+            if text.endswith("..."):
+                if not post_speech_silence_duration == mid_sentence_detection_pause:
+                    self.recorder.set_parameter("post_speech_silence_duration", mid_sentence_detection_pause)
+                    if IS_DEBUG: print(f"RT: post_speech_silence_duration: {post_speech_silence_duration}")
+            elif text and text[-1] in sentence_end_marks and self.prev_text and self.prev_text[-1] in sentence_end_marks:
+                if not post_speech_silence_duration == end_of_sentence_detection_pause:
+                    self.recorder.set_parameter("post_speech_silence_duration", end_of_sentence_detection_pause)
+                    if IS_DEBUG: print(f"RT: post_speech_silence_duration: {post_speech_silence_duration}")
+            else:
+                if not post_speech_silence_duration == unknown_sentence_detection_pause:
+                    self.recorder.set_parameter("post_speech_silence_duration", unknown_sentence_detection_pause)
+                    if IS_DEBUG: print(f"RT: post_speech_silence_duration: {post_speech_silence_duration}")
+
+            self.prev_text = text
+            
+            import string
+            transtext = text.translate(str.maketrans('', '', string.punctuation))
+            
+            if use_llm_sentence_end_detection and self.is_speech_finished(transtext):
+                if not post_speech_silence_duration == rapid_sentence_end_detection:
+                    self.recorder.set_parameter("post_speech_silence_duration", rapid_sentence_end_detection)
+                    if IS_DEBUG: print(f"RT: {transtext} post_speech_silence_duration: {post_speech_silence_duration}")
+
+            # Append the new text with its timestamp
+            self.text_time_deque.append((current_time, text))
+
+            # Remove texts older than hard_break_even_on_background_noise seconds
+            while self.text_time_deque and self.text_time_deque[0][0] < current_time - hard_break_even_on_background_noise:
+                self.text_time_deque.popleft()
+
+            # Check if at least hard_break_even_on_background_noise_min_texts texts have arrived within the last hard_break_even_on_background_noise seconds
+            if len(self.text_time_deque) >= hard_break_even_on_background_noise_min_texts:
+                texts = [t[1] for t in self.text_time_deque]
+                first_text = texts[0]
+                last_text = texts[-1]
+
+                # Compute the similarity ratio between the first and last texts
+                similarity = SequenceMatcher(None, first_text, last_text).ratio()
+
+                if similarity > hard_break_even_on_background_noise_min_similarity and len(first_text) > hard_break_even_on_background_noise_min_chars:
+                    # self.abrupt_stop = True
+                    self.recorder.stop()
+
+            # Mark the task as done
+            self.text_queue.task_done()
 
 
 if __name__ == '__main__':

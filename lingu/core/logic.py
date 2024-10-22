@@ -40,6 +40,9 @@ class Logic:
             content,
             model)
 
+    def llm(self, **kwargs):
+        return self.inference_manager.llm(**kwargs)
+
     def ready(self):
         """Sets the ready event."""
         self.ready_event.set()

@@ -3,13 +3,10 @@ application_name: Lingu
 version: 1.0
 debug_mode: true
 language: en
-#openai_model: gpt-4-1106-preview
 openai_model: gpt-4o
-# openai_model: gpt-4-1106-preview
-# openai_model: gpt-3.5-turbo-1106max_history_messages: 12
 max_history_messages: 50
-max_tokens_per_msg: 8000
-max_history_tokens: 64000
+max_tokens_per_msg: 2000
+max_history_tokens: 4000
 called_tool_messages: 2
 retry_attempts: 7
 timeout_increase: 5
@@ -83,11 +80,12 @@ listen:
   return_to_wakewords_after_silence: 20  # Time in seconds to return to wake word detection after silence
   silero_sensitivity_normal: 0.2  # Silero VAD sensitivity for normal mode
   silero_sensitivity_music: 0.01  # Silero VAD sensitivity for music mode
-  fast_post_speech_silence_duration: 0.25  # Duration of silence to consider speech ended (fast mode)
   long_term_noise_decay: 0.995  # Decay factor for long-term noise estimation
   short_term_noise_decay: 0.9  # Decay factor for short-term noise estimation
   allow_speech_interruption: true  # Allow interruption of ongoing speech
+  silero_deactivity_detection: true # Better environment noise handling. Set to False on slower systems.
   sentence_delimiters: .?!。  # Characters used to delimit sentences in transcription
+  early_transcription_on_silence: 0 # Faster transcription on silence detection (enter milliseconds of silence when fast transcription should be performed)
   wakeword_backend: pvporcupine  # Backend library for wake word detection (pvporcupine or oww)
   # For openwakeword / oww detection set comma-separated paths to custom OpenWakeWord model files
   #   e.g. for windows
@@ -96,6 +94,9 @@ listen:
   openwakeword_inference_framework: onnx  # Inference framework for OpenWakeWord (onnx or tflite)
   wake_word_buffer_duration: 0.1  # Duration in seconds to buffer audio during wake word detection (set to ~0.1 for pvporcupine and ~1.0 for oww)
   wake_words_sensitivity: 0.5  # Sensitivity for wake word detection (0 to 1, (set to ~0.5 for pvporcupine and ~0.35 for oww)
+  rapid_sentence_end_detection: 0.1
+  beam_size: 5
+  beam_size_realtime: 3
 
 speech:
   warmup: true
@@ -182,7 +183,7 @@ modules:
 #  - mail
   - mimic
   - music
-#  - os_apps
+  - os_apps
 #  - weather
 #  - house 
 #  - search
