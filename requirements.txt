@@ -1,4 +1,4 @@
-RealtimeSTT==0.3.0
+RealtimeSTT==0.3.1
 RealtimeTTS[all]==0.4.7
 PyQt6-Fluent-Widgets==1.7.0
 absl-py==2.1.0
