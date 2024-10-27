@@ -347,9 +347,9 @@ def launch_linguflex():
 if __name__ == "__main__":
     check_env()
     selected_gpu = select_gpu()
+    # install_deepspeed()
     install_requirements()
     install_torch(selected_gpu)
-    # install_deepspeed()
     # install_flash_attention()
     #install_transformers()
     download_models()

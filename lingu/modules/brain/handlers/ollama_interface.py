@@ -21,9 +21,15 @@ class OllamaInterface(LLMInterfaceBase):
         check_ollama_installed()
 
         model_name = model_name or cfg("local_llm", "model_name", default="llama3.1:8b")
+
+        function_calling_model_name = cfg(
+            "local_llm", "function_calling_model_name",
+            default=cfg(
+            "local_llm", "model_name",
+            default="llama3.1:8b"))
+
         vision_model_name = vision_model_name or cfg("see", "model_name", default="llava")
         self.vision_model = vision_model_name
-        function_calling_model_name = cfg("local_llm", "function_calling_model_name", default="llama3.1:8b")
         ollama_url = cfg("local_llm", "ollama_url", default="http://localhost:11434/v1")
 
 

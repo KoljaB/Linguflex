@@ -164,18 +164,6 @@ class SpeechLogic(Logic):
     def _user_audio(self, user_audio_bytes):
         if not self.engines.engine.engine_name == "coqui":
             return
-        path_ref_file = "lingu/resources/user_voice/voice_example.wav"
-        if not os.path.exists(path_ref_file):
-            return
-
-        audio_int16 = np.int16(user_audio_bytes * 32767)
-
-        path_cur_file = "user_audio.wav"
-        with wave.open(path_cur_file, 'w') as wav_file:
-            wav_file.setnchannels(1)
-            wav_file.setsampwidth(2)
-            wav_file.setframerate(16000)
-            wav_file.writeframes(audio_int16.tobytes())
 
     def yield_chunk_callback(self, chunk):
 

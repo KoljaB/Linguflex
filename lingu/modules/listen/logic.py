@@ -144,6 +144,7 @@ class ListenLogic(Logic):
         self.speech_finished_cache = {}
         self.prev_text = ""
         self.text_time_deque = deque()
+        self.post_speech_silence_duration = 0
         # self.abrupt_stop = False
 
         self.add_listener("playback_start", "music", self._on_playback_start)
@@ -251,31 +252,33 @@ class ListenLogic(Logic):
 
 
     def _final_text(self, text):
-        post_speech_silence_duration = self.recorder.get_parameter("post_speech_silence_duration")
-        log.inf(f"  [listen] speech end detected, post_speech_silence_duration: {post_speech_silence_duration}")
+        log.inf(f"  [listen] speech end detected, post_speech_silence_duration: {self.post_speech_silence_duration}")
         prompt.reset()
 
         self.trigger("before_user_text_complete", text)
         self.trigger("user_text_complete", text)
 
-        # last_transcription_bytes = self.recorder.get_parameter("last_transcription_bytes_b64")
-        # decoded_bytes = base64.b64decode(last_transcription_bytes)
+        last_transcription_bytes = self.recorder.get_parameter("last_transcription_bytes_b64")
+        # if last_transcription_bytes is None:
+        #     print(f"### last_transcription_bytes_b64 is None")
+        # else:
+        #     print(f"### last_transcription_bytes_b64 len: {len(last_transcription_bytes)}")
+        decoded_bytes = base64.b64decode(last_transcription_bytes)
 
         # # Step 2: Reconstruct the np.int16 array from the decoded bytes
-        # audio_array = np.frombuffer(decoded_bytes, dtype=np.int16)
+        audio_array = np.frombuffer(decoded_bytes, dtype=np.int16)
 
-        # # Step 3: (Optional) If the original data was normalized, convert to np.float32 and normalize
-        # INT16_MAX_ABS_VALUE = 32768.0
-        # normalized_audio = audio_array.astype(np.float32) / INT16_MAX_ABS_VALUE        
-        # self.trigger("user_audio_complete", normalized_audio)
+        # Step 3: (Optional) If the original data was normalized, convert to np.float32 and normalize
+        INT16_MAX_ABS_VALUE = 32768.0
+        normalized_audio = audio_array.astype(np.float32) / INT16_MAX_ABS_VALUE        
+        self.trigger("user_audio_complete", normalized_audio)
 
         if hasattr(self, 'on_final_text'):
             self.on_final_text(text)
 
-        if IS_DEBUG: print(f"SENTENCE: post_speech_silence_duration: {post_speech_silence_duration}")
-        # self.recorder.post_speech_silence_duration = unknown_sentence_detection_pause
+        if IS_DEBUG: print(f"SENTENCE: post_speech_silence_duration: {self.post_speech_silence_duration}")
         print(f"_final_text setting post_speech_silence_duration to {unknown_sentence_detection_pause}")
-        self.recorder.set_parameter("post_speech_silence_duration", unknown_sentence_detection_pause)
+        self.set_post_speech_silence_duration(unknown_sentence_detection_pause)
         text = self.preprocess_text(text)
         text = text.rstrip()
         self.text_time_deque.clear()
@@ -310,18 +313,11 @@ class ListenLogic(Logic):
 
     def _on_playback_start(self):
         self.recorder.set_parameter("silero_sensitivity",silero_sensitivity_music)
-        # self.recorder.silero_sensitivity = silero_sensitivity_music
-
         self.recorder.set_parameter("wake_word_activation_delay", 0)
-        #self.recorder.wake_word_activation_delay = 0
 
     def _on_playback_stop(self):
         self.recorder.set_parameter("silero_sensitivity",silero_sensitivity_normal)
-        # self.recorder.silero_sensitivity = silero_sensitivity_normal
-
         self.recorder.set_parameter("wake_word_activation_delay", return_to_wakewords_after_silence)
-        # self.recorder.wake_word_activation_delay = \
-        #     return_to_wakewords_after_silence
 
     def toggle_mute(self):
         self.state.is_muted = not self.state.is_muted
@@ -331,13 +327,14 @@ class ListenLogic(Logic):
         else:
             self.wakeup()
 
+    def set_post_speech_silence_duration(self, post_speech_silence_duration):
+        self.recorder.set_parameter("post_speech_silence_duration", post_speech_silence_duration)
+        self.post_speech_silence_duration = post_speech_silence_duration
+
     def _recording_start(self):
         log.dbg("  [listen] recording start")
         print(f"_recording_start setting post_speech_silence_duration to {self.state.end_of_speech_silence} (self.state.end_of_speech_silence)")
-        self.recorder.set_parameter("post_speech_silence_duration", self.state.end_of_speech_silence)
-
-        # self.recorder.post_speech_silence_duration = \
-        #     self.state.end_of_speech_silence
+        self.set_post_speech_silence_duration(self.state.end_of_speech_silence)
         self.last_realtime_text = ""
         self.state.set_active(True)
         self.trigger("recording_start")
@@ -368,16 +365,13 @@ class ListenLogic(Logic):
     def set_start_timeout(self, value):
         log.inf(f"  [listen] setting start timeout to {value:.1f} seconds")
         self.recorder.set_parameter("wake_word_activation_delay", value)
-        
-        # self.recorder.wake_word_activation_delay = value
         self.state.wake_word_activation_delay = value
         self.state.save()
 
     def set_end_timeout(self, value):
         log.inf(f"  [listen] setting end timeout to {value:.1f} seconds")
         print(f"set_end_timeout setting post_speech_silence_duration to {value} (value)")
-        self.recorder.set_parameter("post_speech_silence_duration", value)
-        # self.recorder.post_speech_silence_duration = value
+        self.set_post_speech_silence_duration(value)
         self.state.end_of_speech_silence = value
         self.state.save()
 
@@ -416,8 +410,6 @@ class ListenLogic(Logic):
             lang = ""
 
         input_device_index = int(cfg("listen", "input_device_index", default=-1))
-        # print(f"input_device_index: {input_device_index}")
-    
 
         if input_device_index == -1:
             input_device_index = None
@@ -466,15 +458,21 @@ class ListenLogic(Logic):
                 "Incomplete: When the sky...\n"
                 "Complete: She walked home.\n"
                 "Incomplete: Because he...\n"
-            )
+            ),
+            'use_extended_logging': True,
         }
 
         # log the parameters
         log.dbg("  [listen] creating recorder with parameters: "
                 f"{recorder_params}")
 
+        print("  [listen] creating recorder with parameters: "
+                f"{recorder_params}")
+
         # Initialize the recorder with the unpacked parameters
         self.recorder = AudioToTextRecorderClient(**recorder_params)
+
+        self.post_speech_silence_duration = self.recorder.get_parameter("post_speech_silence_duration")
 
         self.speech_ready_event.wait()
         self.start_listen_event.wait()
@@ -575,25 +573,25 @@ class ListenLogic(Logic):
                 # Sentinel value to indicate thread should exit
                 break
 
-            post_speech_silence_duration = self.recorder.get_parameter("post_speech_silence_duration")
-            log.inf(f"  [listen] process_queue realtime, post_speech_silence_duration: {post_speech_silence_duration}")
+            # self.post_speech_silence_duration = self.recorder.get_parameter("post_speech_silence_duration")
+            log.inf(f"  [listen] process_queue realtime, post_speech_silence_duration: {self.post_speech_silence_duration}")
 
             text = self.preprocess_text(text)
             current_time = time.time()
 
             sentence_end_marks = ['.', '!', '?', '。'] 
             if text.endswith("..."):
-                if not post_speech_silence_duration == mid_sentence_detection_pause:
-                    self.recorder.set_parameter("post_speech_silence_duration", mid_sentence_detection_pause)
-                    if IS_DEBUG: print(f"RT: post_speech_silence_duration: {post_speech_silence_duration}")
+                if not self.post_speech_silence_duration == mid_sentence_detection_pause:
+                    self.set_post_speech_silence_duration(mid_sentence_detection_pause)
+                    if IS_DEBUG: print(f"RT: post_speech_silence_duration: {self.post_speech_silence_duration}")
             elif text and text[-1] in sentence_end_marks and self.prev_text and self.prev_text[-1] in sentence_end_marks:
-                if not post_speech_silence_duration == end_of_sentence_detection_pause:
-                    self.recorder.set_parameter("post_speech_silence_duration", end_of_sentence_detection_pause)
-                    if IS_DEBUG: print(f"RT: post_speech_silence_duration: {post_speech_silence_duration}")
+                if not self.post_speech_silence_duration == end_of_sentence_detection_pause:
+                    self.set_post_speech_silence_duration(end_of_sentence_detection_pause)
+                    if IS_DEBUG: print(f"RT: post_speech_silence_duration: {self.post_speech_silence_duration}")
             else:
-                if not post_speech_silence_duration == unknown_sentence_detection_pause:
-                    self.recorder.set_parameter("post_speech_silence_duration", unknown_sentence_detection_pause)
-                    if IS_DEBUG: print(f"RT: post_speech_silence_duration: {post_speech_silence_duration}")
+                if not self.post_speech_silence_duration == unknown_sentence_detection_pause:
+                    self.set_post_speech_silence_duration(unknown_sentence_detection_pause)
+                    if IS_DEBUG: print(f"RT: post_speech_silence_duration: {self.post_speech_silence_duration}")
 
             self.prev_text = text
             
@@ -601,9 +599,9 @@ class ListenLogic(Logic):
             transtext = text.translate(str.maketrans('', '', string.punctuation))
             
             if use_llm_sentence_end_detection and self.is_speech_finished(transtext):
-                if not post_speech_silence_duration == rapid_sentence_end_detection:
-                    self.recorder.set_parameter("post_speech_silence_duration", rapid_sentence_end_detection)
-                    if IS_DEBUG: print(f"RT: {transtext} post_speech_silence_duration: {post_speech_silence_duration}")
+                if not self.post_speech_silence_duration == rapid_sentence_end_detection:
+                    self.set_post_speech_silence_duration(rapid_sentence_end_detection)
+                    if IS_DEBUG: print(f"RT: {transtext} post_speech_silence_duration: {self.post_speech_silence_duration}")
 
             # Append the new text with its timestamp
             self.text_time_deque.append((current_time, text))
@@ -622,7 +620,6 @@ class ListenLogic(Logic):
                 similarity = SequenceMatcher(None, first_text, last_text).ratio()
 
                 if similarity > hard_break_even_on_background_noise_min_similarity and len(first_text) > hard_break_even_on_background_noise_min_chars:
-                    # self.abrupt_stop = True
                     self.recorder.stop()
 
             # Mark the task as done

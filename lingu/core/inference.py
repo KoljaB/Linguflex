@@ -10,7 +10,9 @@ MAX_RETRY = 3
 
 function_calling_model_name = cfg(
     "local_llm", "function_calling_model_name",
-    default="llama2")
+    default=cfg(
+    "local_llm", "model_name",
+    default="llama3.1:8b"))
 
 class InferenceManager:
     """

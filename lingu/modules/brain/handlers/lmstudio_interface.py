@@ -5,7 +5,12 @@ import instructor
 
 class LMStudioInterface(LLMInterfaceBase):
     def __init__(self, history, model_path=None, model_name=None, vision_model_name=None):
-        function_calling_model_name = cfg("local_llm", "function_calling_model_name", default="lmstudio-community/Meta-Llama-3.1-8B-Instruct-GGUF/Meta-Llama-3.1-8B-Instruct-Q8_0.gguf")
+        function_calling_model_name = cfg(
+            "local_llm", "function_calling_model_name",
+            default=cfg(
+            "local_llm", "model_name",
+            default="llama3.1:8b"))
+
         lmstudio_url = cfg("local_llm", "lmstudio_url", default="http://localhost:1234/v1")
         
         llama = OpenAI(base_url=lmstudio_url, api_key="dummy")
