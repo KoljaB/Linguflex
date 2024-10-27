@@ -68,7 +68,7 @@ local_llm:
   verbose: true
 
 listen:
-  main_recorder_model: large-v2 # Model size for main transcription, can be distil models like distil-large-v2 or smaller like medium
+  main_recorder_model: medium.en # Model size for main transcription, can be distil models like distil-large-v2 or smaller like medium
   realtime_recorder_model: tiny.en  # Model size for real-time transcription
   enable_realtime_transcription: true  # Enable or disable real-time transcription
   realtime_processing_pause: 0.02  # Time interval between real-time transcription updates
@@ -95,8 +95,11 @@ listen:
   wake_word_buffer_duration: 0.1  # Duration in seconds to buffer audio during wake word detection (set to ~0.1 for pvporcupine and ~1.0 for oww)
   wake_words_sensitivity: 0.5  # Sensitivity for wake word detection (0 to 1, (set to ~0.5 for pvporcupine and ~0.35 for oww)
   rapid_sentence_end_detection: 0.1
-  beam_size: 5
-  beam_size_realtime: 3
+  beam_size: 3
+  beam_size_realtime: 1
+  end_of_sentence_detection_pause: 0.5
+  mid_sentence_detection_pause: 1.7
+  unknown_sentence_detection_pause: 1.2
 
 speech:
   warmup: true
