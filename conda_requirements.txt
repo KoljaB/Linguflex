@@ -1,6 +1,6 @@
 # core functionality
 RealtimeTTS[all]==0.4.7
-RealtimeSTT==0.3.1
+RealtimeSTT==0.3.2
 PyQt6-Fluent-Widgets==1.7.0
 openai-token-counter==1.0.2
 instructor==1.6.3
