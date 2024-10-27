@@ -26,7 +26,7 @@ from dataclasses import dataclass
 from typing import Deque
 from collections import deque
 
-IS_DEBUG = False
+IS_DEBUG = True
 
 
 main_recorder_model = cfg(
@@ -91,8 +91,6 @@ early_transcription_on_silence = int(cfg(
     "listen", "early_transcription_on_silence", default=0))
 use_main_model_for_realtime = bool(cfg(
     "listen", "use_main_model_for_realtime", default=False))
-
-
 end_of_sentence_detection_pause = float(cfg(
     "listen", "end_of_sentence_detection_pause", default=1.2))
 mid_sentence_detection_pause = float(cfg(
@@ -143,9 +141,8 @@ class ListenLogic(Logic):
         self.max_history_age = 1.0  # 1 second
         self.speech_finished_cache = {}
         self.prev_text = ""
-        self.text_time_deque = deque()
         self.post_speech_silence_duration = 0
-        # self.abrupt_stop = False
+        self.text_time_deque = deque()
 
         self.add_listener("playback_start", "music", self._on_playback_start)
         self.add_listener("playback_stop", "music", self._on_playback_stop)
@@ -201,12 +198,10 @@ class ListenLogic(Logic):
     def wakeup(self):
         self.recorder.clear_audio_queue()
         self.recorder.set_parameter("recording_stop_time", 0)
-        # self.recorder.recording_stop_time = 0
         self.state.set_disabled(False)
         self.recorder.wakeup()
         self.start_listen_event.set()
         self.recorder.set_parameter("listen_start",time.time())
-        #self.recorder.listen_start = 
 
     def set_lang_shortcut(self, lang_shortcut):
         log.inf(f"  [listen] setting language shortcut to {lang_shortcut}")
@@ -235,7 +230,6 @@ class ListenLogic(Logic):
 
     def _on_wake_up(self):
         self.recorder.set_parameter("listen_start",time.time())        
-        #self.recorder.listen_start = time.time()
 
     def _realtime_transcription(self, text: str):
         text = text.strip()
@@ -259,10 +253,6 @@ class ListenLogic(Logic):
         self.trigger("user_text_complete", text)
 
         last_transcription_bytes = self.recorder.get_parameter("last_transcription_bytes_b64")
-        # if last_transcription_bytes is None:
-        #     print(f"### last_transcription_bytes_b64 is None")
-        # else:
-        #     print(f"### last_transcription_bytes_b64 len: {len(last_transcription_bytes)}")
         decoded_bytes = base64.b64decode(last_transcription_bytes)
 
         # # Step 2: Reconstruct the np.int16 array from the decoded bytes
@@ -284,7 +274,7 @@ class ListenLogic(Logic):
         self.text_time_deque.clear()
         if text.endswith("..."):
             text = text[:-2]
-                
+
         self.prev_text = ""
 
     def listen(self):
@@ -436,8 +426,7 @@ class ListenLogic(Logic):
             'min_length_of_recording': min_length_of_recording,
             'min_gap_between_recordings': min_gap_between_recordings,
             'wake_word_timeout': wake_word_timeout,
-            'wake_word_activation_delay':
-                self.state.wake_word_activation_delay,
+            'wake_word_activation_delay': self.state.wake_word_activation_delay,
             'wakeword_backend': wakeword_backend,
             'openwakeword_model_paths': openwakeword_model_paths,
             'openwakeword_inference_framework': openwakeword_inference_framework,
@@ -560,7 +549,18 @@ class ListenLogic(Logic):
         return result
 
     def process_queue(self):
-        #global  text_time_deque, abrupt_stop
+        def ends_with_ellipsis(text: str):
+            if text.endswith("..."):
+                return True
+            if len(text) > 1 and text[:-1].endswith("..."):
+                return True
+            return False
+
+        def sentence_end(text: str):
+            sentence_end_marks = ['.', '!', '?', '。']
+            if text and text[-1] in sentence_end_marks:
+                return True
+            return False
 
         # Initialize a deque to store texts with their timestamps
         while True:
@@ -579,19 +579,18 @@ class ListenLogic(Logic):
             text = self.preprocess_text(text)
             current_time = time.time()
 
-            sentence_end_marks = ['.', '!', '?', '。'] 
-            if text.endswith("..."):
+            if ends_with_ellipsis(text):
                 if not self.post_speech_silence_duration == mid_sentence_detection_pause:
                     self.set_post_speech_silence_duration(mid_sentence_detection_pause)
-                    if IS_DEBUG: print(f"RT: post_speech_silence_duration: {self.post_speech_silence_duration}")
-            elif text and text[-1] in sentence_end_marks and self.prev_text and self.prev_text[-1] in sentence_end_marks:
+                    if IS_DEBUG: print(f"RT: post_speech_silence_duration for {text} (...): {self.post_speech_silence_duration}")
+            elif sentence_end(text) and sentence_end(self.prev_text) and not ends_with_ellipsis(self.prev_text):
                 if not self.post_speech_silence_duration == end_of_sentence_detection_pause:
                     self.set_post_speech_silence_duration(end_of_sentence_detection_pause)
-                    if IS_DEBUG: print(f"RT: post_speech_silence_duration: {self.post_speech_silence_duration}")
+                    if IS_DEBUG: print(f"RT: post_speech_silence_duration for {text} (.!?): {self.post_speech_silence_duration}")
             else:
                 if not self.post_speech_silence_duration == unknown_sentence_detection_pause:
                     self.set_post_speech_silence_duration(unknown_sentence_detection_pause)
-                    if IS_DEBUG: print(f"RT: post_speech_silence_duration: {self.post_speech_silence_duration}")
+                    if IS_DEBUG: print(f"RT: post_speech_silence_duration for {text} (???): {self.post_speech_silence_duration}")
 
             self.prev_text = text
             
