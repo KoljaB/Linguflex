@@ -43,6 +43,7 @@ class Voices():
         engine_name = engine.engine_name
         voices = self.get_voices(engine_name)
         if len(voices) > 0:
+            print(f"Found {len(voices)} voices for engine {engine_name}, first one is: {voices[0]} (type: {type(voices[0])})")
             engine.set_voice(voices[0])
 
     def save_voice(self, voice, voice_index):

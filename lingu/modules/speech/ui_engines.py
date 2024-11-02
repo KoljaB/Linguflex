@@ -9,6 +9,7 @@ from .logic import logic
 from qfluentwidgets import (
     ComboBox,
     Slider,
+    TextEdit,
 )
 
 
@@ -409,3 +410,31 @@ class OpenAIWidget(QWidget):
     def handle_voice_change(self, index):
         selected_voice = self.select_voice.currentData()
         logic.engines.set_voice_instance("openai", selected_voice)
+
+
+class ParlerWidget(QWidget):
+    """
+    A widget for system voice settings
+    """
+    def __init__(self):
+        """
+        Initialize the SystemWidget.
+
+        Args:
+            logic: The logic layer handling voice operations.
+        """
+        super(ParlerWidget, self).__init__()
+
+        self.layout = UI.layout(self)
+        lbl_select_voice = UI.label("Voice")
+        lbl_select_voice.setContentsMargins(0, 0, 0, 5)
+        self.layout.addWidget(lbl_select_voice)
+
+        self.voice_prompt = TextEdit(self)
+        self.voice_prompt.textChanged.connect(self.voice_prompt_text_changed)
+        self.layout.addWidget(self.voice_prompt)
+
+
+    def voice_prompt_text_changed(self):
+        voice_prompt = self.voice_prompt.toPlainText()
+        logic.engines.set_voice_instance("parler_tts", voice_prompt)

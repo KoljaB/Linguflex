@@ -105,6 +105,93 @@ class OS_Apps_Logic(Logic):
         except FileNotFoundError as e:
             return f"{tool.replace('_', ' ').title()} application not found: {e}"
 
+    def validate_if_app_was_opened(self, tool):
+        """
+        Checks if the specified application is running.
+        Returns True if the application is running, False otherwise.
+        
+        Args:
+            tool (str): The name of the tool to check from get_available_apps()
+            
+        Returns:
+            bool: True if the application is running, False otherwise
+        """
+        system = platform.system().lower()
+        
+        # Map tool names to their process names on different platforms
+        process_names = {
+            'windows': {
+                'calculator': 'CalculatorApp.exe',
+                'text_editor': 'notepad.exe',
+                'file_manager': 'explorer.exe',
+                'terminal': 'cmd.exe',
+                'browser': 'chrome.exe,firefox.exe,msedge.exe,iexplore.exe',
+                'system_monitor': 'taskmgr.exe',
+                'paint': 'mspaint.exe'
+            },
+            'darwin': {  # macOS
+                'calculator': 'Calculator',
+                'text_editor': 'TextEdit',
+                'file_manager': 'Finder',
+                'terminal': 'Terminal',
+                'browser': 'Safari,Google Chrome,Firefox',
+                'system_monitor': 'Activity Monitor',
+                'paint': 'Preview'
+            },
+            'linux': {
+                'calculator': 'gnome-calculator,kcalc,xcalc',
+                'text_editor': 'gedit',
+                'file_manager': 'nautilus',
+                'terminal': 'gnome-terminal',
+                'browser': 'chrome,firefox,chromium',
+                'system_monitor': 'gnome-system-monitor',
+                'paint': 'gimp'
+            }
+        }
+        
+        if tool not in self.get_available_apps():
+            raise ValueError(f"Tool '{tool}' is not in the list of available apps")
+            
+        try:
+            if system == 'windows':
+                # Use tasklist to get running processes
+                output = subprocess.check_output('tasklist /FO CSV /NH', shell=True).decode()
+                running_processes = [line.split(',')[0].strip('"').lower() for line in output.splitlines()]
+                
+                # Check against possible process names
+                process_list = process_names['windows'][tool].split(',')
+                return any(proc.lower() in running_processes for proc in process_list)
+                
+            elif system == 'darwin':  # macOS
+                # Use ps command to check running processes
+                cmd = ["ps", "-A", "-o", "comm="]
+                output = subprocess.check_output(cmd).decode()
+                running_processes = [p.strip().lower() for p in output.splitlines()]
+                
+                # Check against possible process names
+                process_list = process_names['darwin'][tool].split(',')
+                return any(any(proc.lower() in p for p in running_processes) for proc in process_list)
+                
+            elif system == 'linux':
+                # Use ps command to check running processes
+                cmd = ["ps", "-A", "-o", "comm="]
+                output = subprocess.check_output(cmd).decode()
+                running_processes = [p.strip().lower() for p in output.splitlines()]
+                
+                # Check against possible process names
+                process_list = process_names['linux'][tool].split(',')
+                return any(proc.lower() in running_processes for proc in process_list)
+                
+            else:
+                raise OSError("Unsupported operating system")
+                
+        except subprocess.CalledProcessError as e:
+            print(f"Error checking process: {e}")
+            return False
+        except Exception as e:
+            print(f"Unexpected error while checking process: {e}")
+            return False
+
     def _open_calculator(self):
         system = platform.system().lower()
         

@@ -1,5 +1,6 @@
 from typing import Any, Dict, Optional
 from .log import log
+from .arguments import get_argument
 import yaml
 import sys
 import os
@@ -39,12 +40,11 @@ class SettingsManager:
             Optional[str]: The file path from the command line arguments.
               Returns None if no file path was submitted.
         """
-        if len(sys.argv) > 1:
-            yaml_file_path = sys.argv[1]
-            if __name__ == '__main__':
-                log.dbg("  [settings] Using file from command line: "
-                        f"{yaml_file_path}")
-            return yaml_file_path
+        settings_file_arg = get_argument('settings')
+        if settings_file_arg:
+            log.dbg("  [settings] Using file from command line: "
+                    f"{settings_file_arg}")
+            return settings_file_arg
         return None
 
     def load_settings(self) -> Dict[str, Any]:

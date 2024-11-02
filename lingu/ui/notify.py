@@ -13,6 +13,7 @@ from PyQt6.QtGui import QIcon, QPixmap, QPainter, QFont
 from PyQt6.QtCore import QSize
 import time
 
+timer = None
 
 class NotifyWindow(QWidget):
 
@@ -280,6 +281,7 @@ def notify(
 
 
 def wait_notify(callback=None, interval=50):
+    global timer
     """
     Wait for the notification to become visible using a non-blocking approach.
 
@@ -302,7 +304,9 @@ def wait_notify(callback=None, interval=50):
         # Connect the timeout signal to the check function
         timer.timeout.connect(check_and_proceed)
         timer.start(interval)  # Start the timer with the specified interval
+
     else:
+        
         while not notify_manager.notification_visible():
             QApplication.processEvents()  # Process any pending UI events
             time.sleep(0.02)  # Sleep for 20 milliseconds

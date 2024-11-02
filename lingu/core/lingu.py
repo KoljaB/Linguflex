@@ -4,7 +4,7 @@ from lingu.ui.main import UI
 from .modules import Modules
 from .events import events
 from .prompt import prompt
-from lingu import cfg, log, notify
+from lingu import cfg, log, notify, is_testmode
 from .tools import Tools
 import threading
 import keyboard
@@ -29,6 +29,7 @@ class Lingu:
         Args:
             app: The main application object to be used with Lingu.
         """
+        print("START")
         self.app = app
         keyboard.on_press_key("esc", self.on_press)
         
@@ -49,9 +50,16 @@ class Lingu:
         Starts the Lingu application by loading modules
         and initializing the UI.
         """
+        log.inf("  [core] starting module manager")
         self.modules = Modules()
+
+        log.inf("  [core] creating modules")
         self.modules.create()
+
+        log.inf("  [core] loading start modules")
         self.modules.load_start_modules()
+
+        log.inf("  [core] creating UI")
         self.ui = UI(self.app, self.modules.all)
 
         # start in thread so that the UI can be shown
@@ -66,7 +74,9 @@ class Lingu:
 
         notify("Start", "Starting modules", -1, "custom", "🚀")
 
+        log.inf("  [core] post processing modules")
         self.modules.post_process()
+
         self.modules.init()
         self.modules.load_delayed_modules()
         self.modules.import_language_files()
@@ -97,6 +107,11 @@ class Lingu:
             )
 
         notify("Ready", "Modules loaded.", 5000, "success", "✅")
+
+        if is_testmode():
+            for test in self.modules.tests:
+                log.dbg("Running test")
+                test()
 
     def _main_worker(self):
         """
@@ -130,6 +145,8 @@ class Lingu:
 
         while self.tools.executed_tools:
 
+            print(f"### EXECUTED TOOLS ###\n{self.tools.executed_tools}")
+
             # add executed tools to history
             self.brainlogic.add_executed_tools_to_history(
                 self.tools.executed_tools)
@@ -158,3 +175,6 @@ class Lingu:
                     tools_for_usertext=tools_for_usertext,
                     functions=functions
                 )
+
+        print(f"### EXIT ANSWER LOOP ###")
+

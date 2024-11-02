@@ -24,9 +24,7 @@ class OllamaInterface(LLMInterfaceBase):
 
         function_calling_model_name = cfg(
             "local_llm", "function_calling_model_name",
-            default=cfg(
-            "local_llm", "model_name",
-            default="llama3.1:8b"))
+            default=model_name)
 
         vision_model_name = vision_model_name or cfg("see", "model_name", default="llava")
         self.vision_model = vision_model_name

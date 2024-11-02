@@ -6,6 +6,7 @@ from RealtimeTTS import (
     SystemEngine,
     CoquiEngine,
     OpenAIEngine,
+    ParlerEngine,
 )
 import logging
 import os
@@ -72,6 +73,7 @@ class Engines():
         self.elevenlabs_engine = None
         self.coqui_engine = None
         self.openai_engine = None
+        self.parler_engine = None
         self.model_path = model_path
 
     def get_engine(self, engine_name):
@@ -88,6 +90,14 @@ class Engines():
                     pitch=10,
                 )
             return self.azure_engine
+        elif engine_name == "parler_tts":
+            if not self.parler_engine:
+                self.parler_engine = ParlerEngine(
+                    model_name="ylacombe/parler-tts-mini-jenny-30H",
+                    buffer_duration_s=1.4,
+                    play_steps_in_s=0.25
+                )
+            return self.parler_engine
         elif engine_name == "elevenlabs":
             if not self.elevenlabs_engine:
                 self.elevenlabs_engine = ElevenlabsEngine(
@@ -146,6 +156,8 @@ class Engines():
             engine_name = "coqui"
         elif engine_index == 4:
             engine_name = "openai"
+        elif engine_index == 5:
+            engine_name = "parler_tts"
         return engine_name
 
     def get_index_from_engine_name(self, engine_name):
@@ -157,6 +169,8 @@ class Engines():
         elif engine_name == "coqui":
             engine_index = 3
         elif engine_name == "openai":
+            engine_index = 4
+        elif engine_name == "parler_tts":
             engine_index = 4
         return engine_index
 
@@ -197,6 +211,10 @@ class Engines():
             self.state.engine_index = 4
             self.engine = self.get_engine(engine_name)
             self.state.bottom_info = "OpenAI"
+        elif engine_name == "parler_tts":
+            self.state.engine_index = 5
+            self.engine = self.get_engine(engine_name)
+            self.state.bottom_info = "Parler"
         else:
             self.state.engine_index = 0
             self.state.bottom_info = "System"

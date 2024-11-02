@@ -10,6 +10,7 @@ from .ui_engines import (
     SystemWidget,
     AzureWidget,
     CoquiWidget,
+    ParlerWidget
 )
 from PyQt6.QtCore import Qt
 from qfluentwidgets import (
@@ -39,6 +40,7 @@ class SpeechUI(UI):
             "Elevenlabs",
             "Coqui",
             "OpenAI",
+            "Parler",
         ]
 
         self.buttons = self.add_buttons({
@@ -387,6 +389,12 @@ class SpeechUI(UI):
                 if "voice_name" in self.voice:
                     self.engine_widget.select_voice.setCurrentText(
                         self.voice["voice_name"])
+            elif self.voice["engine"] == "parler_tts":
+                # print("switch to openai")
+                self.handle_engine_change(5)
+                # if "voice_name" in self.voice:
+                #     self.engine_widget.select_voice.setCurrentText(
+                #         self.voice["voice_name"])
             else:
                 # print("switch to system")
                 self.handle_engine_change(0)
@@ -460,7 +468,11 @@ class SpeechUI(UI):
             self.engine_index = 4
             self.engine_name = "openai"
             self.engine_widget = OpenAIWidget()
-        if index >= 0 and index <= 4:
+        elif index == 5:
+            self.engine_index = 5
+            self.engine_name = "parler_tts"
+            self.engine_widget = ParlerWidget()
+        if index >= 0 and index <= 5:
             self.engine_layout.addWidget(self.engine_widget)
             self.engine_layout.update()
             self.engine_layout.activate()

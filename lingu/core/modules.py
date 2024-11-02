@@ -4,6 +4,7 @@ from .populatable import Populatable
 from .invokable import Invokable
 from .settings import cfg
 from .state import State
+from .test import Test
 from .logic import Logic
 from .log import log
 from .exc import exc
@@ -17,7 +18,7 @@ import os
 
 
 language = cfg("language", default="en")
-load_start = ['state.py', 'logic.py']
+load_start = ['state.py', 'logic.py', 'test.py']
 load_delayed = ['inference.py', 'ui.py']
 module_path = "lingu/modules"
 
@@ -65,6 +66,7 @@ class Modules:
         self.all = {}
         self.populatables = []
         self.invokables = []
+        self.tests = []
         self.inference_manager = InferenceManager()
 
     def import_file(self, py_file: str, folder: str, module: dict):
@@ -88,6 +90,20 @@ class Modules:
 
             module["modules"][base_name] = mod
 
+            if inspect.isclass(obj) and issubclass(obj, Test) \
+                    and obj is not Test:
+                log.inf(f"    + test found: {obj.__name__}")
+
+                instance = obj()
+                instance.module_name = base_name
+                for method_name, method in inspect.getmembers(
+                    instance,
+                    predicate=inspect.ismethod
+                ):
+                    if method_name == "execute":
+                        log.inf("      + execute method imported")
+                        self.tests.append(instance.execute)
+                    
             if inspect.isclass(obj) and issubclass(obj, State) \
                     and obj is not State:
 

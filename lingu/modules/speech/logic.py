@@ -225,6 +225,8 @@ class SpeechLogic(Logic):
             self.trigger("rvc_audio_chunk", remaining_data)
 
     def post_init_processing(self):
+        
+        #if not state.engine_name == "coqui" and not state.engine_name == "parler_tts":
         if not state.engine_name == "coqui":
             return
 

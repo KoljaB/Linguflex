@@ -18,7 +18,6 @@ def main():
     """
     from PyQt6.QtWidgets import QApplication
     import sys
-
     from .lingu import Lingu
     from lingu import notify, wait_notify
 
@@ -46,3 +45,4 @@ if __name__ == '__main__':
     from lingu import log
     log.inf("Logging initialized.")
     main()
+    log.inf("Exit")
