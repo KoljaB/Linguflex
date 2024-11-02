@@ -40,6 +40,10 @@ class BrainLogic(Logic):
                 log.inf(f"  [brain] using local language model \"{model_name}\" with lmstudio provider")
                 from .handlers.lmstudio_interface import LMStudioInterface
                 self.llm = LMStudioInterface(self.history)
+            elif model_provider == "openrouter":
+                log.inf(f"  [brain] using local language model \"{model_name}\" with openrouter provider")
+                from .handlers.openrouter_interface import OpenrouterInterface
+                self.llm = OpenrouterInterface(self.history)
             else:
                 log.err(f"  [brain] Invalid model provider: {model_provider}. Please use 'ollama' or 'lmstudio'.")
                 raise ValueError(f"Invalid model provider: {model_provider}. Please use 'ollama' or 'lmstudio'.")

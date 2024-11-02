@@ -45,10 +45,11 @@ prompt: >
 
 local_llm:
   use_local_llm: true # change to true to use local llms like ollama, default: false (uses openai model)
+  model_provider: ollama  # "ollama" or "lmstudio" or "openrouter"
   gpu_layers: 40
-  model_provider: ollama  # "ollama" or "lmstudio" 
   ollama_url: http://127.0.0.1:11434/v1
   lmstudio_url: http://127.0.0.1:1234/v1
+  openrouter_url: https://openrouter.ai/api/v1
   model_path: models/llm/
   model_name: llama3.1:8b
   function_calling_model_name: llama3.1:8b
