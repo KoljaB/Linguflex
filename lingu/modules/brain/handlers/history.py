@@ -1,4 +1,4 @@
-from openai_token_counter import openai_token_counter
+import tiktoken
 from lingu import log
 import base64
 import json
@@ -220,89 +220,60 @@ class History:
 
         return messages
 
-    # def get(self, number_of_messages=-1) -> list:
-    #     """
-    #     Retrieves the most recent entries in the history
-    #     up to the maximum limit.
-
-    #     Returns:
-    #         list: A list of the most recent entries.
-    #     """
-    #     number_of_messages = (
-    #         number_of_messages
-    #         if number_of_messages > 0
-    #         else self.max_history_messages
-    #     )
-    #     messages = self.history[-number_of_messages:]
-
-    #     # Remove tool message from the history if it is the first message
-    #     # This is because tool needs context
-    #     while (
-    #         len(messages) > 0
-    #         and "role" in messages[0]
-    #         and messages[0]["role"] == "tool"
-    #     ):
-    #         messages = messages[1:]
-
-    #     return messages
-
-    def get_tokens(self, messages, functions, model="gpt-3.5-turbo"):
+    def get_tokens(self, messages, functions=None, model="gpt-3.5-turbo"):
         """
-        Get the number of tokens in the messages.
+        Get the number of tokens used by the messages and functions.
         """
-        # both openai_function_tokens and openai_token_counter libraries fail
-        # to count tokens in some cases, so we just estimate
-        estimation_factor = 0.33
-
         try:
-            result_no_tools = openai_token_counter(
-                messages=messages,
-                model=model,
-                functions=None,
-                function_call="auto"
-            )
-        except Exception as e:
-            log.wrn(f"  [history] Error in token counting: {e}")
-            result_no_tools = int(len(str(messages)) * estimation_factor)
-        tokens_tools_est = 0
+            encoding = tiktoken.encoding_for_model(model)
+        except KeyError:
+            log.wrn(f"Model {model} not found. Using cl100k_base encoding.")
+            encoding = tiktoken.get_encoding("cl100k_base")
+
+        # Define tokens per message and tokens per name
+        if model.startswith("gpt-3.5-turbo") or model.startswith("gpt-4"):
+            tokens_per_message = 3
+            tokens_per_name = 1
+        else:
+            log.wrn(f"Token counting not implemented for model {model}. Using default.")
+            tokens_per_message = 3
+            tokens_per_name = 1
+
+        num_tokens = 0
+        for message in messages:
+            num_tokens += tokens_per_message
+            for key, value in message.items():
+                if key == "role":
+                    num_tokens += len(encoding.encode(value))
+                elif key == "content":
+                    if value is not None:
+                        if isinstance(value, str):
+                            num_tokens += len(encoding.encode(value))
+                        elif isinstance(value, list) or isinstance(value, dict):
+                            num_tokens += len(encoding.encode(json.dumps(value)))
+                elif key == "name":
+                    num_tokens += tokens_per_name
+                    num_tokens += len(encoding.encode(value))
+                elif key == "function_call":
+                    # function_call is a dict with 'name' and 'arguments'
+                    num_tokens += len(encoding.encode("function_call"))
+                    function_call = value
+                    if "name" in function_call:
+                        num_tokens += len(encoding.encode(function_call["name"]))
+                    if "arguments" in function_call:
+                        num_tokens += len(encoding.encode(function_call["arguments"]))
+                else:
+                    # For any other keys
+                    num_tokens += len(encoding.encode(str(value)))
+
+        num_tokens += 3  # every reply is primed with <|start|>assistant<|message|>
+
+        # Count tokens in functions if provided
         if functions:
-            for fct in functions:
-                # print(fct)
-                tokens_tools_est += len(str(fct))
-        tokens_tools_est = int(tokens_tools_est * estimation_factor)
-        # log.dbg(
-        #     f"  [history] Estimated tokens for tools: {tokens_tools_est}")
-        result = result_no_tools + tokens_tools_est
+            functions_tokens = len(encoding.encode(json.dumps(functions)))
+            num_tokens += functions_tokens
 
-        return result
-
-        # try:
-        #     result = openai_token_counter(
-        #         messages=messages,
-        #         model=model,
-        #         functions=functions,
-        #         function_call="auto"
-        #     )
-        #     return result
-        # except Exception as e:
-        #     log.err(f"  [history] Error in token counting: {e}")
-        #     result_no_tools = openai_token_counter(
-        #         messages=messages,
-        #         model=model,
-        #         functions=None,
-        #         function_call="auto"
-        #     )
-        #     tokens_tools_est = 0
-        #     if functions:
-        #         for fct in functions:
-        #             print(fct)
-        #             tokens_tools_est += len(str(fct))
-        #     tokens_tools_est = tokens_tools_est * 0.33
-        #     log.dbg(
-        #         f"  [history] Estimated tokens for tools: {tokens_tools_est}")
-        #     result = result_no_tools + tokens_tools_est
-
-        #     return result
+        return num_tokens
 
     def trim_tokens(
             self,
@@ -334,11 +305,11 @@ class History:
                             # Replace image data with a placeholder
                             content_part['image_url']['url'] = IMG_PLACEHOLDER
                 elif isinstance(message['content'], str):
-                    message_tokens = self.get_tokens([message], None, model)
+                    message_tokens = self.get_tokens([message], functions, model)
                     while message_tokens > self.max_tokens_per_msg:
                         message['content'] = message['content'][:-10]
                         message_tokens = self.get_tokens(
-                            [message], None, model)
+                            [message], functions, model)
 
         # First loop: Trim each message independently, excluding the last two
         for message in self.history[:-2]:
@@ -359,9 +330,12 @@ class History:
                 iteration_count += 1
 
         # Second loop: Check the total tokens of the entire history
-        current_tokens = self.get_tokens(
-            system_message + self.get(), functions, model)
         iteration_count = 0
+
+        # Prepare the full messages list including system message
+        messages = [{'role': 'system', 'content': system_message}] + self.get()
+
+        current_tokens = self.get_tokens(messages, functions, model)
 
         while (current_tokens > self.max_history_tokens
                 and len(self.history) > 0
@@ -370,8 +344,8 @@ class History:
             self.history.pop(0)
 
             # Recalculate the total number of tokens
-            current_tokens = self.get_tokens(
-                system_message + self.get(), functions, model)
+            messages = [{'role': 'system', 'content': system_message}] + self.get()
+            current_tokens = self.get_tokens(messages, functions, model)
 
             log.dbg("  [trim_tokens] New total tokens after removing a "
                     f"message: {current_tokens}")

@@ -5,6 +5,7 @@ from .settings import cfg
 from .events import events
 import instructor
 from instructor import patch
+import time
 
 MAX_RETRY = 3
 
@@ -36,10 +37,38 @@ class InferenceManager:
             "recording_start",
             "listen",
             lambda: self.set_inference_allowed(False))
+        # events.add_listener(
+        #     "audio_stream_stop",
+        #     "speech",
+        #     lambda: self.set_inference_allowed(True))
+
+        def on_assistant_text_complete(text):
+            self.set_inference_allowed(True)
+
         events.add_listener(
-            "audio_stream_stop",
-            "speech",
-            lambda: self.set_inference_allowed(True))
+            "assistant_text_complete",
+            "brain",
+            on_assistant_text_complete)
+            #lambda: self.set_inference_allowed(True))
+
+    def inference_safe(
+            self,
+            inference_object,
+            prompt,
+            content=None,
+            model="gpt-3.5-turbo-1106",
+            abort_retries = 5,
+            sleep_retries = 3):
+
+        result = None
+
+        retries = abort_retries
+        while result is None:
+            result = self.inference(inference_object, prompt, content, model)
+            if result is not None or retries == 0:
+                return result
+            time.sleep(sleep_retries)
+            retries = retries - 1
 
     def llm(self, **kwargs):
         """

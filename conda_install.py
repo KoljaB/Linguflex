@@ -267,7 +267,11 @@ def set_pip_version():
     printl("Setting pip version")
     
     # WE NEED pip 24.1 because latest fairseq==0.12.2 needed for rvc post processing does only support pip<24.1 currently
+    # https://github.com/facebookresearch/fairseq/issues/5518
     run_cmd("python -m pip install \"pip<24.1\"", assert_success=True)
+
+
+
     #run_cmd("python -m pip install \"pip==24.0.0\"", assert_success=True)
 
     #run_cmd("python -m pip install --upgrade pip", assert_success=True)

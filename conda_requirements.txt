@@ -1,21 +1,20 @@
 # core functionality
-RealtimeTTS[all]==0.4.7
-RealtimeSTT==0.3.4
-PyQt6-Fluent-Widgets==1.7.0
-openai-token-counter==1.0.2
+RealtimeTTS[all]==0.4.10
+RealtimeSTT==0.3.7
+PyQt6-Fluent-Widgets==1.7.1
 instructor==1.6.3
 ollama==0.3.3
 
 # rvc post processing
 fairseq==0.12.2
-faiss-cpu==1.8.0.post1
-praat-parselmouth==0.4.4
+faiss-cpu==1.9.0
+praat-parselmouth==0.4.5
 torchcrepe==0.0.23
 torchfcpe==0.0.4
 pyworld==0.3.4
 
 # music module
-yt-dlp==2024.8.6
+yt-dlp==2024.11.4
 pytube==15.0.0
 python-vlc==3.0.20123
 
@@ -29,11 +28,14 @@ beautifulsoup4==4.12.3
 chardet==5.2.0
 
 # open Interpreter module
-open-Interpreter==0.3.13
+open-Interpreter==0.4.3
 
 # calendar module
 google-auth-oauthlib==1.2.1
 
 # Server module
-fastapi==0.115.0
-uvicorn==0.30.6
+fastapi==0.115.4
+uvicorn==0.32.0
+
+# Memory module
+sentence-transformers==3.2.1

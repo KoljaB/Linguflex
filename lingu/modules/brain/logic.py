@@ -69,6 +69,14 @@ class BrainLogic(Logic):
         
         log.inf("  [brain] brain initialized")
 
+        self.add_listener(
+            "history_request",
+            "*",
+            self.history_serve)
+
+    def history_serve(self):
+        self.trigger("history_serve", self.history.get(6))
+
     def abort_immediately(self):
         """
         Aborts the current process immediately.

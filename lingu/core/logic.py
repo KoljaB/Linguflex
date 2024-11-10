@@ -40,6 +40,30 @@ class Logic:
             content,
             model)
 
+
+    def inference_safe(
+            self,
+            inference_object,
+            prompt,
+            content=None,
+            model="gpt-3.5-turbo-1106",
+            abort_retries = 5):
+        """
+        Inference logic but guarantees return at the price of being slow.
+
+        Args:
+            inference_object: The inference object to use.
+            prompt: The prompt to use for inference.
+            content: The content to analyze or process.
+            model: The model to use for inference.
+        """
+        return self.inference_manager.inference_safe(
+            inference_object,
+            prompt,
+            content,
+            model,
+            abort_retries)
+
     def llm(self, **kwargs):
         return self.inference_manager.llm(**kwargs)
 
