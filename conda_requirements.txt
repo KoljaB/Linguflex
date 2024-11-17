@@ -1,8 +1,8 @@
 # core functionality
-RealtimeTTS[all]==0.4.10
+RealtimeTTS[all]==0.4.11
 RealtimeSTT==0.3.7
 PyQt6-Fluent-Widgets==1.7.1
-instructor==1.6.3
+instructor==1.6.4
 ollama==0.3.3
 
 # rvc post processing
@@ -16,7 +16,7 @@ pyworld==0.3.4
 # music module
 yt-dlp==2024.11.4
 pytube==15.0.0
-python-vlc==3.0.20123
+python-vlc==3.0.21203
 
 # context module
 keyboard==0.13.5
@@ -34,8 +34,8 @@ open-Interpreter==0.4.3
 google-auth-oauthlib==1.2.1
 
 # Server module
-fastapi==0.115.4
+fastapi==0.115.5
 uvicorn==0.32.0
 
 # Memory module
-sentence-transformers==3.2.1
+sentence-transformers==3.3.0

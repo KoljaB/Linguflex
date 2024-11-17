@@ -42,6 +42,16 @@ def main():
 
 
 if __name__ == '__main__':
+    import torch.multiprocessing as mp
+    import sys
+    try:
+        if sys.platform.startswith('linux') or sys.platform == 'darwin':  # For Linux or macOS
+            mp.set_start_method("spawn")
+        elif mp.get_start_method(allow_none=True) is None:
+            mp.set_start_method("spawn")
+    except RuntimeError as e:
+        print("Start method has already been set. Details:", e)
+
     from lingu import log
     log.inf("Logging initialized.")
     main()

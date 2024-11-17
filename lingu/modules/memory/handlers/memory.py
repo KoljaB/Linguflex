@@ -49,7 +49,7 @@ class Memory:
             self.save()
             return memory
         else:
-            return None  # Or you could return an existing memory with the same text
+            return None
 
     def remove(self, text: str) -> bool:
         """Remove a memory by its text content."""
