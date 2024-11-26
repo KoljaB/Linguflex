@@ -170,9 +170,11 @@ class MimicUI(UI):
             self.select_char.blockSignals(False)
 
             self.select_voice.blockSignals(True)
-            self.select_voice.setCurrentText(self.char["voice"]["name"])
+            # Add null checks and provide defaults
+            voice_name = "" if not self.char.get("voice") else (self.char["voice"].get("name") or "")
+            self.select_voice.setCurrentText(voice_name)
             self.select_voice.blockSignals(False)
-            self.char_personality.setText(self.char["prompt"])
+            self.char_personality.setText(self.char.get("prompt", ""))
 
             if "temperature" in self.char:
                 self.creativity.setValue(int(self.char["temperature"] * 10))
