@@ -232,7 +232,8 @@ class SpeechLogic(Logic):
 
         if warmup:
             # delayed execute warmup
-            threading.Timer(2, self.test_voice, args=[warmup_text, warmup_muted]).start()
+            pass
+            # threading.Timer(2, self.test_voice, args=[warmup_text, warmup_muted]).start()
 
     def assistant_text_start(self):
         """

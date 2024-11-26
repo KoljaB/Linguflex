@@ -4,6 +4,7 @@ batch/
 test_env/
 tests_private/
 docs_private/
+installer_files/
 models/
 Lingu.code-workspace
 credentials.json

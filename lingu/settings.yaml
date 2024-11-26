@@ -45,14 +45,15 @@ prompt: >
 
 local_llm:
   use_local_llm: true # change to true to use local llms like ollama, default: false (uses openai model)
-  model_provider: ollama  # "ollama" or "lmstudio" or "openrouter"
+  model_provider: vllm # ollama  # "ollama" or "lmstudio" or "openrouter"
   gpu_layers: 40
+  vllm_url: http://127.0.0.1:8000/v1
   ollama_url: http://127.0.0.1:11434/v1
   lmstudio_url: http://127.0.0.1:1234/v1
   openrouter_url: https://openrouter.ai/api/v1
   model_path: models/llm/
-  model_name: llama3.1:8b
-  function_calling_model_name: llama3.1:8b
+  model_name: Qwen/Qwen2.5-1.5B-Instruct
+  function_calling_model_name: Qwen/Qwen2.5-1.5B-Instruct
   # model_name: lmstudio-community/Meta-Llama-3.1-8B-Instruct-GGUF/Meta-Llama-3.1-8B-Instruct-Q4_K_M-take2.gguf
   # function_calling_model_name: lmstudio-community/Meta-Llama-3.1-8B-Instruct-GGUF/Meta-Llama-3.1-8B-Instruct-Q4_K_M-take2.gguf
   max_retries: 3
@@ -95,12 +96,24 @@ listen:
   openwakeword_inference_framework: onnx  # Inference framework for OpenWakeWord (onnx or tflite)
   wake_word_buffer_duration: 0.1  # Duration in seconds to buffer audio during wake word detection (set to ~0.1 for pvporcupine and ~1.0 for oww)
   wake_words_sensitivity: 0.5  # Sensitivity for wake word detection (0 to 1, (set to ~0.5 for pvporcupine and ~0.35 for oww)
-  rapid_sentence_end_detection: 0.1
   beam_size: 3
   beam_size_realtime: 1
+  rapid_sentence_end_detection: 0.25
   end_of_sentence_detection_pause: 0.5
-  mid_sentence_detection_pause: 1.7
+  mid_sentence_detection_pause: 2.2
   unknown_sentence_detection_pause: 1.2
+
+  # rapid_sentence_end_detection: 0.5
+  # end_of_sentence_detection_pause: 0.8
+  # mid_sentence_detection_pause: 1.9
+  # unknown_sentence_detection_pause: 2.6
+  # beam_size: 3
+  # beam_size_realtime: 1
+  # rapid_sentence_end_detection: 0.1
+  # end_of_sentence_detection_pause: 0.5
+  # mid_sentence_detection_pause: 1.7
+  # unknown_sentence_detection_pause: 1.2
+  input_device_index: 18
 
 speech:
   warmup: true
@@ -120,6 +133,7 @@ speech:
   coqui_top_k: 70
   coqui_top_p: 0.9
   rvc_assets_path: models/rvc/assets
+  e: 18
 
 weather:
   city: New York
@@ -186,12 +200,12 @@ modules:
   - brain
 #  - mail
   - mimic
-  - music
+#  - music
   - os_apps
 #  - weather
 #  - house 
 #  - search
 #  - calendar
 #  - server
-  - interpreter
+#  - interpreter
   - speech

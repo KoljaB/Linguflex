@@ -54,6 +54,10 @@ coqui_top_p = float(cfg("speech", "coqui_top_p", default=0.9))
 coqui_pretrained = bool(cfg(
     "speech", "coqui_use_pretrained_model", default=True))
 
+output_device_index = int(cfg(
+    "speech", "output_device_index", default=-1))
+print("Configured output_device_index", output_device_index)
+
 
 class Engines():
     def __init__(
@@ -75,6 +79,14 @@ class Engines():
         self.openai_engine = None
         self.parler_engine = None
         self.model_path = model_path
+
+        self.output_device_index = int(cfg( "speech", "output_device_index", default=-1))
+        print("Configured output_device_index", output_device_index)
+
+        if self.output_device_index == -1:
+          self.output_device_index = None
+
+        print(f"  [speech] output_device_index: {self.output_device_index}")
 
     def get_engine(self, engine_name):
 
@@ -131,7 +143,29 @@ class Engines():
                     pretrained=coqui_pretrained,
                     comma_silence_duration=0.1,
                     sentence_silence_duration=0.2,
-                    default_silence_duration=0.1)
+                    default_silence_duration=0.1,
+                    load_balancing=True,
+                    load_balancing_buffer_length=0.3,
+                    load_balancing_cut_off=0.1,
+                    )
+                # self.coqui_engine = CoquiEngine(
+                #     language=language,
+                #     speed=1.0,
+                #     specific_model=self.state.coqui_model,
+                #     local_models_path=self.model_path,
+                #     voices_path="lingu/resources",
+                #     voice="female.json",
+                #     temperature=coqui_temperature,
+                #     length_penalty=coqui_length_penalty,
+                #     repetition_penalty=coqui_repetition_penalty,
+                #     top_k=coqui_top_k,
+                #     top_p=coqui_top_p,
+                #     add_sentence_filter=True,
+                #     use_deepspeed=coqui_use_deepspeed,
+                #     pretrained=coqui_pretrained,
+                #     comma_silence_duration=0.1,
+                #     sentence_silence_duration=0.2,
+                #     default_silence_duration=0.1)                
             else:
                 self.set_coqui_model(self.state.coqui_model)
             return self.coqui_engine
@@ -229,6 +263,7 @@ class Engines():
                 self.engine,
                 on_audio_stream_start=self._on_audio_stream_start,
                 on_audio_stream_stop=self._on_audio_stream_stop,
+                output_device_index=self.output_device_index,
                 level=logging.DEBUG
             )
 

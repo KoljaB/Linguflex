@@ -87,6 +87,7 @@ fast_sentence_end_silence_duration = float(cfg(
     "listen", "fast_sentence_end_silence_duration", default=0.1))
 input_device_index = int(cfg(
     "listen", "input_device_index", default=-1))
+print("Configured input_device_index", input_device_index)
 early_transcription_on_silence = int(cfg(
     "listen", "early_transcription_on_silence", default=0))
 use_main_model_for_realtime = bool(cfg(
@@ -402,7 +403,9 @@ class ListenLogic(Logic):
         input_device_index = int(cfg("listen", "input_device_index", default=-1))
 
         if input_device_index == -1:
-            input_device_index = None
+          input_device_index = None
+
+        print(f"  [listen] input_device_index: {input_device_index}")
 
         # recorder construction parameters dictionary
         recorder_params = {
@@ -448,6 +451,7 @@ class ListenLogic(Logic):
                 "Complete: She walked home.\n"
                 "Incomplete: Because he...\n"
             ),
+            'debug_mode': True,
             'use_extended_logging': True,
         }
 

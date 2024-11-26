@@ -28,7 +28,7 @@ class OllamaInterface(LLMInterfaceBase):
 
         vision_model_name = vision_model_name or cfg("see", "model_name", default="llava")
         self.vision_model = vision_model_name
-        ollama_url = cfg("local_llm", "ollama_url", default="http://localhost:11434/v1")
+        ollama_url = cfg("local_llm", "ollama_url", default="http://127.0.0.1:11434/v1")
 
 
         llama = OpenAI(base_url=ollama_url, api_key="dummy")
