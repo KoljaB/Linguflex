@@ -1,6 +1,6 @@
 # core functionality
 RealtimeTTS[all]==0.4.11
-RealtimeSTT==0.3.7
+RealtimeSTT==0.3.81
 PyQt6-Fluent-Widgets==1.7.1
 instructor==1.6.4
 ollama==0.3.3

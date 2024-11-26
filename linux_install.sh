@@ -103,6 +103,7 @@ echo "Conda environment activated with Python 3.10.9"
 
 
 # Your further setup can go here
+conda init bash
 
 # Keep the shell open
 exec "$SHELL"

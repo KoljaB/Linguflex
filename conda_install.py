@@ -358,4 +358,6 @@ if __name__ == "__main__":
     #install_transformers()
     download_models()
     download_xtts_base_model()
-    launch_linguflex()
+
+    if not is_linux():
+        launch_linguflex()

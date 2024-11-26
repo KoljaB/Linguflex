@@ -45,15 +45,17 @@ prompt: >
 
 local_llm:
   use_local_llm: true # change to true to use local llms like ollama, default: false (uses openai model)
-  model_provider: vllm # ollama  # "ollama" or "lmstudio" or "openrouter"
+  model_provider: ollama # ollama  # "ollama" or "lmstudio" or "openrouter"
   gpu_layers: 40
   vllm_url: http://127.0.0.1:8000/v1
   ollama_url: http://127.0.0.1:11434/v1
   lmstudio_url: http://127.0.0.1:1234/v1
   openrouter_url: https://openrouter.ai/api/v1
   model_path: models/llm/
-  model_name: Qwen/Qwen2.5-1.5B-Instruct
-  function_calling_model_name: Qwen/Qwen2.5-1.5B-Instruct
+  model_name: llama3.1:8b
+  function_calling_model_name: llama3.1:8b  
+  # model_name: Qwen/Qwen2.5-1.5B-Instruct
+  # function_calling_model_name: Qwen/Qwen2.5-1.5B-Instruct
   # model_name: lmstudio-community/Meta-Llama-3.1-8B-Instruct-GGUF/Meta-Llama-3.1-8B-Instruct-Q4_K_M-take2.gguf
   # function_calling_model_name: lmstudio-community/Meta-Llama-3.1-8B-Instruct-GGUF/Meta-Llama-3.1-8B-Instruct-Q4_K_M-take2.gguf
   max_retries: 3
@@ -113,7 +115,7 @@ listen:
   # end_of_sentence_detection_pause: 0.5
   # mid_sentence_detection_pause: 1.7
   # unknown_sentence_detection_pause: 1.2
-  input_device_index: 18
+  input_device_index: 6
 
 speech:
   warmup: true
@@ -133,7 +135,7 @@ speech:
   coqui_top_k: 70
   coqui_top_p: 0.9
   rvc_assets_path: models/rvc/assets
-  e: 18
+  output_device_index: 0
 
 weather:
   city: New York
