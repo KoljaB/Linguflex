@@ -1,5 +1,7 @@
 # Linux Installation Guide
 
+(tested on: Ubuntu 24.04.1 LTS codename "Noble.")
+
 ## Install Linguflex Core
 
 ### 1. Create a Virtual Environment
