@@ -1,19 +1,82 @@
-#from openai.error import OpenAIError, InvalidRequestError
 from openai import OpenAI, OpenAIError
 from .llminterfacebase import LLMInterfaceBase
 from lingu import cfg, log
-#from openai import OpenAI
 import subprocess
 import instructor
+import platform
 import ollama
 import json
 import sys
 
+
 def check_ollama_installed():
+    RED = "\033[91m"
+    GREEN = "\033[92m"
+    YELLOW = "\033[93m"
+    CYAN = "\033[96m"
+    RESET = "\033[0m"
+    BOLD = "\033[1m"
+
     try:
-        subprocess.run(["ollama", "--version"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+        subprocess.run(
+            ["ollama", "--version"],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            check=True
+        )
     except FileNotFoundError:
-        log.err("Ollama is not installed. Please download and install it from: https://ollama.ai/download")
+        print(f"\n{RED}{BOLD}Ollama CLI not found. It seems Ollama is not installed on your system.{RESET}")
+        print(
+            f"\n{CYAN}You can configure a different LLM provider like OpenAI, lmstudio, vllm, or OpenRouter "
+            f"by updating {BOLD}lingu/settings.yaml{RESET}."
+        )
+        print(
+            f"\n{YELLOW}Choosing 'n' will exit the program.{RESET}"
+        )
+        print(
+            f"\n{YELLOW}Would you like me to try install Ollama now? (y/n){RESET}"
+        )
+
+        choice = input().strip().lower()
+        if choice == 'y':
+            print(f"{CYAN}Attempting to install Ollama...{RESET}")
+            try:
+                if platform.system() == "Windows":
+                    subprocess.run(
+                        [sys.executable, "-m", "pip", "install", "ollama"],
+                        check=True
+                    )
+                elif platform.system() == "Linux":
+                    subprocess.run(
+                        "curl -fsSL https://ollama.com/install.sh | sh",
+                        shell=True,
+                        check=True
+                    )
+                else:
+                    print(f"{RED}{BOLD}Unsupported operating system for automatic installation.{RESET}")
+                    sys.exit(1)
+                # Retry after installation
+                subprocess.run(
+                    ["ollama", "--version"],
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL,
+                    check=True
+                )
+                print(f"{GREEN}{BOLD}Ollama installed successfully!{RESET}")
+            except Exception as e:
+                os_hint = "Windows" if platform.system() == "Windows" else "Linux"
+                print(f"{RED}{BOLD}Failed to install Ollama: {e}{RESET}")
+                print(
+                    f"\n{YELLOW}Please visit {CYAN}https://ollama.com/download{RESET}{YELLOW}, select the "
+                    f"correct download for your operating system ({BOLD}{os_hint}{RESET}{YELLOW}), "
+                    f"and follow the instructions. After installation, restart this program.{RESET}"
+                )
+                sys.exit(1)
+        else:
+            print(f"{RED}{BOLD}Ollama installation skipped. Exiting...{RESET}")
+            sys.exit(1)
+    except subprocess.CalledProcessError:
+        print(f"{RED}{BOLD}An error occurred while checking Ollama version.{RESET}")
         sys.exit(1)
 
 class OllamaInterface(LLMInterfaceBase):

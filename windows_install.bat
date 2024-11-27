@@ -96,4 +96,4 @@ echo. && echo.
 exit /b
 
 :end
-cmd
+pause
