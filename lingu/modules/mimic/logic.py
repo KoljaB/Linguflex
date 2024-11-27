@@ -93,7 +93,8 @@ class MimicLogic(Logic):
         char_prompt = self.char["prompt"]
         char_voice = self.char["voice"]
 
-        self.trigger("set_voice", char_voice)
+        if char_voice:
+            self.trigger("set_voice", char_voice)
         self.trigger("set_prompt", char_prompt)
 
         return True
