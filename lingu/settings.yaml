@@ -72,6 +72,7 @@ local_llm:
   verbose: true
 
 listen:
+  input_device: ArctisX PnP Microphone
   main_recorder_model: medium.en # Model size for main transcription, can be distil models like distil-large-v2 or smaller like medium
   realtime_recorder_model: tiny.en  # Model size for real-time transcription
   enable_realtime_transcription: true  # Enable or disable real-time transcription
@@ -105,19 +106,8 @@ listen:
   mid_sentence_detection_pause: 2.2
   unknown_sentence_detection_pause: 1.2
 
-  # rapid_sentence_end_detection: 0.5
-  # end_of_sentence_detection_pause: 0.8
-  # mid_sentence_detection_pause: 1.9
-  # unknown_sentence_detection_pause: 2.6
-  # beam_size: 3
-  # beam_size_realtime: 1
-  # rapid_sentence_end_detection: 0.1
-  # end_of_sentence_detection_pause: 0.5
-  # mid_sentence_detection_pause: 1.7
-  # unknown_sentence_detection_pause: 1.2
-  input_device_index: 6
-
 speech:
+  output_device: ALC897 Analog
   warmup: true
   warmup_muted: false
   warmup_text: Hi
@@ -135,7 +125,6 @@ speech:
   coqui_top_k: 70
   coqui_top_p: 0.9
   rvc_assets_path: models/rvc/assets
-  output_device_index: 0
 
 weather:
   city: New York

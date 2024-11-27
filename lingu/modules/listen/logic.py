@@ -17,6 +17,7 @@ from RealtimeSTT import AudioToTextRecorderClient
 from lingu import cfg, log, Logic, prompt, is_testmode
 import numpy as np
 import threading
+import pyaudio
 import base64
 import queue
 import time
@@ -85,9 +86,14 @@ rapid_sentence_end_duration = float(cfg(
     "listen", "rapid_sentence_end_duration", default=0.1))
 fast_sentence_end_silence_duration = float(cfg(
     "listen", "fast_sentence_end_silence_duration", default=0.1))
-input_device_index = int(cfg(
-    "listen", "input_device_index", default=-1))
-print("Configured input_device_index", input_device_index)
+
+# input_device_name = int(cfg(
+#     "listen", "input_device", default=""))
+# input_device_index = int(cfg(
+#     "listen", "input_device_index", default=-1))
+
+
+# print("Configured input_device_index", input_device_index)
 early_transcription_on_silence = int(cfg(
     "listen", "early_transcription_on_silence", default=0))
 use_main_model_for_realtime = bool(cfg(
@@ -110,6 +116,8 @@ hard_break_even_on_background_noise_min_similarity = float(cfg(
     "listen", "hard_break_even_on_background_noise_min_similarity", default=0.99))
 hard_break_even_on_background_noise_min_chars = int(cfg(
     "listen", "hard_break_even_on_background_noise_min_chars", default=15))
+wake_words = cfg(
+    "listen", "wake_words", default="Jarvis")
 
 compute_type = cfg(
     "listen", "compute_type",
@@ -394,18 +402,61 @@ class ListenLogic(Logic):
         self.state.pegel = pegel
         self.trigger("recorded_chunk")
 
+    def get_input_device_index_by_name(self, device_name):
+        try:
+            p = pyaudio.PyAudio()
+            device_count = p.get_device_count()
+            matching_devices = []
+            for i in range(device_count):
+                device_info = p.get_device_info_by_index(i)
+                device_name_lower = device_info["name"].lower()
+                search_name_lower = device_name.lower()
+                if search_name_lower in device_name_lower and device_info["maxInputChannels"] > 0:
+                    matching_devices.append((i, device_info["name"]))
+            if matching_devices:
+                # If multiple devices match, select the first one
+                selected_index, selected_name = matching_devices[0]
+                print(f"  [listen] Matched input device: '{selected_name}' with index {selected_index}")
+                return selected_index
+            else:
+                return None
+        except ImportError:
+            print("pyaudio is not installed. Cannot find input device by name.")
+            return None
+
     def _recording_worker(self):
 
         lang = self.state.language
         if lang == "Auto":
             lang = ""
 
-        input_device_index = int(cfg("listen", "input_device_index", default=-1))
+        # Prioritize input_device_name over input_device_index
+        input_device_name_cfg = cfg("listen", "input_device", default="")
+        input_device_name = input_device_name_cfg.strip()
+        input_device_index_cfg = int(cfg("listen", "input_device_index", default=-1))
+        input_device_index = None  # Default to None
+
+        log.inf(f"  [listen] input_device_name: '{input_device_name}', input_device_index: {input_device_index_cfg}")
+
+        if input_device_name:
+            # Attempt to find the device index by partial name
+            print(f"  [listen] Attempting to find device index for device name containing: '{input_device_name}'")
+            input_device_index = self.get_input_device_index_by_name(input_device_name)
+            if input_device_index is not None:
+                print(f"  [listen] Found input device containing '{input_device_name}' with index {input_device_index}")
+            else:
+                print(f"  [listen] Input device containing '{input_device_name}' not found. Using 'input_device_index' from config if valid.")
+                if input_device_index_cfg != -1:
+                    input_device_index = input_device_index_cfg
+        else:
+            # Use input_device_index from config if valid
+            if input_device_index_cfg != -1:
+                input_device_index = input_device_index_cfg
 
         if input_device_index == -1:
           input_device_index = None
 
-        print(f"  [listen] input_device_index: {input_device_index}")
+        print(f"  [listen] Using input_device_index: {input_device_index}")
 
         # recorder construction parameters dictionary
         recorder_params = {
@@ -413,7 +464,7 @@ class ListenLogic(Logic):
             'compute_type' : compute_type,
             'input_device_index': input_device_index,
             'language': lang,
-            'wake_words': "Jarvis",
+            'wake_words': wake_words,
             'wake_words_sensitivity': wake_words_sensitivity,
             'spinner': False,
             'silero_sensitivity': silero_sensitivity_normal,

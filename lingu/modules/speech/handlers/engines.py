@@ -9,6 +9,7 @@ from RealtimeTTS import (
     ParlerEngine,
 )
 import logging
+import pyaudio
 import os
 
 deepspeed_installed = False
@@ -80,13 +81,59 @@ class Engines():
         self.parler_engine = None
         self.model_path = model_path
 
-        self.output_device_index = int(cfg( "speech", "output_device_index", default=-1))
-        print("Configured output_device_index", output_device_index)
 
-        if self.output_device_index == -1:
-          self.output_device_index = None
+        # Prioritize output_device_name over output_device_index
+        output_device_name_cfg = cfg("speech", "output_device", default="")
+        output_device_name = output_device_name_cfg.strip()
+        output_device_index_cfg = int(cfg("speech", "output_device_index", default=-1))
+        output_device_index = None  # Default to None
 
-        print(f"  [speech] output_device_index: {self.output_device_index}")
+        log.inf(f"  [speech] output_device_name: '{output_device_name}', output_device_index: {output_device_index_cfg}")
+
+        if output_device_name:
+            # Attempt to find the device index by partial name
+            print(f"  [speech] Attempting to find device index for device name containing: '{output_device_name}'")
+            output_device_index = self.get_output_device_index_by_name(output_device_name)
+            if output_device_index is not None:
+                print(f"  [speech] Found output device containing '{output_device_name}' with index {output_device_index}")
+            else:
+                print(f"  [speech] Output device containing '{output_device_name}' not found. Using 'output_device_index' from config if valid.")
+                if output_device_index_cfg != -1:
+                    output_device_index = output_device_index_cfg
+        else:
+            # Use output_device_index from config if valid
+            if output_device_index_cfg != -1:
+                output_device_index = output_device_index_cfg
+
+        if output_device_index == -1:
+          output_device_index = None
+
+        self.output_device_index = output_device_index
+
+        print(f"  [speech] Using output_device_index: {output_device_index}")
+
+
+    def get_output_device_index_by_name(self, device_name):
+        try:
+            p = pyaudio.PyAudio()
+            device_count = p.get_device_count()
+            matching_devices = []
+            for i in range(device_count):
+                device_info = p.get_device_info_by_index(i)
+                device_name_lower = device_info["name"].lower()
+                search_name_lower = device_name.lower()
+                if search_name_lower in device_name_lower and device_info["maxOutputChannels"] > 0:
+                    matching_devices.append((i, device_info["name"]))
+            if matching_devices:
+                # If multiple devices match, select the first one
+                selected_index, selected_name = matching_devices[0]
+                print(f"  [speech] Matched output device: '{selected_name}' with index {selected_index}")
+                return selected_index
+            else:
+                return None
+        except ImportError:
+            print("pyaudio is not installed. Cannot find output device by name.")
+            return None
 
     def get_engine(self, engine_name):
 

@@ -92,17 +92,8 @@ source "$CONDA_ROOT_PREFIX/bin/activate" "$INSTALL_ENV_DIR" || { echo "Conda act
 
 echo "Conda environment activated with Python 3.10.9"
 
-
-# To activate this environment, use                                             
-#                                                                               
-#     $ conda activate /home/lon/Dev/Linguflex/Linguflex/installer_files/env    
-#                                                                               
-# To deactivate an active environment, use                                      
-#                                                                               
-#     $ conda deactivate                                                        
-
-
 # Your further setup can go here
+apt-get install -y portaudio19-dev
 conda init bash
 
 # Keep the shell open

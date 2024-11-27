@@ -85,8 +85,8 @@ python show_devices.py
 ### 9. Start Linguflex
 
 ```bash
-sudo bash -c "source /home/username/Dev/Linguflex/Linguflex/installer_files/conda/etc/profile.d/conda.sh && \
-conda activate /home/username/Dev/Linguflex/Linguflex/installer_files/env && \
+sudo bash -c "source /home/$USER/Dev/Linguflex/Linguflex/installer_files/conda/etc/profile.d/conda.sh && \
+conda activate /home/$USER/Dev/Linguflex/Linguflex/installer_files/env && \
 source /home/username/Dev/Linguflex/Linguflex/_set_env_linux.sh && \
 python -m lingu.core.run"
 ```
