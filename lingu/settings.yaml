@@ -85,7 +85,6 @@ listen:
   short_term_noise_decay: 0.9  # Decay factor for short-term noise estimation
   allow_speech_interruption: true  # Allow interruption of ongoing speech
   silero_deactivity_detection: true # Better environment noise handling. Set to False on slower systems.
-  sentence_delimiters: .?!。  # Characters used to delimit sentences in transcription
   early_transcription_on_silence: 0 # Faster transcription on silence detection (enter milliseconds of silence when fast transcription should be performed)
   wakeword_backend: pvporcupine  # Backend library for wake word detection (pvporcupine or oww)
   # For openwakeword / oww detection set comma-separated paths to custom OpenWakeWord model files
