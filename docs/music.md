@@ -24,6 +24,10 @@ This module facilitates:
 
 ## Installation
 
+### VLC Player
+
+Please install VLC player. The [Python VLC library](https://github.com/videolan/vlc) depends on it to stream and play music from YouTube. Linguflex requires VLC to be installed for its music module player to work correctly.
+
 ### Environment Variables
 
 `GOOGLE_API_KEY`
