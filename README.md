@@ -84,7 +84,7 @@ Follow the [Modules Guide](./docs/modules.md) for step-by-step instructions abou
 
 ## License
 
-The codebase is under MIT License and the TTS model weights are under the individual TTS engine licenses listed below:
+The codebase is under the [Apache License 2.0](LICENSE) (see also [NOTICE](NOTICE); versions published before 2026-11-10 were made available under the MIT License) and the TTS model weights are under the individual TTS engine licenses listed below:
 
 #### CoquiEngine
 - **License**: Open-source only for noncommercial projects.
